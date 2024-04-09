@@ -12,11 +12,18 @@
           "package": "s_c",
           "versionNumber": "16.3"
         }
-      ]
+      ],
+      "package": "StoreConnect Add-on: Klaviyo",
+      "versionName": "ver 0.1",
+      "versionNumber": "0.1.0.NEXT",
+      "versionDescription": "StoreConnect Add-on for Klaviyo integration"
     }
   ],
   "name": "add-on-klaviyo",
   "namespace": "",
   "sfdcLoginUrl": "https://login.salesforce.com",
-  "sourceApiVersion": "59.0"
+  "sourceApiVersion": "59.0",
+  "packageAliases": {
+    "StoreConnect Add-on: Klaviyo": "0Ho2u000000001JCAQ"
+  }
 }
