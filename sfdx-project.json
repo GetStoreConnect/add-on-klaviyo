@@ -1,0 +1,22 @@
+{
+  "packageDirectories": [
+    {
+      "path": "force-app",
+      "default": true,
+      "dependencies": [
+        {
+          "package": "Streams",
+          "versionNumber": "61.0.5"
+        },
+        {
+          "package": "s_c",
+          "versionNumber": "16.3"
+        }
+      ]
+    }
+  ],
+  "name": "add-on-klaviyo",
+  "namespace": "",
+  "sfdcLoginUrl": "https://login.salesforce.com",
+  "sourceApiVersion": "59.0"
+}

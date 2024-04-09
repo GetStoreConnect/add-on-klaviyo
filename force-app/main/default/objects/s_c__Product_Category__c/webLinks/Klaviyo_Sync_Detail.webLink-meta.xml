@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Klaviyo_Sync_Detail</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <encodingKey>UTF-8</encodingKey>
+    <height>600</height>
+    <linkType>url</linkType>
+    <masterLabel>Klaviyo Sync</masterLabel>
+    <openType>sidebar</openType>
+    <protected>false</protected>
+    <url>/flow/Klaviyo_SF_Sync?targetId={!s_c__Product_Category__c.Id}&amp;IntegrationType=CatalogCategory&amp;retURL=/lightning/r/s_c__Product_Category__c/{!s_c__Product_Category__c.Id}/view</url>
+</WebLink>

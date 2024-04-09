@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Synced__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Indicator that this record has been synced with the target platform instance. Uncheck this field to indicate that a re-sync of changes is required.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Indicator that this record has been synced with the target platform instance. Uncheck this field to indicate that a re-sync of changes is required</inlineHelpText>
+    <label>Synced</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

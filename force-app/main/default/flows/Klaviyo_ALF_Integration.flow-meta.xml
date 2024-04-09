@@ -1,0 +1,3783 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Create_Catalog_Category</name>
+        <label>Create Catalog Category</label>
+        <locationX>50</locationX>
+        <locationY>458</locationY>
+        <actionName>Streams__Streamscript</actionName>
+        <actionType>apex</actionType>
+        <dataTypeMappings>
+            <typeName>T__c1</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c2</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c3</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c4</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c5</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c6</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c7</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c8</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c9</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__i0</typeName>
+            <typeValue>s_c__Store__c</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r1</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r2</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r3</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r4</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r5</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r6</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r7</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r8</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r9</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>U__record</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>U__records</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>b1</name>
+            <value>
+                <elementReference>UseBulkApi</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>b2</name>
+            <value>
+                <elementReference>RunAsynchronously</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i0</name>
+            <value>
+                <elementReference>Store</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i1</name>
+            <value>
+                <elementReference>flowName</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i2</name>
+            <value>
+                <elementReference>NamedCredential</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i3</name>
+            <value>
+                <elementReference>IntegrationType</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i4</name>
+            <value>
+                <elementReference>platformInstanceName</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>l1</name>
+            <value>
+                <elementReference>InputIds</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>n1</name>
+            <value>
+                <elementReference>batchSize</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>x</name>
+            <value>
+                <stringValue># Streamscript l1=InputIds i1=flowName n1=batchSize b1=UseBulkApi b2=RunAsynchronously i2=NamedCredential i3=IntegrationType i4=platformInstanceName i0=Store
+
+## Method declarations
+
+# Converts a List into a queryable string of quote enclosed
+# (&apos;,&apos;) separated values
+function List-Stringify($list, $identifier, $alwaysFill) {
+    $string = []
+
+    foreach($item in $list) {
+        $value = &apos;&apos;
+        if($identifier == null) {
+            $value = $item
+        } else {
+            $value = $item.get($identifier)
+        }
+        $string.add(`&apos;$value&apos;`)
+    }
+
+    if($string.isEmpty() &amp;&amp; $alwaysFill == true) {
+        $string.add(&apos;&apos;)
+    }
+
+    $string = List-Concat $string &apos;,&apos;
+    $string = `($string)`
+
+    return $string
+}
+
+# Creates a map of varius Record Ids to Integration Ids
+function Map-Integrations($platformInstanceName, $inputIds, $field) {
+    $map = {}
+    # Check input
+    if($field != null and $inputIds != &apos;&apos; and $inputIds != &apos;()&apos;) {
+        # Query existing integrations for the input ProductIds OR CategoryIds
+        $integrations = Query-Records `
+            SELECT Id, External_Id__c, $field
+            FROM Integration__c 
+            WHERE Platform__c = &apos;$platformInstanceName&apos; AND
+                $field IN $inputIds
+        `
+        
+        if($integrations.size() &gt; 0) {
+            foreach($item in $integrations) {
+                $recordId = $item.get($field)
+                if($recordId != null) {
+                    $map.put($recordId, $item)
+                }
+            }
+        }
+    }
+    return $map
+}
+
+function Klaviyo-Create-CatalogCategoryRequests($records, $integrationMap, $integrationType, $catalogType, $namedCredential, $useBulkApi) {
+    $requests = []
+
+    # Bulk API Requests instantiation
+    $postRequest = {
+        &apos;url&apos;: `callout:$namedCredential/api/catalog-category-bulk-create-jobs/`,
+        &apos;method&apos;: &apos;POST&apos;,
+        &apos;integration_type&apos;: `$integrationType`,
+        &apos;catalog_type&apos;: `$catalogType`,
+        &apos;body&apos;: {
+            &apos;data&apos;: {
+                &apos;type&apos;: `catalog-category-bulk-create-job`,
+                &apos;attributes&apos;: {
+                    &apos;categories&apos;: {
+                        &apos;data&apos;: []
+                    }
+                }
+            }
+        }
+    }
+    $patchRequest = {
+        &apos;url&apos;: `callout:$namedCredential/api/catalog-category-bulk-update-jobs/`,
+        &apos;method&apos;: &apos;POST&apos;,
+        &apos;integration_type&apos;: `$integrationType`,
+        &apos;catalog_type&apos;: `$catalogType`,
+        &apos;body&apos;: {
+            &apos;data&apos;: {
+                &apos;type&apos;: `catalog-category-bulk-update-job`,
+                &apos;attributes&apos;: {
+                    &apos;categories&apos;: {
+                        &apos;data&apos;: []
+                    }
+                }
+            }
+        }
+    }
+
+    # Iterate over each category and create a request body if it does not exist
+    foreach($record in $records) {
+        $request = {}
+        try {
+            $url = `callout:$namedCredential/api/catalog-categories/`
+            $method = &apos;POST&apos;
+            $body = {}
+
+            # Extract the category name            
+            $categoryName = $record.s_c__Display_Name__c
+            $externalId = null
+
+            if($integrationMap.get($record.Id) != null) {
+                $externalId = $integrationMap.get($record.Id).External_Id__c
+            }
+
+            if($categoryName == null) {
+                $categoryName = $record.Name
+            }
+            # Base request as if its a POST
+            $body = {
+                &apos;type&apos;: &apos;catalog-category&apos;,
+                &apos;attributes&apos;: {
+                    &apos;external_id&apos;: `$record.Id`,
+                    &apos;name&apos;: `$categoryName`,
+                    &apos;integration_type&apos;: `$integrationType`,
+                    &apos;catalog_type&apos;: `$catalogType`
+                }
+            }
+            
+            # Set Id for PATCH
+            if($externalId != null) {
+                $url = `$url/$externalId`
+                $method = &apos;PATCH&apos;
+                $body.put(&apos;id&apos;, $externalId)
+                $body.attributes.delete(&apos;external_id&apos;)
+                $body.attributes.delete(&apos;integration_type&apos;)
+                $body.attributes.delete(&apos;catalog_type&apos;)
+            }
+            # Add the request to the list of requests
+            if(!$useBulkApi) {
+                $requests.add({
+                    &apos;url&apos;: `$url`,
+                    &apos;method&apos;: `$method`,
+                    &apos;integration_type&apos;: `$integrationType`,
+                    &apos;catalog_type&apos;: `$catalogType`,
+                    &apos;external_id&apos;: `$externalId`,
+                    &apos;body&apos;: {
+                        &apos;data&apos;: $body
+                    }
+                })
+            } else {
+                if($method == &apos;POST&apos;) {
+                    $postRequest.body.data.attributes.categories.data.add($body)
+                } elseif($method == &apos;PATCH&apos;) {
+                    Log $body
+                    $patchRequest.body.data.attributes.categories.data.add($body)
+                }
+            }
+        } catch {
+            throw `Exception: $_`
+        }
+    }
+
+    if($useBulkApi) {
+        if($postRequest.body.data.attributes.categories.data.size() &gt; 0) {
+            $requests.add($postRequest)
+        }
+        if($patchRequest.body.data.attributes.categories.data.size() &gt; 0) {
+            $requests.add($patchRequest)
+        }
+    }
+
+    return $requests
+}
+
+# Dispatch all of the input requests
+function Http-Dispatch($requests, $integrationMap, $platformInstanceName) {
+    # Created/updated Integration records
+    $integrations = []
+    
+    # Iterate over each request
+    foreach($request in $requests) {
+        $request.headers = { &apos;Content-Type&apos;: &apos;application/json&apos; }
+        
+        $integrationType = $request.integration_type
+        $catalogType = $request.catalog_type
+        $response = {status: 0, body: &apos;&apos;}
+        # Method switcher
+        if($request.method == &apos;POST&apos; ) {
+            $response = Http-Post $request.url $request.headers $request.body
+        } elseif($request.method == &apos;PATCH&apos;) {
+            $response = Http-Patch $request.url $request.headers $request.body
+        }
+        Log $response
+        # Decode body
+        $body = {}
+        if($response.body != &apos;&apos;) {
+            $body = Json-Decode $response.body
+        }
+        # Default local record Id
+        $recordId = null
+        $synced = true
+
+        # Success response
+        if($response.status == 201) {
+            $recordId = $body.data.attributes.external_id
+        } elseif($response.status == 204) {
+            $recordId = $request.body.external_id
+        } elseif($response.status == 409) {
+            $body = $body.errors.get(0)
+            if($body.code.startsWith(&apos;duplicate&apos;)) {
+                $recordId = $body.meta.duplicate_external_id
+            }
+        } else {
+            $synced = false
+        }
+
+        # Check that a result was found
+        if($recordId != null) {
+            $externalId = `$integrationType:::$catalogType:::$recordId`
+            $integrationId = null
+            if($integrationMap.get($recordId) != null) {
+                $integrationId = $integrationMap.get($recordId).Id
+            }
+            # Determine if New or Existing Integration
+            $integration = New-Integration__c
+            if($integrationId != null) {
+                $integration = New-Integration__c -Id $integrationId
+            }
+            # Set Integration fields
+            $integration.Platform__c = $platformInstanceName
+            $integration.External_Id__c = $externalId
+            $integration.Product_Category_Id__c = $recordId
+            $integration.Synced__c = $synced
+
+            $integrations.add($integration)
+        }
+        
+    }
+    return $integrations
+}
+
+function Integration-Upsert($records) {
+    # Check if any Integration records were passed in
+    if($records.size() &gt; 0) {
+        Record-Upsert $records &apos;Id&apos;
+    }
+}
+
+# Controller to dispatch HTTP requests as either a synchonous or aysncronous callouts
+# If valid Integration__c records are returned then this will commit those to the database
+function Http-Dispatch-Controller($requests, $integrationMap, $platformInstanceName, $async) {
+    if($requests.size() &gt; 0 &amp;&amp; $platformInstanceName != null) {
+        if($async) {
+            $scope = {
+                &apos;requests&apos;: $requests,
+                &apos;integrationMap&apos;: $integrationMap,
+                &apos;platformInstanceName&apos;: $platformInstanceName
+            }
+            $jobId = Script-Enqueue $scope ${
+                $requests = $_.requests
+                $integrationMap = $_.integrationMap
+                $platformInstanceName = $_.platformInstanceName
+
+                # Created/updated Integration records
+                $records = []
+                
+                # Iterate over each request
+                foreach($request in $requests) {
+                    $request.headers = { &apos;Content-Type&apos;: &apos;application/json&apos; }
+
+                    $integrationType = $request.integration_type
+                    $catalogType = $request.catalog_type
+                    $response = {status: 0, body: &apos;&apos;}
+                    # Method switcher
+                    if($request.method == &apos;POST&apos; ) {
+                        $response = Http-Post $request.url $request.headers $request.body
+                    } elseif($request.method == &apos;PATCH&apos;) {
+                        $response = Http-Patch $request.url $request.headers $request.body
+                    }
+                    
+                    # Decode body
+                    $body = {}
+                    if($response.body != &apos;&apos;) {
+                        $body = Json-Decode $response.body
+                    }
+                    # Default local record Id
+                    $recordId = null
+                    $synced = true
+        
+                    # Success response
+                    if($response.status == 201) {
+                        $recordId = $body.data.attributes.external_id
+                    } elseif($response.status == 204) {
+                        $recordId = $request.body.external_id
+                    } elseif($response.status == 409) {
+                        $body = $body.errors.get(0)
+                        if($body.code.startsWith(&apos;duplicate&apos;)) {
+                            $recordId = $body.meta.duplicate_external_id
+                        }
+                    } else {
+                        $synced = false
+                    }
+        
+                    # Check that a result was found
+                    if($recordId != null) {
+                        $externalId = `$integrationType:::$catalogType:::$recordId`
+                        $integrationId = null
+                        if($integrationMap.get($recordId) != null) {
+                            $integrationId = $integrationMap.get($recordId).Id
+                        }
+                        # Determine if New or Existing Integration
+                        $integration = New-Integration__c
+                        if($integrationId != null) {
+                            $integration = New-Integration__c -Id $integrationId
+                        }
+                        # Set Integration fields
+                        $integration.Platform__c = $platformInstanceName
+                        $integration.External_Id__c = $externalId
+                        $integration.Product_Category_Id__c = $recordId
+                        $integration.Synced__c = $synced
+
+                        $records.add($integration)
+                    }
+                }
+                
+                # Check if any Integration records were passed in
+                if($records.size() &gt; 0) {
+                    Record-Upsert $records &apos;Id&apos;
+                }
+            }
+        } else {
+            Integration-Upsert (Http-Dispatch $requests $integrationMap $platformInstanceName)
+        }
+    }
+}
+
+## Main script
+
+# Convert list to queryable string
+$inputIds = {`!InputIds}
+
+if($inputIds.size() &gt; 0) {
+    # Capture global Flow variables
+    $flowName = {`!flowName}
+    $batchSize = {`!batchSize}
+    $useBulkApi = {`!UseBulkApi}
+    $async = {`!RunAsynchronously}
+    $namedCredential = {`!NamedCredential}
+    $integrationType = {`!IntegrationType}
+    $platformInstanceName = {`!platformInstanceName}
+    $store = {`!Store}
+
+    # Automatically batch the inputs if they exceed the batch limit
+    if($inputIds.size() &gt; $batchSize) {
+        $scope = {
+            &apos;FlowName&apos;: $flowName,
+            &apos;UseBulkApi&apos;: $useBulkApi,
+            &apos;RunAsynchronously&apos;: $async,
+            &apos;IntegrationType&apos;: $integrationType,
+            &apos;InputIds&apos;: []
+        }
+        Script-Batch $batchSize $inputIds $scope ${
+            $ctx = {
+                &apos;UseBulkApi&apos;: $_.UseBulkApi,
+                &apos;RunAsynchronously&apos;: $_.RunAsynchronously,
+                &apos;IntegrationType&apos;: $_.IntegrationType,
+                &apos;InputIds&apos;: $__.items
+            }
+            Script-Flow $_.FlowName $ctx
+        }
+    } else {
+        # Convert list to queryable string
+        $inputIds = List-Stringify $inputIds
+
+        # Limit all following queries to a single store since there is a 1:1
+        # relationship between a store and a platform instance
+        $taxonomyQuery = `
+            SELECT Id, s_c__Store_Id__c
+            FROM s_c__Taxonomy__c 
+        `
+
+        # Add Store scoping if set
+        if($store.Id != null) {
+            $taxonomyQuery = $taxonomyQuery + `
+                WHERE s_c__Store_Id__c = &apos;$store.Id&apos; 
+            `
+        }
+
+        # Query Taxonomies
+        $taxonomies = Query-Records $taxonomyQuery
+
+        $integrations = []
+
+        # Only carry out further operations if records exist for scope
+        if($taxonomies.size() &gt; 0) {
+            # Convert list to queryable string
+            $taxonomyIds = List-Stringify $taxonomies &apos;Id&apos; false
+
+            # Initial queries for all actionable records
+            $categories = Query-Records `
+                SELECT Id, Name, s_c__Display_Name__c
+                FROM s_c__Product_Category__c 
+                WHERE Id IN $inputIds AND
+                        s_c__Taxonomy_Id__c IN $taxonomyIds
+            `
+
+            # Only carry out further operations if some valid records are found
+            if($categories.size() &gt; 0) {
+                $klaviyoIntegrationType = &apos;$custom&apos;
+                $klaviyoCatalogType = &apos;$default&apos;
+                # Convert list to queryable string
+                $categoryIds = List-Stringify $categories &apos;Id&apos; false
+                # Get map of existing integrations
+                $integrationMap = Map-Integrations $platformInstanceName $categoryIds &apos;Product_Category_Id__c&apos;
+
+                # Create HTTP requests
+                $requests = Klaviyo-Create-CatalogCategoryRequests $categories $integrationMap $klaviyoIntegrationType $klaviyoCatalogType $namedCredential $useBulkApi
+                Log $requests
+                # Dispatch all HTTP requests and create Integration records if possible
+                Http-Dispatch-Controller $requests $integrationMap $platformInstanceName $async
+            }
+        }
+    }
+}
+
+</stringValue>
+            </value>
+        </inputParameters>
+        <nameSegment>Streams__Streamscript</nameSegment>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+        <versionSegment>1</versionSegment>
+    </actionCalls>
+    <actionCalls>
+        <name>Create_Catalog_Item</name>
+        <label>Create Catalog Item</label>
+        <locationX>314</locationX>
+        <locationY>458</locationY>
+        <actionName>Streams__Streamscript</actionName>
+        <actionType>apex</actionType>
+        <dataTypeMappings>
+            <typeName>T__c1</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c2</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c3</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c4</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c5</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c6</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c7</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c8</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c9</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__i0</typeName>
+            <typeValue>s_c__Store__c</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r1</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r2</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r3</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r4</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r5</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r6</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r7</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r8</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r9</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>U__record</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>U__records</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>b1</name>
+            <value>
+                <elementReference>UseBulkApi</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>b2</name>
+            <value>
+                <elementReference>RunAsynchronously</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i0</name>
+            <value>
+                <elementReference>Store</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i1</name>
+            <value>
+                <elementReference>flowName</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i2</name>
+            <value>
+                <elementReference>NamedCredential</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i3</name>
+            <value>
+                <elementReference>IntegrationType</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i4</name>
+            <value>
+                <elementReference>platformInstanceName</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>l1</name>
+            <value>
+                <elementReference>InputIds</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>n1</name>
+            <value>
+                <elementReference>batchSize</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>x</name>
+            <value>
+                <stringValue># Streamscript l1=InputIds i1=flowName n1=batchSize b1=UseBulkApi b2=RunAsynchronously i2=NamedCredential i3=IntegrationType i4=platformInstanceName i0=Store
+
+## Method declarations
+
+# Converts a List into a queryable string of quote enclosed
+# (&apos;,&apos;) separated values
+function List-Stringify($list, $identifier, $alwaysFill) {
+    $string = []
+
+    foreach($item in $list) {
+        $value = &apos;&apos;
+        if($identifier == null) {
+            $value = $item
+        } else {
+            $value = $item.get($identifier)
+        }
+        $string.add(`&apos;$value&apos;`)
+    }
+
+    if($string.isEmpty() &amp;&amp; $alwaysFill == true) {
+        $string.add(&apos;&apos;)
+    }
+
+    $string = List-Concat $string &apos;,&apos;
+    $string = `($string)`
+
+    return $string
+}
+
+# Creates a map of varius Record Ids to Integration Ids
+function Map-Integrations($platformInstanceName, $inputIds, $field) {
+    $map = {}
+    # Check input
+    if($field != null and $inputIds != &apos;&apos; and $inputIds != &apos;()&apos;) {
+        # Query existing integrations for the input ProductIds OR CategoryIds
+        $integrations = Query-Records `
+            SELECT Id, External_Id__c, $field
+            FROM Integration__c 
+            WHERE Platform__c = &apos;$platformInstanceName&apos; AND
+                $field IN $inputIds
+        `
+        
+        if($integrations.size() &gt; 0) {
+            foreach($item in $integrations) {
+                $recordId = $item.get($field)
+                if($recordId != null) {
+                    $map.put($recordId, $item)
+                }
+            }
+        }
+    }
+    return $map
+}
+
+# Creates a map of ProductId to total Available to Sell units
+function Map-StockLevels($productIds, $stockLocationIds) {
+    $map = {}
+    # Check input
+    if($productIds != &apos;&apos; and $productIds != &apos;()&apos; and $stockLocationIds != &apos;&apos; and $stockLocationIds != &apos;()&apos;) {
+        $stockLevels = Query-Records `
+            SELECT Id, s_c__Product_Id__c, s_c__Available_To_Sell__c
+            FROM s_c__Stock_Level__c 
+            WHERE s_c__Product_Id__c IN $productIds AND
+                    s_c__Stock_Location_Id__c IN $stockLocationIds
+        `
+    
+        if($stockLevels.size() &gt; 0) {
+            foreach($item in $stockLevels) {
+                $productId = $item.get(&apos;s_c__Product_Id__c&apos;)
+                $availableToSell = $item.get(&apos;s_c__Available_To_Sell__c&apos;)*1
+                if($map.hasKey($productId)) {
+                    $availableToSell = $map.get($productId) + $availableToSell
+                }
+                $map.put($productId, $availableToSell)
+            }
+        }
+    }
+    return $map
+}
+
+# Creates a map of ProductId to Standard Pricebook Entry
+function Map-StandardPricebookEntries($pricebookId, $currencyIsoCode, $productIds) {
+    $pricebookEntriesQuery = `
+        SELECT Id, UnitPrice, Product2Id
+        FROM PricebookEntry 
+        WHERE IsActive = TRUE AND
+                Product2.Id IN $productIds
+    `
+
+    # Optional Pricebook2Id
+    if($pricebookId != null) {
+        $pricebookEntriesQuery = $pricebookEntriesQuery + `
+            AND Pricebook2Id = &apos;$pricebookId&apos;
+        `
+    }
+
+    # Optional currency as multi-currency may not be enabled
+    if($currencyIsoCode != null) {
+        $pricebookEntriesQuery = $pricebookEntriesQuery + `
+            AND CurrencyIsoCode = &apos;$currencyIsoCode&apos;
+        `
+    }
+
+    $pricebookEntries = Query-Records $pricebookEntriesQuery
+
+    $map = {}
+    if($pricebookEntries.size() &gt; 0) {
+        foreach($item in $pricebookEntries) {
+            $productId = $item.get(&apos;Product2Id&apos;)
+            $map.put($productId, $item)
+        }
+    }
+    return $map
+}
+
+# Creates a map of ProductId to all related Categories
+function Map-Categories($productIds) {
+    $map = {}
+    # Check input
+    if($productIds != &apos;&apos; and $productIds != &apos;()&apos;) {
+        $categories = Query-Records `
+            SELECT Id, Name, s_c__Product_Id__c, s_c__Category_Id__r.Id,
+                    s_c__Category_Id__r.s_c__Display_Name__c
+            FROM s_c__Products_Product_Categories__c 
+            WHERE s_c__Product_Id__c IN $productIds
+        `
+
+        if($categories.size() &gt; 0) {
+            foreach($item in $categories) {
+                $productId = $item.get(&apos;s_c__Product_Id__c&apos;)
+                $category = $item.get(&apos;s_c__Category_Id__r&apos;)
+                if(not $map.hasKey($productId)) {
+                    $map.put($productId, [])
+                }
+                $map.get($productId).add($category)
+            }
+        }
+    }
+    return $map
+}
+
+# Creats a map of ProductId to the first related Media record in position order
+function Map-Media($productIds) {
+    $map = {}
+    # Check input
+    if($productIds != &apos;&apos; and $productIds != &apos;()&apos;) {
+        $media = Query-Records `
+            SELECT Id, s_c__Media_Id__r.s_c__Thumbnail_Image__c, 
+                    s_c__Media_Id__r.s_c__Url__c, s_c__Product_Id__c
+            FROM s_c__Product_Media__c 
+            WHERE s_c__Product_Id__c IN $productIds AND
+                    s_c__Media_Id__r.s_c__File_Type__c = &apos;image&apos; 
+            ORDER BY s_c__Position__c ASC NULLS FIRST
+        `
+        
+        if($media.size() &gt; 0) {
+            foreach($item in $media) {
+                $productId = $item.get(&apos;s_c__Product_Id__c&apos;)
+                if(not $map.hasKey($productId)) {
+                    $map.put($productId, $item.get(&apos;s_c__Media_Id__r&apos;))
+                }
+            }
+        }
+    }
+    return $map
+}
+
+function Klaviyo-Create-CatalogItemRequests($records, $context, $integrationMap, $integrationType, $catalogType, $namedCredential, $useBulkApi) {
+    $requests = []
+
+    # Bulk API Requests instantiation
+    $postRequest = {
+        &apos;url&apos;: `callout:$namedCredential/api/catalog-item-bulk-create-jobs/`,
+        &apos;method&apos;: &apos;POST&apos;,
+        &apos;integration_type&apos;: `$integrationType`,
+        &apos;catalog_type&apos;: `$catalogType`,
+        &apos;body&apos;: {
+            &apos;data&apos;: {
+                &apos;type&apos;: `catalog-item-bulk-create-job`,
+                &apos;attributes&apos;: {
+                    &apos;items&apos;: {
+                        &apos;data&apos;: []
+                    }
+                }
+            }
+        }
+    }
+    $patchRequest = {
+        &apos;url&apos;: `callout:$namedCredential/api/catalog-item-bulk-update-jobs/`,
+        &apos;method&apos;: &apos;POST&apos;,
+        &apos;integration_type&apos;: `$integrationType`,
+        &apos;catalog_type&apos;: `$catalogType`,
+        &apos;body&apos;: {
+            &apos;data&apos;: {
+                &apos;type&apos;: `catalog-item-bulk-update-job`,
+                &apos;attributes&apos;: {
+                    &apos;items&apos;: {
+                        &apos;data&apos;: []
+                    }
+                }
+            }
+        }
+    }
+
+    # Outside loop so it isn&apos;t called multiple times
+    $dtNow = Script-Now
+
+    # Iterate over each category and create a request body if it does not exist
+    foreach($record in $records) {
+        $request = {}
+        try {
+            $url = `callout:$namedCredential/api/catalog-items/`
+            $method = &apos;POST&apos;
+            $body = {}
+
+            # Extract context
+            $store = $context.store
+            $stockLevelMap = $context.stockLevelMap
+            $pricebookEntryMap = $context.pricebookEntryMap
+            $categoryMap = $context.categoryMap
+            $mediaMap = $context.mediaMap
+
+            $id = $record.Id
+            $externalId = null
+            $pricebookEntry = $pricebookEntryMap.get($record.Id)
+            $categories = []
+            $media = $mediaMap.get($record.Id)
+            $name = $record.Name
+            $sku = $record.ProductCode
+            $description = $record.Description
+            $itemUrl = `$store.s_c__Link__c/products`
+            $availableToSell = $stockLevelMap.get($record.Id)
+            $availableDate = $record.s_c__Available_On__c
+            $price = 0
+            $isPublished = false
+            
+            $relationshipPayload = {}
+            $categoryPayload = []
+
+            # Extract mapped Integration External Id if already integrated
+            if($integrationMap.get($record.Id) != null) {
+                $externalId = $integrationMap.get($record.Id).External_Id__c
+            }
+
+            ## Required Fields
+            # SKU override
+            if($record.StockKeepingUnit != null) {
+                if(not $record.StockKeepingUnit.isBlank()) {
+                    $sku = $record.StockKeepingUnit
+                }
+            }
+            # Display Name override
+            if($record.s_c__Display_Name__c != null) {
+                if(not $record.s_c__Display_Name__c.isBlank()){
+                    $name = $record.s_c__Display_Name__c
+                }
+            }
+            # Display Description override
+            if($record.s_c__Summary__c != null) {
+                if(not $record.s_c__Summary__c.isBlank()) {
+                    $description = $record.s_c__Summary__c
+                }
+            }
+            # Available to Sell
+            if($availableToSell == null || $availableToSell &lt; 0 || $record.s_c__Track_Inventory__c == false) {
+                $availableToSell = -1
+            }
+    
+            if($record.s_c__Slug__c != null) {
+                $itemUrl = `$itemUrl/$record.s_c__Slug__c`
+            }
+
+            if($categoryMap == null) {
+                $categoryMap = {}
+            }
+    
+            if($pricebookEntry == null) {
+                $pricebookEntry = { UnitPrice: null }
+            } else {
+                $price = $pricebookEntry.UnitPrice
+            }
+    
+            if($media == null) {
+                $media = { s_c__Url__c: null, s_c__Thumbnail_Image__c: null }
+            }
+
+            if($categoryMap.get($record.Id) != null) {
+                $categories = $categoryMap.get($record.Id)
+            }
+
+            # Is published logic
+            if($record.IsActive &amp;&amp; $availableDate &lt;= $dtNow &amp;&amp; $pricebookEntry.UnitPrice != null) {
+                $isPublished = true
+            }
+
+            # Base request as if its a POST
+            $body = {
+                &apos;type&apos;: &apos;catalog-item&apos;,
+                &apos;attributes&apos;: {
+                    &apos;external_id&apos;: `$id`,
+                    &apos;title&apos;: `$name`,
+                    &apos;price&apos;: $price,
+                    &apos;description&apos;: `$description`,
+                    &apos;url&apos;: `$itemUrl`,
+                    &apos;image_full_url&apos;: `$media.s_c__Url__c`,
+                    &apos;image_thumbnail_url&apos;: `$media.s_c__Thumbnail_Image__c`,
+                    &apos;published&apos;: $isPublished,
+                    &apos;catalog_type&apos;: &apos;$default&apos;,
+                    &apos;integration_type&apos;: &apos;$custom&apos;
+                }
+            }
+
+            foreach($category in $categories) {
+                $categoryExternalId = null
+                if($integrationMap.get($category.Id) != null) {
+                    $categoryExternalId = $integrationMap.get($category.Id).External_Id__c   
+                }
+                if($categoryExternalId != null) {
+                    $categoryPayload.add({
+                        &apos;type&apos;: &apos;catalog-category&apos;,
+                        &apos;id&apos;: $categoryExternalId
+                    })
+                }
+            }
+    
+            if($categoryPayload.size() &gt; 0) {
+                $body.relationships = {
+                    &apos;categories&apos;: {
+                        &apos;data&apos;: $categoryPayload
+                    }
+                }
+            }
+
+            # Set Id for PATCH
+            if($externalId != null) {
+                $url = `$url/$externalId`
+                $method = &apos;PATCH&apos;
+                $body.put(&apos;id&apos;, $externalId)
+                $body.attributes.delete(&apos;external_id&apos;)
+                $body.attributes.delete(&apos;integration_type&apos;)
+                $body.attributes.delete(&apos;catalog_type&apos;)
+            }
+            # Add the request to the list of requests
+            if(!$useBulkApi) {
+                $requests.add({
+                    &apos;url&apos;: `$url`,
+                    &apos;method&apos;: `$method`,
+                    &apos;integration_type&apos;: `$integrationType`,
+                    &apos;catalog_type&apos;: `$catalogType`,
+                    &apos;body&apos;: {
+                        &apos;data&apos;: $body
+                    }
+                })
+            } else {
+                if($method == &apos;POST&apos;) {
+                    $postRequest.body.data.attributes.categories.data.add($body)
+                } elseif($method == &apos;PATCH&apos;) {
+                    Log $body
+                    $patchRequest.body.data.attributes.categories.data.add($body)
+                }
+            }
+        } catch {
+            throw `Exception: $_`
+        }
+    }
+
+    if($useBulkApi) {
+        if($postRequest.body.data.attributes.categories.data.size() &gt; 0) {
+            $requests.add($postRequest)
+        }
+        if($patchRequest.body.data.attributes.categories.data.size() &gt; 0) {
+            $requests.add($patchRequest)
+        }
+    }
+
+    return $requests
+}
+
+# Dispatch all of the input requests
+function Http-Dispatch($requests, $callback, $callbackContext, $integrationMap, $platformInstanceName) {
+    # Created/updated Integration records
+    $integrations = []
+    
+    # Iterate over each request
+    foreach($request in $requests) {
+        $request.headers = { &apos;Content-Type&apos;: &apos;application/json&apos; }
+        
+        $integrationType = $request.integration_type
+        $catalogType = $request.catalog_type
+        $response = {status: 0, body: &apos;&apos;}
+        # Method switcher
+        if($request.method == &apos;POST&apos; ) {
+            $response = Http-Post $request.url $request.headers $request.body
+        } elseif($request.method == &apos;PATCH&apos;) {
+            $response = Http-Patch $request.url $request.headers $request.body
+        }
+        Log $response
+        # Decode body
+        $body = {}
+        if($response.body != &apos;&apos;) {
+            $body = Json-Decode $response.body
+        }
+        # Default local record Id
+        $recordId = null
+        $synced = true
+
+        # Success response
+        if($response.status == 200 or $response.status == 201) {
+            $recordId = $body.data.attributes.external_id
+        } elseif($response.status == 409) {
+            $body = $body.errors.get(0)
+            if($body.code.startsWith(&apos;duplicate&apos;)) {
+                $recordId = $body.meta.duplicate_external_id
+            } elseif($body.code.startsWith(&apos;conflict&apos;)) {
+                $bodyDetailParts = $body.detail.split(&apos;`&apos;)
+                if($bodyDetailParts.size() &gt; 1) {
+                    $recordId = $bodyDetailParts.get(1)
+                }
+            }
+        } else {
+            $synced = false
+        }
+
+        # Check that a result was found
+        if($recordId != null) {
+            $externalId = `$integrationType:::$catalogType:::$recordId`
+            $integrationId = null
+            if($integrationMap.get($recordId) != null) {
+                $integrationId = $integrationMap.get($recordId).Id
+            }
+            # Determine if New or Existing Integration
+            $integration = New-Integration__c
+            if($integrationId != null) {
+                $integration = New-Integration__c -Id $integrationId
+            }
+            # Set Integration fields
+            $integration.Platform__c = $platformInstanceName
+            $integration.External_Id__c = $externalId
+            $integration.Product_Id__c = $recordId
+            $integration.Synced__c = $synced
+
+            $integrations.add($integration)
+        }
+        
+    }
+
+    # Execute the callback Flow if any InputIds exist
+    if($callbackContext.InputIds.size() &gt; 0) {
+        $scope = {
+            &apos;callback&apos;: $callback,
+            &apos;callbackContext&apos;: $callbackContext
+        }
+        Script-Enqueue $scope ${
+            Script-Flow $_.callback $_.callbackContext
+        }
+    }
+
+    return $integrations
+}
+
+function Integration-Upsert($records) {
+    # Check if any Integration records were passed in
+    if($records.size() &gt; 0) {
+        Record-Upsert $records &apos;Id&apos;
+    }
+}
+
+# Controller to dispatch HTTP requests as either a synchonous or aysncronous callouts
+# If valid Integration__c records are returned then this will commit those to the database
+function Http-Dispatch-Controller($requests, $callback, $callbackContext, $integrationMap, $platformInstanceName, $async) {
+    if($requests.size() &gt; 0 &amp;&amp; $platformInstanceName != null) {
+        if($async) {
+            $scope = {
+                &apos;requests&apos;: $requests,
+                &apos;integrationMap&apos;: $integrationMap,
+                &apos;platformInstanceName&apos;: $platformInstanceName
+            }
+            $jobId = Script-Enqueue $scope ${
+                $requests = $_.requests
+                $integrationMap = $_.integrationMap
+                $platformInstanceName = $_.platformInstanceName
+
+                # Created/updated Integration records
+                $records = []
+                
+                # Iterate over each request
+                foreach($request in $requests) {
+                    $request.headers = { &apos;Content-Type&apos;: &apos;application/json&apos; }
+
+                    $integrationType = $request.integration_type
+                    $catalogType = $request.catalog_type
+                    $response = {status: 0, body: &apos;&apos;}
+                    # Method switcher
+                    if($request.method == &apos;POST&apos; ) {
+                        $response = Http-Post $request.url $request.headers $request.body
+                    } elseif($request.method == &apos;PATCH&apos;) {
+                        $response = Http-Patch $request.url $request.headers $request.body
+                    }
+
+                    # Decode body
+                    $body = {}
+                    if($response.body != &apos;&apos;) {
+                        $body = Json-Decode $response.body
+                    }
+                    # Default local record Id
+                    $recordId = null
+                    $synced = true
+        
+                    # Success response
+                    if($response.status == 200 or $response.status == 201) {
+                        $recordId = $body.data.attributes.external_id
+                    } elseif($response.status == 409) {
+                        $body = $body.errors.get(0)
+                        if($body.code.startsWith(&apos;duplicate&apos;)) {
+                            $recordId = $body.meta.duplicate_external_id
+                        } elseif($body.code.startsWith(&apos;conflict&apos;)) {
+                            $bodyDetailParts = $body.detail.split(&apos;`&apos;)
+                            if($bodyDetailParts.size() &gt; 1) {
+                                $recordId = $bodyDetailParts.get(1)
+                            }
+                        }
+                    } else {
+                        $synced = false
+                    }
+
+                    # Check that a result was found
+                    if($recordId != null) {
+                        $externalId = `$integrationType:::$catalogType:::$recordId`
+                        $integrationId = null
+                        if($integrationMap.get($recordId) != null) {
+                            $integrationId = $integrationMap.get($recordId).Id
+                        }
+                        # Determine if New or Existing Integration
+                        $integration = New-Integration__c
+                        if($integrationId != null) {
+                            $integration = New-Integration__c -Id $integrationId
+                        }
+                        # Set Integration fields
+                        $integration.Platform__c = $platformInstanceName
+                        $integration.External_Id__c = $externalId
+                        $integration.Product_Id__c = $recordId
+                        $integration.Synced__c = $synced
+            
+                        $records.add($integration)
+                    }
+                }
+
+                # Execute the callback Flow if any InputIds exist
+                if($callbackContext.InputIds.size() &gt; 0) {
+                    $scope = {
+                        &apos;callback&apos;: $callback,
+                        &apos;callbackContext&apos;: $callbackContext
+                    }
+                    Script-Enqueue $scope ${
+                        Script-Flow $_.callback $_.callbackContext
+                    }
+                }
+                
+                # Check if any Integration records were passed in
+                if($records.size() &gt; 0) {
+                    Record-Upsert $records &apos;Id&apos;
+                }
+            }
+        } else {
+            Integration-Upsert (Http-Dispatch $requests $callback $callbackContext $integrationMap $platformInstanceName)
+        }
+    }
+}
+
+## Main script
+
+# Convert list to queryable string
+$inputIds = {`!InputIds}
+
+if($inputIds.size() &gt; 0) {
+    # Capture global Flow variables
+    $flowName = {`!flowName}
+    $batchSize = {`!batchSize}
+    $useBulkApi = {`!UseBulkApi}
+    $async = {`!RunAsynchronously}
+    $namedCredential = {`!NamedCredential}
+    $integrationType = {`!IntegrationType}
+    $platformInstanceName = {`!platformInstanceName}
+    $store = {`!Store}
+
+    # Automatically batch the inputs if they exceed the batch limit
+    if($inputIds.size() &gt; $batchSize) {
+        $scope = {
+            &apos;FlowName&apos;: $flowName,
+            &apos;UseBulkApi&apos;: $useBulkApi,
+            &apos;RunAsynchronously&apos;: $async,
+            &apos;IntegrationType&apos;: $integrationType,
+            &apos;InputIds&apos;: []
+        }
+        Script-Batch $batchSize $inputIds $scope ${
+            $ctx = {
+                &apos;UseBulkApi&apos;: $_.UseBulkApi,
+                &apos;RunAsynchronously&apos;: $_.RunAsynchronously,
+                &apos;IntegrationType&apos;: $_.IntegrationType,
+                &apos;InputIds&apos;: $__.items
+            }
+            Script-Flow $_.FlowName $ctx
+        }
+    } else {
+        # Convert list to queryable string
+        $inputIds = List-Stringify $inputIds
+
+        # Limit all following queries to a single store since there is a 1:1
+        # relationship between a store and a platform instance
+        $stockLocationsQuery = `
+            SELECT Id, s_c__Stock_Location_Id__c, s_c__Store_Id__c
+            FROM s_c__Store_Stock_Location__c
+        `
+        
+        # Add Store scoping if set
+        if($store.Id != null) {
+            $stockLocationsQuery = $stockLocationsQuery + `
+                WHERE s_c__Store_Id__c = &apos;$store.Id&apos; 
+            `
+        }
+        
+        # Query Stock Locations
+        $stockLocations = Query-Records $stockLocationsQuery
+        
+        $integrations = []
+        
+        # Only carry out further operations if some stock locations are found
+        if($stockLocations.size() &gt; 0) {
+            # Convert list to queryable string
+            $stockLocationIds = List-Stringify $stockLocations &apos;s_c__Stock_Location_Id__c&apos; false
+        
+            # Initial queries for all ProductIds to be optimised
+            $products = Query-Records `
+                SELECT Id, Name, s_c__Display_Name__c, s_c__Summary_Markdown__c, Description,
+                        s_c__Slug__c, IsActive, s_c__Is_Master__c, ProductCode, StockKeepingUnit, 
+                        s_c__Track_Inventory__c, s_c__Available_On__c
+                FROM Product2 
+                WHERE Id IN $inputIds AND
+                        Id IN (
+                            SELECT s_c__Product_Id__c
+                            FROM s_c__Stock_Level__c 
+                            WHERE s_c__Stock_Location_Id__c IN $stockLocationIds
+                        )
+            `
+            
+            # Only carry out further operations if some valid records are found
+            if($products.size() &gt; 0) {
+                $callbackContext = {
+                    &apos;UseBulkApi&apos;: $useBulkApi,
+                    &apos;RunAsynchronously&apos;: $async,
+                    &apos;IntegrationType&apos;: &apos;CatalogVariant&apos;,
+                    &apos;InputIds&apos;: []
+                }
+                $masterProducts = []
+        
+                # Split the products into master and non-master in case a 
+                # mixed list is provided to this action
+                foreach($product in $products) {
+                    if($product.s_c__Is_Master__c) {
+                        $masterProducts.add($product)
+                    } else {
+                        $callbackContext.InputIds.add($product.Id)
+                    }
+                }
+        
+                # Reallocate master products to the original products list
+                $products = $masterProducts
+        
+                if($products.size() &gt; 0) {
+                    $klaviyoIntegrationType = &apos;$custom&apos;
+                    $klaviyoCatalogType = &apos;$default&apos;
+                    
+                    # Convert list to queryable string
+                    $productIds = List-Stringify $products &apos;Id&apos; false
+                    $pricebookId = null
+                    $currencyIsoCode = null
+            
+                    if($store == null) {
+                        $pricebook = Query-Record `
+                            SELECT Id
+                            FROM Pricebook2
+                            WHERE IsStandard = true
+                        `
+                        $pricebookId = $pricebook.Id
+                    } else {
+                        $pricebookId = $store.s_c__Pricebook_Id__c
+                        $currencyIsoCode = $store.CurrencyIsoCode
+                    }
+            
+                    # Map all the related Objects to each ProductId in the input list for
+                    # fast and efficient lookups when building payloads
+                    $stockLevelMap = Map-StockLevels $productIds $stockLocationIds
+                    $pricebookEntryMap = Map-StandardPricebookEntries $pricebookId $currencyIsoCode $productIds
+                    $categoryMap = Map-Categories $productIds
+                    $mediaMap = Map-Media $productIds
+            
+                    $categories = []
+                    foreach($category in $categoryMap.values()) {
+                        $categories.addAll($category)
+                    }
+                    $categoryIds = List-Stringify $categories &apos;Id&apos; false
+            
+                    # Get map of existing integrations
+                    $integrationMap = {}
+                    $integrationMap.putAll(Map-Integrations $platformInstanceName $productIds &apos;Product_Id__c&apos;)
+                    $integrationMap.putAll(Map-Integrations $platformInstanceName $categoryIds &apos;Product_Category_Id__c&apos;)
+            
+                    $context = {
+                        &apos;store&apos;: $store, 
+                        &apos;stockLevelMap&apos;: $stockLevelMap, 
+                        &apos;pricebookEntryMap&apos;: $pricebookEntryMap, 
+                        &apos;categoryMap&apos;: $categoryMap, 
+                        &apos;mediaMap&apos;: $mediaMap
+                    }
+            
+                    # Create HTTP requests
+                    $requests = Klaviyo-Create-CatalogItemRequests $products $context $integrationMap $klaviyoIntegrationType $klaviyoCatalogType $namedCredential $useBulkApi
+                    # Dispatch all HTTP requests and create Integration records if possible
+                    Http-Dispatch-Controller $requests $flowName $callbackContext $integrationMap $platformInstanceName $async
+                } elseif($callbackContext.InputIds.size() &gt; 0) {
+                    # Execute callback for variant products if found with no master products
+                    $scope = {
+                        &apos;callback&apos;: $flowName,
+                        &apos;callbackContext&apos;: $callbackContext
+                    }
+                    Script-Enqueue $scope ${
+                        Script-Flow $_.callback $_.callbackContext
+                    }
+                }
+            }
+        }   
+    }
+}
+
+</stringValue>
+            </value>
+        </inputParameters>
+        <nameSegment>Streams__Streamscript</nameSegment>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+        <versionSegment>1</versionSegment>
+    </actionCalls>
+    <actionCalls>
+        <name>Create_Catalog_Variant</name>
+        <label>Create Catalog Variant</label>
+        <locationX>578</locationX>
+        <locationY>458</locationY>
+        <actionName>Streams__Streamscript</actionName>
+        <actionType>apex</actionType>
+        <dataTypeMappings>
+            <typeName>T__c1</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c2</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c3</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c4</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c5</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c6</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c7</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c8</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c9</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__i0</typeName>
+            <typeValue>s_c__Store__c</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r1</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r2</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r3</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r4</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r5</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r6</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r7</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r8</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r9</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>U__record</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>U__records</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>b1</name>
+            <value>
+                <elementReference>UseBulkApi</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>b2</name>
+            <value>
+                <elementReference>RunAsynchronously</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i0</name>
+            <value>
+                <elementReference>Store</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i1</name>
+            <value>
+                <elementReference>flowName</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i2</name>
+            <value>
+                <elementReference>NamedCredential</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i3</name>
+            <value>
+                <elementReference>IntegrationType</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i4</name>
+            <value>
+                <elementReference>platformInstanceName</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>l1</name>
+            <value>
+                <elementReference>InputIds</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>n1</name>
+            <value>
+                <elementReference>batchSize</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>x</name>
+            <value>
+                <stringValue># Streamscript l1=InputIds i1=flowName n1=batchSize b1=UseBulkApi b2=RunAsynchronously i2=NamedCredential i3=IntegrationType i4=platformInstanceName i0=Store
+
+## Method declarations
+
+# Converts a List into a queryable string of quote enclosed
+# (&apos;,&apos;) separated values
+function List-Stringify($list, $identifier, $alwaysFill) {
+    $string = []
+
+    foreach($item in $list) {
+        $value = &apos;&apos;
+        if($identifier == null) {
+            $value = $item
+        } else {
+            $value = $item.get($identifier)
+        }
+        $string.add(`&apos;$value&apos;`)
+    }
+
+    if($string.isEmpty() &amp;&amp; $alwaysFill == true) {
+        $string.add(&apos;&apos;)
+    }
+
+    $string = List-Concat $string &apos;,&apos;
+    $string = `($string)`
+
+    return $string
+}
+
+# Creates a map of varius Record Ids to Integration Ids
+function Map-Integrations($platformInstanceName, $inputIds, $field) {
+    $map = {}
+    # Check input
+    if($field != null and $inputIds != &apos;&apos; and $inputIds != &apos;()&apos;) {
+        # Query existing integrations for the input ProductIds OR CategoryIds
+        $integrations = Query-Records `
+            SELECT Id, External_Id__c, $field
+            FROM Integration__c 
+            WHERE Platform__c = &apos;$platformInstanceName&apos; AND
+                $field IN $inputIds
+        `
+        
+        if($integrations.size() &gt; 0) {
+            foreach($item in $integrations) {
+                $recordId = $item.get($field)
+                if($recordId != null) {
+                    $map.put($recordId, $item)
+                }
+            }
+        }
+    }
+    return $map
+}
+
+# Creates a map of ProductId to total Available to Sell units
+function Map-StockLevels($productIds, $stockLocationIds) {
+    $map = {}
+    # Check input
+    if($productIds != &apos;&apos; and $productIds != &apos;()&apos; and $stockLocationIds != &apos;&apos; and $stockLocationIds != &apos;()&apos;) {
+        $stockLevels = Query-Records `
+            SELECT Id, s_c__Product_Id__c, s_c__Available_To_Sell__c
+            FROM s_c__Stock_Level__c 
+            WHERE s_c__Product_Id__c IN $productIds AND
+                    s_c__Stock_Location_Id__c IN $stockLocationIds
+        `
+    
+        
+        if($stockLevels.size() &gt; 0) {
+            foreach($item in $stockLevels) {
+                $productId = $item.get(&apos;s_c__Product_Id__c&apos;)
+                $availableToSell = $item.get(&apos;s_c__Available_To_Sell__c&apos;)*1
+                if($map.hasKey($productId)) {
+                    $availableToSell = $map.get($productId) + $availableToSell
+                }
+                $map.put($productId, $availableToSell)
+            }
+        }
+    }
+    return $map
+}
+
+# Creates a map of ProductId to Standard Pricebook Entry
+function Map-StandardPricebookEntries($pricebookId, $currencyIsoCode, $productIds) {
+    $map = {}
+
+    $pricebookEntriesQuery = `
+        SELECT Id, UnitPrice, Product2Id
+        FROM PricebookEntry 
+        WHERE IsActive = TRUE AND
+                Product2.Id IN $productIds
+    `
+
+    # Optional Pricebook2Id
+    if($pricebookId != null) {
+        $pricebookEntriesQuery = $pricebookEntriesQuery + `
+            AND Pricebook2Id = &apos;$pricebookId&apos;
+        `
+    }
+
+    # Optional currency as multi-currency may not be enabled
+    if($currencyIsoCode != null) {
+        $pricebookEntriesQuery = $pricebookEntriesQuery + `
+            AND CurrencyIsoCode = &apos;$currencyIsoCode&apos;
+        `
+    }
+
+    $pricebookEntries = Query-Records $pricebookEntriesQuery
+
+    if($pricebookEntries.size() &gt; 0) {
+        foreach($item in $pricebookEntries) {
+            $productId = $item.get(&apos;Product2Id&apos;)
+            $map.put($productId, $item)
+        }
+    }
+    return $map
+}
+
+# Creats a map of ProductId to MasterProductId
+function Map-MasterProducts($productIds) {
+    $map = {}
+    # Check input
+    if($productIds != &apos;&apos; and $productIds != &apos;()&apos;) {
+        $variants = Query-Records `
+            SELECT Id, s_c__Master_Product_Id__c, s_c__Variant_Product_Id__c, 
+                    s_c__Variant_Type__c, s_c__Variant_Value__c
+            FROM s_c__Product_Variant__c 
+            WHERE s_c__Variant_Product_Id__c IN $productIds
+                    AND s_c__Master_Product_Id__c != NULL
+        `
+        
+        if($variants.size() &gt; 0) {
+            foreach($item in $variants) {
+                $productId = $item.s_c__Variant_Product_Id__c
+                $map.put($productId, $item)
+            }
+        }
+    }
+    return $map
+}
+
+# Creats a map of ProductId to the first related Media record in position order
+function Map-Media($productIds) {
+    $map = {}
+    # Check input
+    if($productIds != &apos;&apos; and $productIds != &apos;()&apos;) {
+        $media = Query-Records `
+            SELECT Id, s_c__Media_Id__r.s_c__Thumbnail_Image__c, 
+                    s_c__Media_Id__r.s_c__Url__c, s_c__Product_Id__c
+            FROM s_c__Product_Media__c 
+            WHERE s_c__Product_Id__c IN $productIds AND
+                    s_c__Media_Id__r.s_c__File_Type__c = &apos;image&apos; 
+            ORDER BY s_c__Position__c ASC NULLS FIRST
+        `
+
+        if($media.size() &gt; 0) {
+            foreach($item in $media) {
+                $productId = $item.get(&apos;s_c__Product_Id__c&apos;)
+                if(not $map.hasKey($productId)) {
+                    $map.put($productId, $item.get(&apos;s_c__Media_Id__r&apos;))
+                }
+            }
+        }
+    }
+    return $map
+}
+
+function Klaviyo-Create-CatalogVariantRequests($records, $context, $integrationMap, $integrationType, $catalogType, $namedCredential, $useBulkApi) {
+    $requests = []
+
+    # Bulk API Requests instantiation
+    $postRequest = {
+        &apos;url&apos;: `callout:$namedCredential/api/catalog-variant-bulk-create-jobs/`,
+        &apos;method&apos;: &apos;POST&apos;,
+        &apos;integration_type&apos;: `$integrationType`,
+        &apos;catalog_type&apos;: `$catalogType`,
+        &apos;body&apos;: {
+            &apos;data&apos;: {
+                &apos;type&apos;: `catalog-variant-bulk-create-job`,
+                &apos;attributes&apos;: {
+                    &apos;variants&apos;: {
+                        &apos;data&apos;: []
+                    }
+                }
+            }
+        }
+    }
+    $patchRequest = {
+        &apos;url&apos;: `callout:$namedCredential/api/catalog-variant-bulk-update-jobs/`,
+        &apos;method&apos;: &apos;POST&apos;,
+        &apos;integration_type&apos;: `$integrationType`,
+        &apos;catalog_type&apos;: `$catalogType`,
+        &apos;body&apos;: {
+            &apos;data&apos;: {
+                &apos;type&apos;: `catalog-variant-bulk-update-job`,
+                &apos;attributes&apos;: {
+                    &apos;variants&apos;: {
+                        &apos;data&apos;: []
+                    }
+                }
+            }
+        }
+    }
+
+    # Outside loop so it isn&apos;t called multiple times
+    $dtNow = Script-Now
+
+    # Iterate over each category and create a request body if it does not exist
+    foreach($record in $records) {
+        $request = {}
+        try {
+            $url = `callout:$namedCredential/api/catalog-variants/`
+            $method = &apos;POST&apos;
+            $body = {}
+
+            # Extract context
+            $store = $context.store
+            $stockLevelMap = $context.stockLevelMap
+            $pricebookEntryMap = $context.pricebookEntryMap
+            $masterProductMap = $context.masterProductMap
+            $mediaMap = $context.mediaMap
+
+            $id = $record.Id
+            $externalId = null
+            $pricebookEntry = $pricebookEntryMap.get($record.Id)
+            $categories = []
+            $media = $mediaMap.get($record.Id)
+            $name = $record.Name
+            $sku = $record.ProductCode
+            $description = $record.Description
+            $itemUrl = `$store.s_c__Link__c/products`
+            $availableToSell = $stockLevelMap.get($record.Id)
+            $availableDate = $record.s_c__Available_On__c
+            $price = 0
+            $isPublished = false
+            $masterProductId = null
+            $masterProductExternalId = null
+            $relationshipPayload = {}
+            $catalogItemPayload = []
+
+            if($masterProductMap.get($record.Id) != null) {
+                $masterProductId = $masterProductMap.get($record.Id).s_c__Master_Product_Id__c
+            }
+
+            if($masterProductId != null) {
+                if($integrationMap.get($masterProductId) != null) {
+                    $masterProductExternalId = $integrationMap.get($masterProductId).External_Id__c   
+                }
+                # Create CatalogItem relationship payload if mapped
+                if($masterProductExternalId != null) {
+                    $catalogItemPayload = {
+                        &apos;type&apos;: &apos;catalog-item&apos;,
+                        &apos;id&apos;: $masterProductExternalId
+                    }
+                }
+                # Check for master product media if variant has none
+                if($media == null) {
+                    $media = $mediaMap.get($masterProductId)
+                }
+            }
+
+            # Skip this product if no Master Product integration was found
+            if($masterProductExternalId == null) {
+                continue
+            }
+
+            # Extract mapped Integration External Id if already integrated
+            if($integrationMap.get($record.Id) != null) {
+                $externalId = $integrationMap.get($record.Id).External_Id__c
+            }
+
+            ## Required Fields
+            # SKU override
+            if($record.StockKeepingUnit != null) {
+                if(not $record.StockKeepingUnit.isBlank()) {
+                    $sku = $record.StockKeepingUnit
+                }
+            }
+            # Display Name override
+            if($record.s_c__Display_Name__c != null) {
+                if(not $record.s_c__Display_Name__c.isBlank()){
+                    $name = $record.s_c__Display_Name__c
+                }
+            }
+            # Display Description override
+            if($record.s_c__Summary__c != null) {
+                if(not $record.s_c__Summary__c.isBlank()) {
+                    $description = $record.s_c__Summary__c
+                }
+            }
+            # Available to Sell
+            if($availableToSell == null || $availableToSell &lt; 0 || $record.s_c__Track_Inventory__c == false) {
+                $availableToSell = -1
+            }
+    
+            if($record.s_c__Slug__c != null) {
+                $itemUrl = `$itemUrl/$record.s_c__Slug__c`
+            }
+    
+            if($pricebookEntry == null) {
+                $pricebookEntry = { UnitPrice: null }
+            } else {
+                $price = $pricebookEntry.UnitPrice
+            }
+    
+            if($media == null) {
+                $media = { s_c__Url__c: null, s_c__Thumbnail_Image__c: null }
+            }
+
+            # Is published logic
+            if($record.IsActive &amp;&amp; $availableDate &lt;= $dtNow &amp;&amp; $pricebookEntry.UnitPrice != null) {
+                $isPublished = true
+            }
+
+            # Base request as if its a POST
+            $body = {
+                &apos;type&apos;: &apos;catalog-variant&apos;,
+                &apos;attributes&apos;: {
+                    &apos;external_id&apos;: `$id`,
+                    &apos;sku&apos;: $sku,
+                    &apos;title&apos;: `$name`,
+                    &apos;price&apos;: $price,
+                    &apos;description&apos;: `$description`,
+                    &apos;url&apos;: `$itemUrl`,
+                    &apos;image_full_url&apos;: `$media.s_c__Url__c`,
+                    &apos;image_thumbnail_url&apos;: `$media.s_c__Thumbnail_Image__c`,
+                    &apos;inventory_quantity&apos;: $availableToSell,
+                    &apos;catalog_type&apos;: &apos;$default&apos;,
+                    &apos;integration_type&apos;: &apos;$custom&apos;
+                }
+            }
+
+            if($catalogItemPayload.size() &gt; 0) {
+                $body.relationships = {
+                    &apos;item&apos;: {
+                        &apos;data&apos;: $catalogItemPayload
+                    }
+                }
+            }
+
+            # Set Id for PATCH
+            if($externalId != null) {
+                $url = `$url/$externalId`
+                $method = &apos;PATCH&apos;
+                $body.put(&apos;id&apos;, $externalId)
+                $body.delete(&apos;relationships&apos;)
+                $body.attributes.delete(&apos;external_id&apos;)
+                $body.attributes.delete(&apos;integration_type&apos;)
+                $body.attributes.delete(&apos;catalog_type&apos;)
+            }
+            # Add the request to the list of requests
+            if(!$useBulkApi) {
+                $requests.add({
+                    &apos;url&apos;: `$url`,
+                    &apos;method&apos;: `$method`,
+                    &apos;integration_type&apos;: `$integrationType`,
+                    &apos;catalog_type&apos;: `$catalogType`,
+                    &apos;body&apos;: {
+                        &apos;data&apos;: $body
+                    }
+                })
+            } else {
+                if($method == &apos;POST&apos;) {
+                    $postRequest.body.data.attributes.categories.data.add($body)
+                } elseif($method == &apos;PATCH&apos;) {
+                    Log $body
+                    $patchRequest.body.data.attributes.categories.data.add($body)
+                }
+            }
+        } catch {
+            throw `Exception: $_`
+        }
+    }
+
+    if($useBulkApi) {
+        if($postRequest.body.data.attributes.categories.data.size() &gt; 0) {
+            $requests.add($postRequest)
+        }
+        if($patchRequest.body.data.attributes.categories.data.size() &gt; 0) {
+            $requests.add($patchRequest)
+        }
+    }
+
+    return $requests
+}
+
+# Dispatch all of the input requests
+function Http-Dispatch($requests, $integrationMap, $platformInstanceName) {
+    # Created/updated Integration records
+    $integrations = []
+    
+    # Iterate over each request
+    foreach($request in $requests) {
+        $request.headers = { &apos;Content-Type&apos;: &apos;application/json&apos; }
+        
+        $integrationType = $request.integration_type
+        $catalogType = $request.catalog_type
+        $response = {status: 0, body: &apos;&apos;}
+        # Method switcher
+        if($request.method == &apos;POST&apos; ) {
+            $response = Http-Post $request.url $request.headers $request.body
+        } elseif($request.method == &apos;PATCH&apos;) {
+            $response = Http-Patch $request.url $request.headers $request.body
+        }
+        Log $response
+        # Decode body
+        $body = {}
+        if($response.body != &apos;&apos;) {
+            $body = Json-Decode $response.body
+        }
+        # Default local record Id
+        $recordId = null
+        $synced = true
+
+        # Success response
+        if($response.status == 200 or $response.status == 201) {
+            $recordId = $body.data.attributes.external_id
+        } elseif($response.status == 409) {
+            $body = $body.errors.get(0)
+            if($body.code.startsWith(&apos;duplicate&apos;)) {
+                $recordId = $body.meta.duplicate_external_id
+            } elseif($body.code.startsWith(&apos;conflict&apos;)) {
+                $bodyDetailParts = $body.detail.split(&apos;`&apos;)
+                if($bodyDetailParts.size() &gt; 1) {
+                    $recordId = $bodyDetailParts.get(1)
+                }
+            }
+        } else {
+            $synced = false
+        }
+
+        # Check that a result was found
+        if($recordId != null) {
+            $externalId = `$integrationType:::$catalogType:::$recordId`
+            $integrationId = null
+            if($integrationMap.get($recordId) != null) {
+                $integrationId = $integrationMap.get($recordId).Id
+            }
+            # Determine if New or Existing Integration
+            $integration = New-Integration__c
+            if($integrationId != null) {
+                $integration = New-Integration__c -Id $integrationId
+            }
+            # Set Integration fields
+            $integration.Platform__c = $platformInstanceName
+            $integration.External_Id__c = $externalId
+            $integration.Product_Id__c = $recordId
+            $integration.Synced__c = $synced
+
+            $integrations.add($integration)
+        }
+        
+    }
+    return $integrations
+}
+
+function Integration-Upsert($records) {
+    # Check if any Integration records were passed in
+    if($records.size() &gt; 0) {
+        Record-Upsert $records &apos;Id&apos;
+    }
+}
+
+# Controller to dispatch HTTP requests as either a synchonous or aysncronous callouts
+# If valid Integration__c records are returned then this will commit those to the database
+function Http-Dispatch-Controller($requests, $integrationMap, $platformInstanceName, $async) {
+    if($requests.size() &gt; 0 &amp;&amp; $platformInstanceName != null) {
+        if($async) {
+            $scope = {
+                &apos;requests&apos;: $requests,
+                &apos;integrationMap&apos;: $integrationMap,
+                &apos;platformInstanceName&apos;: $platformInstanceName
+            }
+            $jobId = Script-Enqueue $scope ${
+                $requests = $_.requests
+                $integrationMap = $_.integrationMap
+                $platformInstanceName = $_.platformInstanceName
+
+                # Created/updated Integration records
+                $records = []
+                
+                # Iterate over each request
+                foreach($request in $requests) {
+                    $request.headers = { &apos;Content-Type&apos;: &apos;application/json&apos; }
+
+                    $integrationType = $request.integration_type
+                    $catalogType = $request.catalog_type
+                    $response = {status: 0, body: &apos;&apos;}
+                    # Method switcher
+                    if($request.method == &apos;POST&apos; ) {
+                        $response = Http-Post $request.url $request.headers $request.body
+                    } elseif($request.method == &apos;PATCH&apos;) {
+                        $response = Http-Patch $request.url $request.headers $request.body
+                    }
+
+                    # Decode body
+                    $body = {}
+                    if($response.body != &apos;&apos;) {
+                        $body = Json-Decode $response.body
+                    }
+                    # Default local record Id
+                    $recordId = null
+                    $synced = true
+        
+                    # Success response
+                    if($response.status == 200 or $response.status == 201) {
+                        $recordId = $body.data.attributes.external_id
+                    } elseif($response.status == 409) {
+                        $body = $body.errors.get(0)
+                        if($body.code.startsWith(&apos;duplicate&apos;)) {
+                            $recordId = $body.meta.duplicate_external_id
+                        } elseif($body.code.startsWith(&apos;conflict&apos;)) {
+                            $bodyDetailParts = $body.detail.split(&apos;`&apos;)
+                            if($bodyDetailParts.size() &gt; 1) {
+                                $recordId = $bodyDetailParts.get(1)
+                            }
+                        }
+                    } else {
+                        $synced = false
+                    }
+        
+                    # Check that a result was found
+                    if($recordId != null) {
+                        $externalId = `$integrationType:::$catalogType:::$recordId`
+                        $integrationId = null
+                        if($integrationMap.get($recordId) != null) {
+                            $integrationId = $integrationMap.get($recordId).Id
+                        }
+                        # Determine if New or Existing Integration
+                        $integration = New-Integration__c
+                        if($integrationId != null) {
+                            $integration = New-Integration__c -Id $integrationId
+                        }
+                        # Set Integration fields
+                        $integration.Platform__c = $platformInstanceName
+                        $integration.External_Id__c = $externalId
+                        $integration.Product_Id__c = $recordId
+                        $integration.Synced__c = $synced
+            
+                        $records.add($integration)
+                    }
+                }
+                
+                # Check if any Integration records were passed in
+                if($records.size() &gt; 0) {
+                    Record-Upsert $records &apos;Id&apos;
+                }
+            }
+        } else {
+            Integration-Upsert (Http-Dispatch $requests $integrationMap $platformInstanceName)
+        }
+    }
+}
+
+## Main script
+
+# Convert list to queryable string
+$inputIds = {`!InputIds}
+
+if($inputIds.size() &gt; 0) {
+    # Capture global Flow variables
+    $flowName = {`!flowName}
+    $batchSize = {`!batchSize}
+    $useBulkApi = {`!UseBulkApi}
+    $async = {`!RunAsynchronously}
+    $namedCredential = {`!NamedCredential}
+    $integrationType = {`!IntegrationType}
+    $platformInstanceName = {`!platformInstanceName}
+    $store = {`!Store}
+
+    # Automatically batch the inputs if they exceed the batch limit
+    if($inputIds.size() &gt; $batchSize) {
+        $scope = {
+            &apos;FlowName&apos;: $flowName,
+            &apos;UseBulkApi&apos;: $useBulkApi,
+            &apos;RunAsynchronously&apos;: $async,
+            &apos;IntegrationType&apos;: $integrationType,
+            &apos;InputIds&apos;: []
+        }
+        Script-Batch $batchSize $inputIds $scope ${
+            $ctx = {
+                &apos;UseBulkApi&apos;: $_.UseBulkApi,
+                &apos;RunAsynchronously&apos;: $_.RunAsynchronously,
+                &apos;IntegrationType&apos;: $_.IntegrationType,
+                &apos;InputIds&apos;: $__.items
+            }
+            Script-Flow $_.FlowName $ctx
+        }
+    } else {
+        # Convert list to queryable string
+        $inputIds = List-Stringify $inputIds
+
+        # Limit all following queries to a single store since there is a 1:1
+        # relationship between a store and a platform instance
+        $stockLocationsQuery = `
+            SELECT Id, s_c__Stock_Location_Id__c, s_c__Store_Id__c
+            FROM s_c__Store_Stock_Location__c
+        `
+        
+        # Add Store scoping if set
+        if($store.Id != null) {
+            $stockLocationsQuery = $stockLocationsQuery + `
+                WHERE s_c__Store_Id__c = &apos;$store.Id&apos; 
+            `
+        }
+        
+        # Query Stock Locations
+        $stockLocations = Query-Records $stockLocationsQuery
+        
+        $integrations = []
+        
+        # Only carry out further operations if some stock locations are found
+        if($stockLocations.size() &gt; 0) {
+            # Convert list to queryable string
+            $stockLocationIds = List-Stringify $stockLocations &apos;s_c__Stock_Location_Id__c&apos; false
+        
+            # Initial queries for all ProductIds to be optimised
+            $products = Query-Records `
+                SELECT Id, Name, s_c__Display_Name__c, s_c__Summary_Markdown__c, Description,
+                        s_c__Slug__c, IsActive, s_c__Is_Master__c, ProductCode, StockKeepingUnit, 
+                        s_c__Track_Inventory__c, s_c__Available_On__c
+                FROM Product2 
+                WHERE Id IN $inputIds AND
+                        s_c__Is_Master__c = false AND
+                        Id IN (
+                            SELECT s_c__Product_Id__c
+                            FROM s_c__Stock_Level__c 
+                            WHERE s_c__Stock_Location_Id__c IN $stockLocationIds
+                        )
+            `
+            
+            # Only carry out further operations if some valid records are found
+            if($products.size() &gt; 0) {
+                $klaviyoIntegrationType = &apos;$custom&apos;
+                $klaviyoCatalogType = &apos;$default&apos;
+                # Convert list to queryable string
+                $productIds = List-Stringify $products &apos;Id&apos; false
+                $pricebookId = null
+                $currencyIsoCode = null
+        
+                if($store == null) {
+                    $pricebook = Query-Record `
+                        SELECT Id
+                        FROM Pricebook2
+                        WHERE IsStandard = true
+                    `
+                    $pricebookId = $pricebook.Id
+                } else {
+                    $pricebookId = $store.s_c__Pricebook_Id__c
+                    $currencyIsoCode = $store.CurrencyIsoCode
+                }
+        
+                # Map all the related Objects to each ProductId in the input list for
+                # fast and efficient lookups when building payloads
+                $stockLevelMap = Map-StockLevels $productIds $stockLocationIds
+                $pricebookEntryMap = Map-StandardPricebookEntries $pricebookId $currencyIsoCode $productIds
+                $masterProductMap = Map-MasterProducts $productIds
+                $mediaMap = Map-Media $productIds
+                $masterProductMediaMap = {}
+        
+                $masterProducts = []
+                $allProducts = []
+                foreach($masterProduct in $masterProductMap.values()) {
+                    $masterProducts.add($masterProduct)
+                    $allProducts.add($masterProduct.s_c__Master_Product_Id__c)
+                }
+                $masterProductIds = List-Stringify $masterProducts &apos;s_c__Master_Product_Id__c&apos; false
+        
+                foreach($product in $products) {
+                    $allProducts.add($product.Id)
+                }
+                $allProductIds = List-Stringify $allProducts null false
+        
+                # Media map of all products for both variant and master
+                # in case the variant doesn&apos;t have any media then the master can be used
+                $mediaMap = Map-Media $allProductIds
+        
+                # Get map of existing integrations
+                $integrationMap = {}
+                $integrationMap.putAll(Map-Integrations $platformInstanceName $productIds &apos;Product_Id__c&apos;)
+                $integrationMap.putAll(Map-Integrations $platformInstanceName $masterProductIds &apos;Product_Id__c&apos;)
+        
+                $context = {
+                    &apos;store&apos;: $store, 
+                    &apos;stockLevelMap&apos;: $stockLevelMap, 
+                    &apos;pricebookEntryMap&apos;: $pricebookEntryMap, 
+                    &apos;masterProductMap&apos;: $masterProductMap,
+                    &apos;mediaMap&apos;: $mediaMap
+                }
+        
+                # Create HTTP requests
+                $requests = Klaviyo-Create-CatalogVariantRequests $products $context $integrationMap $klaviyoIntegrationType $klaviyoCatalogType $namedCredential $useBulkApi
+                # Dispatch all HTTP requests and create Integration records if possible
+                Http-Dispatch-Controller $requests $integrationMap $platformInstanceName $async
+            }
+        }
+    }
+}
+
+</stringValue>
+            </value>
+        </inputParameters>
+        <nameSegment>Streams__Streamscript</nameSegment>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+        <versionSegment>1</versionSegment>
+    </actionCalls>
+    <actionCalls>
+        <name>Create_Fulfillment_Events</name>
+        <label>Create Fulfillment Events</label>
+        <locationX>1106</locationX>
+        <locationY>458</locationY>
+        <actionName>Streams__Streamscript</actionName>
+        <actionType>apex</actionType>
+        <dataTypeMappings>
+            <typeName>T__c1</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c2</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c3</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c4</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c5</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c6</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c7</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c8</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c9</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__i0</typeName>
+            <typeValue>s_c__Store__c</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r1</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r2</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r3</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r4</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r5</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r6</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r7</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r8</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r9</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>U__record</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>U__records</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>b1</name>
+            <value>
+                <elementReference>UseBulkApi</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>b2</name>
+            <value>
+                <elementReference>RunAsynchronously</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i0</name>
+            <value>
+                <elementReference>Store</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i1</name>
+            <value>
+                <elementReference>flowName</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i2</name>
+            <value>
+                <elementReference>NamedCredential</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i3</name>
+            <value>
+                <elementReference>IntegrationType</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i4</name>
+            <value>
+                <elementReference>platformInstanceName</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>l1</name>
+            <value>
+                <elementReference>InputIds</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>n1</name>
+            <value>
+                <elementReference>batchSize</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>x</name>
+            <value>
+                <stringValue># Streamscript l1=InputIds i1=flowName n1=batchSize b1=UseBulkApi b2=RunAsynchronously i2=NamedCredential i3=IntegrationType i4=platformInstanceName i0=Store
+
+## Method declarations
+
+# Converts a List into a queryable string of quote enclosed
+# (&apos;,&apos;) separated values
+function List-Stringify($list, $identifier, $alwaysFill) {
+    $string = []
+
+    foreach($item in $list) {
+        $value = &apos;&apos;
+        if($identifier == null) {
+            $value = $item
+        } else {
+            $value = $item.get($identifier)
+        }
+        $string.add(`&apos;$value&apos;`)
+    }
+
+    if($string.isEmpty() &amp;&amp; $alwaysFill == true) {
+        $string.add(&apos;&apos;)
+    }
+
+    $string = List-Concat $string &apos;,&apos;
+    $string = `($string)`
+
+    return $string
+}
+
+# Creats a map of ProductId to the first related Media record in position order
+function Map-Filter-Child($records, $childKey, $filterKey, $unique) {
+    $filteredValues = []
+    $filterMap = {}
+
+    if($records.size() &gt; 0) {
+        foreach($record in $records) {
+            if($record.get($childKey) != null) {
+                foreach($child in $record.get($childKey)) {
+                    $value = $child.get($filterKey)
+                    if($value != null) {
+                        if($unique) {
+                            $filterMap.put($value, $value)
+                        } else {
+                            $filteredValues.add($value)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if($unique) {
+        $filteredValues = $filterMap.values()
+    }
+
+    return $filteredValues
+}
+
+# Creats a map of ProductId to the first related Media record in position order
+function Map-Media($productIds) {
+    $map = {}
+
+    if($productIds != &apos;&apos; and $productIds != &apos;()&apos;) {
+        if($productIds != &apos;()&apos;) {
+            $media = Query-Records `
+                SELECT Id, s_c__Media_Id__r.s_c__Thumbnail_Image__c, 
+                        s_c__Media_Id__r.s_c__Url__c, s_c__Product_Id__c
+                FROM s_c__Product_Media__c 
+                WHERE s_c__Product_Id__c IN $productIds AND
+                        s_c__Media_Id__r.s_c__File_Type__c = &apos;image&apos; 
+                ORDER BY s_c__Position__c ASC NULLS FIRST
+            `
+            
+            if($media.size() &gt; 0) {
+                foreach($item in $media) {
+                    $productId = $item.get(&apos;s_c__Product_Id__c&apos;)
+                    if(not $map.hasKey($productId)) {
+                        $map.put($productId, $item.get(&apos;s_c__Media_Id__r&apos;))
+                    }
+                }
+            }
+        }
+    }
+    return $map
+}
+
+function Klaviyo-Create-FulfilledOrderEvent($records, $mediaMap, $namedCredential) {
+    $requests = []
+
+    # Iterate over each category and create a request body if it does not exist
+    foreach($record in $records) {
+        $request = {}
+        try {
+            $url = `callout:$namedCredential/api/events/`
+            $method = &apos;POST&apos;
+            $body = {}
+
+            # Extract key fields
+            $order = $record.s_c__Order_Id__r
+            $checkoutStep = $order.s_c__Checkout_Step__c
+            $contact = $order.s_c__Contact_Id__r
+            $account = $order.Account
+            $originalOrder = $order.OriginalOrder
+            $orderItems = $record.s_c__OrderItems__r
+            $totalAmount = 0;
+            
+            # Default event name
+            $eventName = &apos;Fulfilled Order&apos;
+
+            # Default for Customer
+            if($contact == null &amp;&amp; $account != null) {
+                $contact = $account
+            } elseif($contact == null) {
+                $contact = {
+                    &apos;Name&apos;: &apos;&apos;
+                }
+            }
+
+            $contactFirstName = &apos;&apos;
+            $contactLastName = &apos;&apos;
+            $contactNameParts = $contact.Name.split(&apos; &apos;)
+
+            # Split name into First + Last
+            if($contactNameParts.size() &gt; 0) {
+                $i = 0
+                foreach($namePart in $contactNameParts) {
+                    if($i == 0) {
+                        $contactFirstName = $namePart
+                    } elseif($i == 1) {
+                        $contactLastName = $namePart
+                    } else {
+                        $contactLastName = $contactLastName + &apos; &apos; + $namePart
+                    }
+                    $i = $i + 1
+                }
+            }
+
+            $shippingAddress1 = &apos;&apos;
+            $shippingAddress2 = &apos;&apos;
+            $shippingAddressParts = $record.ShippingAddress.split(&apos;\r\n|\r|\n&apos;)
+
+            # Split Shipping Address into 1 or 2 lines
+            if($shippingAddressParts.size() &gt; 0) {
+                $i = 0
+                foreach($addressPart in $shippingAddressParts) {
+                    if($i == 0) {
+                        $shippingAddress1 = $addressPart
+                    } elseif($i == 1) {
+                        $shippingAddress2 = $addressPart
+                    }
+                    $i = $i + 1
+                }
+            }
+            
+            # Default for OriginalOrder
+            if($originalOrder == null) {
+                $originalOrder = {}
+            }
+            # Add Media URL to Order Items if any
+            if($orderItems != null) {
+                foreach($orderItem in $orderItems) {
+                    $productId = $orderItem.Product2Id
+                    $media = $mediaMap.get($productId)
+                    if($media != null &amp;&amp; $orderItem.Product2 != null) {
+                        $mediaUrl = $media.s_c__Url__c
+                        $orderItem.Product2.put(&apos;__Image_Url__&apos;, $mediaUrl)
+                    }
+                    $totalAmount = $totalAmount + $orderItem.TotalPrice
+                }
+            }
+
+            # Base request as if its a POST
+            $body = {
+                &apos;type&apos;: &apos;event&apos;,
+                &apos;attributes&apos;: {
+                    &apos;time&apos;: $record.LastModifiedDate,
+                    &apos;value&apos;: $totalAmount,
+                    &apos;value_currency&apos;: $order.CurrencyIsoCode,
+                    &apos;metric&apos;: {
+                        &apos;data&apos;: {
+                            &apos;type&apos;: &apos;metric&apos;,
+                            &apos;attributes&apos;: {
+                                &apos;name&apos;: $eventName
+                            }
+                        }
+                    },
+                    &apos;properties&apos; : {
+                        &apos;Id&apos;: $record.Id,
+                        &apos;ShipmentReference&apos;: $record.Name
+                        &apos;OrderNumber&apos;: $order.OrderNumber,
+                        &apos;OrderReferenceNumber&apos;: $order.OrderReferenceNumber,
+                        &apos;Status&apos;: $record.s_c__State__c,
+                        &apos;OriginalOrderId&apos;: $order.OriginalOrderId,
+                        &apos;OriginalOrder.OrderNumber&apos;: $originalOrder.OrderNumber,
+                        &apos;OriginalOrder.OrderReferenceNumber&apos;: $originalOrder.OrderReferenceNumber,
+                        &apos;s_c__Provider__c&apos;: $record.s_c__Provider__c,
+                        &apos;s_c__Provider_Service__c&apos;: $record.s_c__Provider_Service__c,
+                        &apos;s_c__Tracking_Code__c&apos;: $record.s_c__Tracking_Code__c,
+                        &apos;OrderItems&apos;: $orderItems
+                    },
+                    &apos;profile&apos;: {
+                        &apos;data&apos;: {
+                            &apos;type&apos;: &apos;profile&apos;,
+                            &apos;attributes&apos;: {
+                                &apos;external_id&apos;: $order.s_c__Contact_Id__c,
+                                &apos;email&apos;: $order.s_c__Checkout_Email__c,
+                                &apos;first_name&apos;: $contactFirstName,
+                                &apos;last_name&apos;: $contactLastName,
+                                &apos;location&apos;: {
+                                    &apos;address1&apos;: $shippingAddress1,
+                                    &apos;address2&apos;: $shippingAddress2,
+                                    &apos;city&apos;: $order.ShippingCity,
+                                    &apos;region&apos;: $order.ShippingState,
+                                    &apos;zip&apos;: $order.ShippingPostalCode,
+                                    &apos;country&apos;: $order.ShippingCountry,
+                                    &apos;timezone&apos;: $order.s_c__Timezone__c,
+                                    &apos;ip&apos;: $order.s_c__Ip_Address__c
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            $requests.add({
+                &apos;url&apos;: `$url`,
+                &apos;method&apos;: `$method`,
+                &apos;body&apos;: {
+                    &apos;data&apos;: $body
+                }
+            })
+        } catch {
+            throw `Exception: $_`
+        }
+    }
+
+    return $requests
+}
+
+# Dispatch all of the input requests
+function Http-Dispatch($requests, $platformInstanceName) {
+    # Iterate over each request
+    foreach($request in $requests) {
+        $request.headers = { &apos;Content-Type&apos;: &apos;application/json&apos; }
+        try {
+            $response = {status: 0, body: &apos;&apos;}
+            # Method switcher
+            if($request.method == &apos;POST&apos; ) {
+                $response = Http-Post $request.url $request.headers $request.body
+            } elseif($request.method == &apos;PATCH&apos;) {
+                $response = Http-Patch $request.url $request.headers $request.body
+            }
+        } catch {                
+            throw `Exception: $_` 
+        }
+    }
+}
+
+# Controller to dispatch HTTP requests as either a synchonous or aysncronous callouts
+function Http-Dispatch-Controller($requests, $platformInstanceName, $async) {    if($requests.size() &gt; 0 &amp;&amp; $platformInstanceName != null) {
+        if($async) {
+            Script-Defer $requests ${
+                Http-Dispatch $_ $platformInstanceName
+            }
+        } else {
+            Http-Dispatch $requests $platformInstanceName
+        }
+    }
+}
+
+## Main script
+
+# Convert list to queryable string
+$inputIds = {`!InputIds}
+
+if($inputIds.size() &gt; 0) {
+    # Capture global Flow variables
+    $flowName = {`!flowName}
+    $batchSize = {`!batchSize}
+    $useBulkApi = {`!UseBulkApi}
+    $async = {`!RunAsynchronously}
+    $namedCredential = {`!NamedCredential}
+    $integrationType = {`!IntegrationType}
+    $platformInstanceName = {`!platformInstanceName}
+    $store = {`!Store}
+
+    # Automatically batch the inputs if they exceed the batch limit
+    if($inputIds.size() &gt; $batchSize) {
+        $scope = {
+            &apos;FlowName&apos;: $flowName,
+            &apos;UseBulkApi&apos;: $useBulkApi,
+            &apos;RunAsynchronously&apos;: $async,
+            &apos;IntegrationType&apos;: $integrationType,
+            &apos;InputIds&apos;: []
+        }
+        Script-Batch $batchSize $inputIds $scope ${
+            $ctx = {
+                &apos;UseBulkApi&apos;: $_.UseBulkApi,
+                &apos;RunAsynchronously&apos;: $_.RunAsynchronously,
+                &apos;IntegrationType&apos;: $_.IntegrationType,
+                &apos;InputIds&apos;: $__.items
+            }
+            Script-Flow $_.FlowName $ctx
+        }
+    } else {
+        # Convert list to queryable string
+        $inputIds = List-Stringify $inputIds
+
+        # Limit all following queries to a single store since there is a 1:1
+        # relationship between a store and a platform instance
+        $baseQuery = `
+            SELECT
+                Id,
+                Name,
+                LastModifiedDate,
+                s_c__Provider__c,
+                s_c__Provider_Service__c,
+                s_c__Tracking_Code__c,
+                s_c__State__c,
+                s_c__Order_Id__r.OrderNumber,
+                s_c__Order_Id__r.OrderReferenceNumber,
+                s_c__Order_Id__r.Status,
+                s_c__Order_Id__r.IsDeleted,
+                s_c__Order_Id__r.CreatedDate,
+                s_c__Order_Id__r.LastModifiedDate,
+                s_c__Order_Id__r.EffectiveDate,
+                s_c__Order_Id__r.AccountId,
+                s_c__Order_Id__r.Account.Name,
+                s_c__Order_Id__r.s_c__Abandoned__c,
+                s_c__Order_Id__r.s_c__Submitted_Date__c,
+                s_c__Order_Id__r.s_c__Timezone__c,
+                s_c__Order_Id__r.s_c__Contact_Id__c,
+                s_c__Order_Id__r.s_c__Contact_Id__r.Name,
+                s_c__Order_Id__r.s_c__Checkout_Email__c,
+                s_c__Order_Id__r.s_c__Checkout_Phone__c,
+                s_c__Order_Id__r.s_c__Ip_Address__c,
+                s_c__Order_Id__r.OriginalOrderId,
+                s_c__Order_Id__r.OriginalOrder.OrderNumber,
+                s_c__Order_Id__r.OriginalOrder.OrderReferenceNumber,
+                s_c__Order_Id__r.CurrencyIsoCode,
+                s_c__Order_Id__r.ShippingStreet,
+                s_c__Order_Id__r.ShippingCity,
+                s_c__Order_Id__r.ShippingState,
+                s_c__Order_Id__r.ShippingPostalCode,
+                s_c__Order_Id__r.ShippingCountry,
+                (SELECT
+                    Id,
+                    ListPrice,
+                    UnitPrice,
+                    Quantity,
+                    TotalPrice,
+                    s_c__Deposit_Amount__c,
+                    s_c__Total_of_Discounts__c,
+                    s_c__Tax_Amount__c,
+                    Description,
+                    Product2Id,
+                    Product2.Name,
+                    Product2.s_c__Display_Name__c,
+                    Product2.ProductCode,
+                    Product2.StockKeepingUnit,
+                    Product2.s_c__Barcode__c,
+                    Product2.IsActive,
+                    Product2.QuantityUnitOfMeasure,
+                    Product2.s_c__Shipping_Length__c,
+                    Product2.s_c__Shipping_Width__c,
+                    Product2.s_c__Shipping_Height__c,
+                    Product2.s_c__Shipping_Weight__c
+                 FROM s_c__OrderItems__r
+                )
+            FROM s_c__Shipment__c 
+            WHERE Id IN $inputIds
+        `
+        
+        # Add Store scoping if set
+        if($store.Id != null) {
+            $baseQuery = $baseQuery + `
+                AND s_c__Store_Id__c = &apos;$store.Id&apos; 
+            `
+        }
+        
+        # Initial queries for all actionable records
+        $shipments = Query-Records $baseQuery
+        
+        # Only carry out further operations if records exist for scope
+        if($shipments.size() &gt; 0) {
+            $productIds = List-Stringify (Map-Filter-Child $shipments &apos;s_c__OrderItems__r&apos; &apos;Product2Id&apos; true)
+        
+            # Reference maps
+            $mediaMap = Map-Media $productIds
+            Log $mediaMap
+            # Create HTTP requests
+            $requests = Klaviyo-Create-FulfilledOrderEvent $shipments $mediaMap $namedCredential
+            Log $requests
+            # Dispatch all HTTP requests and create Integration records if possible
+            #Http-Dispatch-Controller $requests $platformInstanceName $async
+        }
+    }
+}
+
+</stringValue>
+            </value>
+        </inputParameters>
+        <nameSegment>Streams__Streamscript</nameSegment>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+        <versionSegment>1</versionSegment>
+    </actionCalls>
+    <actionCalls>
+        <name>Create_Order_Events</name>
+        <label>Create Order Events</label>
+        <locationX>842</locationX>
+        <locationY>458</locationY>
+        <actionName>Streams__Streamscript</actionName>
+        <actionType>apex</actionType>
+        <dataTypeMappings>
+            <typeName>T__c1</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c2</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c3</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c4</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c5</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c6</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c7</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c8</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c9</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__i0</typeName>
+            <typeValue>s_c__Store__c</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r1</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r2</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r3</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r4</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r5</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r6</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r7</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r8</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r9</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>U__record</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>U__records</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>b1</name>
+            <value>
+                <elementReference>UseBulkApi</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>b2</name>
+            <value>
+                <elementReference>RunAsynchronously</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i0</name>
+            <value>
+                <elementReference>Store</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i1</name>
+            <value>
+                <elementReference>flowName</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i2</name>
+            <value>
+                <elementReference>NamedCredential</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i3</name>
+            <value>
+                <elementReference>IntegrationType</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i4</name>
+            <value>
+                <elementReference>platformInstanceName</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>l1</name>
+            <value>
+                <elementReference>InputIds</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>n1</name>
+            <value>
+                <elementReference>batchSize</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>x</name>
+            <value>
+                <stringValue># Streamscript l1=InputIds i1=flowName n1=batchSize b1=UseBulkApi b2=RunAsynchronously i2=NamedCredential i3=IntegrationType i4=platformInstanceName i0=Store
+
+## Method declarations
+
+# Converts a List into a queryable string of quote enclosed
+# (&apos;,&apos;) separated values
+function List-Stringify($list, $identifier, $alwaysFill) {
+    $string = []
+
+    foreach($item in $list) {
+        $value = &apos;&apos;
+        if($identifier == null) {
+            $value = $item
+        } else {
+            $value = $item.get($identifier)
+        }
+        $string.add(`&apos;$value&apos;`)
+    }
+
+    if($string.isEmpty() &amp;&amp; $alwaysFill == true) {
+        $string.add(&apos;&apos;)
+    }
+
+    $string = List-Concat $string &apos;,&apos;
+    $string = `($string)`
+
+    return $string
+}
+
+# Creats a map of ProductId to the first related Media record in position order
+function Map-Filter-Child($records, $childKey, $filterKey, $unique) {
+    $filteredValues = []
+    $filterMap = {}
+
+    if($records.size() &gt; 0) {
+        foreach($record in $records) {
+            if($record.get($childKey) != null) {
+                foreach($child in $record.get($childKey)) {
+                    $value = $child.get($filterKey)
+                    if($value != null) {
+                        if($unique) {
+                            $filterMap.put($value, $value)
+                        } else {
+                            $filteredValues.add($value)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if($unique) {
+        $filteredValues = $filterMap.values()
+    }
+
+    return $filteredValues
+}
+
+# Creats a map of ProductId to the first related Media record in position order
+function Map-Media($productIds) {
+    $map = {}
+
+    if($productIds != &apos;&apos; and $productIds != &apos;()&apos;) {
+        $media = Query-Records `
+            SELECT Id, s_c__Media_Id__r.s_c__Thumbnail_Image__c, 
+                    s_c__Media_Id__r.s_c__Url__c, s_c__Product_Id__c
+            FROM s_c__Product_Media__c 
+            WHERE s_c__Product_Id__c IN $productIds AND
+                    s_c__Media_Id__r.s_c__File_Type__c = &apos;image&apos; 
+            ORDER BY s_c__Position__c ASC NULLS FIRST
+        `
+        
+        if($media.size() &gt; 0) {
+            foreach($item in $media) {
+                $productId = $item.get(&apos;s_c__Product_Id__c&apos;)
+                if(not $map.hasKey($productId)) {
+                    $map.put($productId, $item.get(&apos;s_c__Media_Id__r&apos;))
+                }
+            }
+        }
+    }
+    return $map
+}
+
+function Klaviyo-Create-PlacedOrderEvent($records, $mediaMap, $namedCredential) {
+    $requests = []
+
+    # Iterate over each category and create a request body if it does not exist
+    foreach($record in $records) {
+        $request = {}
+        try {
+            $url = `callout:$namedCredential/api/events/`
+            $method = &apos;POST&apos;
+            $body = {}
+
+            # Extract key fields
+            $isAbandoned = $record.s_c__Abandoned__c
+            $checkoutStep = $record.s_c__Checkout_Step__c
+            $contact = $record.s_c__Contact_Id__r
+            $account = $record.Account
+            $originalOrder = $record.OriginalOrder
+            $orderItems = $record.OrderItems
+            $campaigns = $record.s_c__Order_Campaigns__r
+            $promotions = $record.s_c__Promotion_Credits__r
+            $payments = $record.s_c__Payments__r
+            
+            # Default event name
+            $eventName = &apos;Order Placed&apos;
+
+            if($isAbandoned) {
+                $eventName = &apos;Incomplete Order&apos;
+            } elseif($checkoutStep != &apos;complete&apos; &amp;&amp; $checkoutStep != &apos;pos-complete&apos;) {
+                $eventName = &apos;Incomplete Order&apos;
+            }
+
+            # Default for Customer
+            if($contact == null &amp;&amp; $account != null) {
+                $contact = $account
+            } elseif($contact == null) {
+                $contact = {
+                    &apos;Name&apos;: &apos;&apos;
+                }
+            }
+
+            $contactFirstName = &apos;&apos;
+            $contactLastName = &apos;&apos;
+            $contactNameParts = $contact.Name.split(&apos; &apos;)
+
+            # Split name into First + Last
+            if($contactNameParts.size() &gt; 0) {
+                $i = 0
+                foreach($namePart in $contactNameParts) {
+                    if($i == 0) {
+                        $contactFirstName = $namePart
+                    } elseif($i == 1) {
+                        $contactLastName = $namePart
+                    } else {
+                        $contactLastName = $contactLastName + &apos; &apos; + $namePart
+                    }
+                    $i = $i + 1
+                }
+            }
+
+            $shippingAddress1 = &apos;&apos;
+            $shippingAddress2 = &apos;&apos;
+            $shippingAddressParts = $record.ShippingAddress.split(&apos;\r\n|\r|\n&apos;)
+
+            # Split Shipping Address into 1 or 2 lines
+            if($shippingAddressParts.size() &gt; 0) {
+                $i = 0
+                foreach($addressPart in $shippingAddressParts) {
+                    if($i == 0) {
+                        $shippingAddress1 = $addressPart
+                    } elseif($i == 1) {
+                        $shippingAddress2 = $addressPart
+                    }
+                    $i = $i + 1
+                }
+            }
+            
+            # Default for OriginalOrder
+            if($originalOrder == null) {
+                $originalOrder = {}
+            }
+            # Add Media URL to Order Items if any
+            if($orderItems != null) {
+                foreach($orderItem in $orderItems) {
+                    $productId = $orderItem.Product2Id
+                    $media = $mediaMap.get($productId)
+                    if($media != null &amp;&amp; $orderItem.Product2 != null) {
+                        $mediaUrl = $media.s_c__Url__c
+                        $orderItem.Product2.put(&apos;__Image_Url__&apos;, $mediaUrl)
+                    }
+                }
+            }
+
+            # Base request as if its a POST
+            $body = {
+                &apos;type&apos;: &apos;event&apos;,
+                &apos;attributes&apos;: {
+                    &apos;time&apos;: $record.s_c__Submitted_Date__c,
+                    &apos;value&apos;: $record.TotalAmount,
+                    &apos;value_currency&apos;: $record.CurrencyIsoCode,
+                    &apos;metric&apos;: {
+                        &apos;data&apos;: {
+                            &apos;type&apos;: &apos;metric&apos;,
+                            &apos;attributes&apos;: {
+                                &apos;name&apos;: $eventName
+                            }
+                        }
+                    },
+                    &apos;properties&apos; : {
+                        &apos;Id&apos;: $record.Id,
+                        &apos;OrderNumber&apos;: $record.OrderNumber,
+                        &apos;OrderReferenceNumber&apos;: $record.OrderReferenceNumber,
+                        &apos;Status&apos;: $record.Status,
+                        &apos;OriginalOrderId&apos;: $record.OriginalOrderId,
+                        &apos;OriginalOrder.OrderNumber&apos;: $originalOrder.OrderNumber,
+                        &apos;OriginalOrder.OrderReferenceNumber&apos;: $originalOrder.OrderReferenceNumber,
+                        &apos;OrderItems&apos;: $record.OrderItems,
+                        &apos;s_c__Order_Campaigns__r&apos;: $record.s_c__Order_Campaigns__r,
+                        &apos;s_c__Promotion_Credits__r&apos;: $record.s_c__Promotion_Credits__r,
+                        &apos;s_c__Payments__r&apos;: $record.s_c__Payments__r
+                    },
+                    &apos;profile&apos;: {
+                        &apos;data&apos;: {
+                            &apos;type&apos;: &apos;profile&apos;,
+                            &apos;attributes&apos;: {
+                                &apos;external_id&apos;: $record.s_c__Contact_Id__c,
+                                &apos;email&apos;: $record.s_c__Checkout_Email__c,
+                                &apos;first_name&apos;: $contactFirstName,
+                                &apos;last_name&apos;: $contactLastName,
+                                &apos;location&apos;: {
+                                    &apos;address1&apos;: $shippingAddress1,
+                                    &apos;address2&apos;: $shippingAddress2,
+                                    &apos;city&apos;: $record.ShippingCity,
+                                    &apos;region&apos;: $record.ShippingState,
+                                    &apos;zip&apos;: $record.ShippingPostalCode,
+                                    &apos;country&apos;: $record.ShippingCountry,
+                                    &apos;timezone&apos;: $record.s_c__Timezone__c,
+                                    &apos;ip&apos;: $record.s_c__Ip_Address__c
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            $requests.add({
+                &apos;url&apos;: `$url`,
+                &apos;method&apos;: `$method`,
+                &apos;body&apos;: {
+                    &apos;data&apos;: $body
+                }
+            })
+        } catch {
+            throw `Exception: $_`
+        }
+    }
+
+    return $requests
+}
+
+# Dispatch all of the input requests
+function Http-Dispatch($requests, $platformInstanceName) {
+    # Iterate over each request
+    foreach($request in $requests) {
+        $request.headers = { &apos;Content-Type&apos;: &apos;application/json&apos; }
+        try {
+            $response = {status: 0, body: &apos;&apos;}
+            # Method switcher
+            if($request.method == &apos;POST&apos; ) {
+                $response = Http-Post $request.url $request.headers $request.body
+            } elseif($request.method == &apos;PATCH&apos;) {
+                $response = Http-Patch $request.url $request.headers $request.body
+            }
+        } catch {                
+            throw `Exception: $_` 
+        }
+    }
+}
+
+# Controller to dispatch HTTP requests as either a synchonous or aysncronous callouts
+function Http-Dispatch-Controller($requests, $platformInstanceName, $async) {    if($requests.size() &gt; 0 &amp;&amp; $platformInstanceName != null) {
+        if($async) {
+            Script-Defer $requests ${
+                Http-Dispatch $_ $platformInstanceName
+            }
+        } else {
+            Http-Dispatch $requests $platformInstanceName
+        }
+    }
+}
+
+## Main script
+
+# Convert list to queryable string
+$inputIds = {`!InputIds}
+
+if($inputIds.size() &gt; 0) {
+    # Capture global Flow variables
+    $flowName = {`!flowName}
+    $batchSize = {`!batchSize}
+    $useBulkApi = {`!UseBulkApi}
+    $async = {`!RunAsynchronously}
+    $namedCredential = {`!NamedCredential}
+    $integrationType = {`!IntegrationType}
+    $platformInstanceName = {`!platformInstanceName}
+    $store = {`!Store}
+
+    # Automatically batch the inputs if they exceed the batch limit
+    if($inputIds.size() &gt; $batchSize) {
+        $scope = {
+            &apos;FlowName&apos;: $flowName,
+            &apos;UseBulkApi&apos;: $useBulkApi,
+            &apos;RunAsynchronously&apos;: $async,
+            &apos;IntegrationType&apos;: $integrationType,
+            &apos;InputIds&apos;: []
+        }
+        Script-Batch $batchSize $inputIds $scope ${
+            $ctx = {
+                &apos;UseBulkApi&apos;: $_.UseBulkApi,
+                &apos;RunAsynchronously&apos;: $_.RunAsynchronously,
+                &apos;IntegrationType&apos;: $_.IntegrationType,
+                &apos;InputIds&apos;: $__.items
+            }
+            Script-Flow $_.FlowName $ctx
+        }
+    } else {
+        # Convert list to queryable string
+        $inputIds = List-Stringify $inputIds
+
+        # Limit all following queries to a single store since there is a 1:1
+        # relationship between a store and a platform instance
+        $baseQuery = `
+            SELECT
+                Id,
+                OrderNumber,
+                OrderReferenceNumber,
+                Status,
+                IsDeleted,
+                CreatedDate,
+                LastModifiedDate,
+                EffectiveDate,
+                AccountId,
+                Account.Name,
+                s_c__Abandoned__c,
+                s_c__Submitted_Date__c,
+                s_c__Timezone__c,
+                s_c__Contact_Id__c,
+                s_c__Contact_Id__r.Name,
+                s_c__Checkout_Email__c,
+                s_c__Checkout_Phone__c,
+                s_c__Ip_Address__c,
+                OriginalOrderId,
+                OriginalOrder.OrderNumber,
+                OriginalOrder.OrderReferenceNumber,
+                OwnerId,
+                Owner.Name,
+                CurrencyIsoCode,
+                ShippingStreet,
+                ShippingCity,
+                ShippingState,
+                ShippingPostalCode,
+                ShippingCountry,
+                s_c__Shipping_Method__c,
+                s_c__Shipping_Notes__c,
+                s_c__Customer_Notes_Long__c,
+                TotalAmount,
+                (SELECT
+                    Id,
+                    ListPrice,
+                    UnitPrice,
+                    Quantity,
+                    TotalPrice,
+                    s_c__Deposit_Amount__c,
+                    s_c__Total_of_Discounts__c,
+                    s_c__Tax_Amount__c,
+                    Description,
+                    Product2Id,
+                    Product2.Name,
+                    Product2.s_c__Display_Name__c,
+                    Product2.ProductCode,
+                    Product2.StockKeepingUnit,
+                    Product2.s_c__Barcode__c,
+                    Product2.IsActive,
+                    Product2.QuantityUnitOfMeasure,
+                    Product2.s_c__Shipping_Length__c,
+                    Product2.s_c__Shipping_Width__c,
+                    Product2.s_c__Shipping_Height__c,
+                    Product2.s_c__Shipping_Weight__c
+                 FROM OrderItems
+                ),
+                (SELECT
+                    Id,
+                    Name,
+                    s_c__Order_Id__c,
+                    s_c__UTM_Campaign__c,
+                    s_c__UTM_Content__c,
+                    s_c__UTM_Medium__c,
+                    s_c__UTM_Source__c,
+                    s_c__UTM_Term__c,
+                    s_c__UTM_Token__c,
+                    s_c__Visited_At__c
+                 FROM s_c__Order_Campaigns__r
+                ),
+                (SELECT
+                    Id,
+                    Name,
+                    s_c__Calculation_Type__c,
+                    s_c__Credit_Value__c,
+                    s_c__Value_Discount__c,
+                    s_c__Percent_Discount__c,
+                    s_c__Discounted_Price__c,
+                    s_c__Order_Id__c,
+                    s_c__Qualifying_Quantity__c,
+                    s_c__Discount_Id__c,
+                    s_c__Discount_Id__r.Name
+                 FROM s_c__Discount_Credits__r
+                ),
+                (SELECT
+                    Id,
+                    Name,
+                    s_c__Amount__c,
+                    s_c__Invoice_Reference__c,
+                    s_c__Invoice_Url__c,
+                    s_c__Method__c,
+                    s_c__Order_Id__c,
+                    s_c__Paid_At__c,
+                    s_c__Payment_Provider_Id__c,
+                    s_c__Payment_Provider_Id__r.Name,
+                    s_c__Payment_Provider_Id__r.s_c__Display_Name__c,
+                    s_c__Payment_Provider_Id__r.s_c__Provider__c,
+                    s_c__Payment_Provider_Id__r.s_c__Api_Options__c,
+                    s_c__Response__c,
+                    s_c__Status__c,
+                    s_c__Surcharge_Amount__c,
+                    s_c__Surcharge_Product_Id__c,
+                    s_c__Surcharge_Product_Id__r.Name,
+                    s_c__Surcharge_Product_Id__r.s_c__Display_Name__c,
+                    s_c__Transaction_Number__c
+                 FROM s_c__Payments__r
+                )
+            FROM Order 
+            WHERE Id IN $inputIds
+        `
+        
+        # Add Store scoping if set
+        if({$store.Id != null) {
+            $baseQuery = $baseQuery + `
+                AND s_c__Store_Id__c = &apos;$store.Id&apos; 
+            `
+        }
+        
+        # Initial queries for all actionable records
+        $orders = Query-Records $baseQuery
+        
+        # Only carry out further operations if records exist for scope
+        if($orders.size() &gt; 0) {
+            $productIds = List-Stringify (Map-Filter-Child $orders &apos;OrderItems&apos; &apos;Product2Id&apos; true)
+        
+            # Reference maps
+            $mediaMap = Map-Media $productIds
+            Log $mediaMap
+            # Create HTTP requests
+            $requests = Klaviyo-Create-PlacedOrderEvent $orders $mediaMap $namedCredential
+            Log $requests
+            # Dispatch all HTTP requests and create Integration records if possible
+            Http-Dispatch-Controller $requests $platformInstanceName $async
+        }
+    }
+}
+
+</stringValue>
+            </value>
+        </inputParameters>
+        <nameSegment>Streams__Streamscript</nameSegment>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+        <versionSegment>1</versionSegment>
+    </actionCalls>
+    <apiVersion>60.0</apiVersion>
+    <assignments>
+        <name>Count_Input_Records</name>
+        <label>Count Input Records</label>
+        <locationX>1172</locationX>
+        <locationY>134</locationY>
+        <assignmentItems>
+            <assignToReference>countInput</assignToReference>
+            <operator>AssignCount</operator>
+            <value>
+                <elementReference>InputIds</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Valid_Input</targetReference>
+        </connector>
+    </assignments>
+    <constants>
+        <name>batchSize</name>
+        <dataType>Number</dataType>
+        <value>
+            <numberValue>5.0</numberValue>
+        </value>
+    </constants>
+    <constants>
+        <name>flowName</name>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Klaviyo_ALF_Integration</stringValue>
+        </value>
+    </constants>
+    <constants>
+        <name>platformInstanceName</name>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>KlaviyoDemo</stringValue>
+        </value>
+    </constants>
+    <decisions>
+        <name>Integration_Type</name>
+        <label>Integration Type</label>
+        <locationX>710</locationX>
+        <locationY>350</locationY>
+        <defaultConnectorLabel>--Unsupported--</defaultConnectorLabel>
+        <rules>
+            <name>Integration_Type_CatalogCategory</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>IntegrationType</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>CatalogCategory</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Create_Catalog_Category</targetReference>
+            </connector>
+            <label>CatalogCategory</label>
+        </rules>
+        <rules>
+            <name>Integration_Type_CatalogItem</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>IntegrationType</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>CatalogItem</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Create_Catalog_Item</targetReference>
+            </connector>
+            <label>CatalogItem</label>
+        </rules>
+        <rules>
+            <name>Integration_Type_CatalogVariant</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>IntegrationType</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>CatalogVariant</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Create_Catalog_Variant</targetReference>
+            </connector>
+            <label>CatalogVariant</label>
+        </rules>
+        <rules>
+            <name>Integration_Type_OrderEvent</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>IntegrationType</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>OrderEvent</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Create_Order_Events</targetReference>
+            </connector>
+            <label>OrderEvent</label>
+        </rules>
+        <rules>
+            <name>Integration_Type_FulfillmentEvent</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>IntegrationType</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>FulfillmentEvent</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Create_Fulfillment_Events</targetReference>
+            </connector>
+            <label>FulfillmentEvent</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Valid_Input</name>
+        <label>Valid Input</label>
+        <locationX>1172</locationX>
+        <locationY>242</locationY>
+        <defaultConnectorLabel>No</defaultConnectorLabel>
+        <rules>
+            <name>Valid_Input_Yes</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>NamedCredential</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>NamedCredential</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <stringValue></stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>countInput</leftValueReference>
+                <operator>GreaterThan</operator>
+                <rightValue>
+                    <numberValue>0.0</numberValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Integration_Type</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <environments>Default</environments>
+    <interviewLabel>Klaviyo - ALF - Integration {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Klaviyo - ALF - Integration</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>1046</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Count_Input_Records</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <variables>
+        <name>countInput</name>
+        <dataType>Number</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <scale>0</scale>
+        <value>
+            <numberValue>0.0</numberValue>
+        </value>
+    </variables>
+    <variables>
+        <name>countIntegrationRecords</name>
+        <dataType>Number</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <scale>0</scale>
+        <value>
+            <numberValue>0.0</numberValue>
+        </value>
+    </variables>
+    <variables>
+        <name>currentItem_Filter_New_Integrations</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Task</objectType>
+    </variables>
+    <variables>
+        <name>currentItem_Master_Integration</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Integration__c</objectType>
+    </variables>
+    <variables>
+        <name>currentItem_Product_Integration</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Integration__c</objectType>
+    </variables>
+    <variables>
+        <name>InputIds</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Allowed values:
+  - CatalogCategory
+  - CatalogItem
+  - CatalogVariant
+  - OrderEvent
+  - FulfillmentEvent</description>
+        <name>IntegrationType</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>kCatalogItem</name>
+        <apexClass>ExternalService__Klaviyo_CatalogItemCreateQuery</apexClass>
+        <dataType>Apex</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>NamedCredential</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <stringValue>Klaviyo</stringValue>
+        </value>
+    </variables>
+    <variables>
+        <name>RunAsynchronously</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <booleanValue>false</booleanValue>
+        </value>
+    </variables>
+    <variables>
+        <name>Store</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <objectType>s_c__Store__c</objectType>
+    </variables>
+    <variables>
+        <name>UseBulkApi</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <booleanValue>false</booleanValue>
+        </value>
+    </variables>
+</Flow>
