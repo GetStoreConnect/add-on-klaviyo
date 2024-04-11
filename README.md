@@ -14,12 +14,14 @@ It has the following **key featuers**:
 ## Installation
 
 [![Install in Production](https://custom-icon-badges.demolab.com/badge/Install-Production-fea42a?style=for-the-badge&logo=storeconnect&logoColor=fea42a "Install in Production")](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t2u000000D2l2AAC)
+
 [![Install in Sandbox](https://custom-icon-badges.demolab.com/badge/Install-Sandbox-fea42a?style=for-the-badge&logo=storeconnect&logoColor=fea42a "Install in Sandbox")](https://test.salesforce.com/packaging/installPackage.apexp?p0=04t2u000000D2l2AAC)
 
 Once installed, there will be a new Permission Set added `StoreConnect Add-on: Klaviyo` which includes permissions to the newly created object `Integration__c`
 
 ### Dependencies
 [![StoreConnect](https://custom-icon-badges.demolab.com/badge/StoreConnect-16.3+-fea42a "StoreConnect")](https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3A00000FMkeKUAT)
+
 [![Streams](https://custom-icon-badges.demolab.com/badge/Streams-61.0+-blue "Streams")](https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3000000B5Z0LEAV)
 
 #### Disclaimer
