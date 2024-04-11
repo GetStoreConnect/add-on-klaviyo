@@ -22,12 +22,14 @@ It has the following **key featuers**:
 1. Assign the `StoreConnect Add-on: Klaviyo` to any users that need to use the integration or see the `Integration__c` records
 2. Klaviyo [Theme Template](./themes/snippets/events/klaviyo.liquid)
 3. Add your Klaviyo Public API Key to the Store Variable `klaviyo_public_api_key` of each store using the integration
+4. Turn on the `Klaviyo_ALF_Integration` flow
 
 **Optional**
-1. Add the `Klaviyo Sync` button to the desired `Product2` Page Layout(s) and/or List View Layout(s)
-2. Add the `Klaviyo Sync` button to the desired `s_c__Product_Category__c` Page Layout(s) and/or List View Layout(s)
-3. Turn on the `Klaviyo_RTF_Order_Events` flow or implement the Order Events via a self-defined method, e.g. Apex Trigger, Scheduled Flow, etc.
-4. Turn on the `Klaviyo_RTF_Fulfillment_Events` flow or implement the Fulfillment Events via a self-defined method, e.g. Apex Trigger, Scheduled Flow, etc.
+1. Turn on the `Klaviyo_SF_Sync` flow to enable `Klaviyo Sync` buttons
+2. Add the `Klaviyo Sync` button to the desired `Product2` Page Layout(s) and/or List View Layout(s)
+3. Add the `Klaviyo Sync` button to the desired `s_c__Product_Category__c` Page Layout(s) and/or List View Layout(s)
+4. Turn on the `Klaviyo_RTF_Order_Events` flow or implement the Order Events via a self-defined method, e.g. Apex Trigger, Scheduled Flow, etc.
+5. Turn on the `Klaviyo_RTF_Fulfillment_Events` flow or implement the Fulfillment Events via a self-defined method, e.g. Apex Trigger, Scheduled Flow, etc.
 
 ### Dependencies
 [![StoreConnect](https://custom-icon-badges.demolab.com/badge/StoreConnect-16.3+-fea42a "StoreConnect")](https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3A00000FMkeKUAT)

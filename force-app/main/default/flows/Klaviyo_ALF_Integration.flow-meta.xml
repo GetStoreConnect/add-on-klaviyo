@@ -8,38 +8,6 @@
         <actionName>Streams__Streamscript</actionName>
         <actionType>apex</actionType>
         <dataTypeMappings>
-            <typeName>T__c1</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c2</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c3</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c4</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c5</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c6</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c7</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c8</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
             <typeName>T__c9</typeName>
             <typeValue>Task</typeValue>
         </dataTypeMappings>
@@ -89,6 +57,38 @@
         </dataTypeMappings>
         <dataTypeMappings>
             <typeName>U__records</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c1</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c2</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c3</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c4</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c5</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c6</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c7</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c8</typeName>
             <typeValue>Task</typeValue>
         </dataTypeMappings>
         <flowTransactionModel>CurrentTransaction</flowTransactionModel>
@@ -582,30 +582,6 @@ if($inputIds.size() &gt; 0) {
         <actionName>Streams__Streamscript</actionName>
         <actionType>apex</actionType>
         <dataTypeMappings>
-            <typeName>T__c1</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c2</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c3</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c4</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c5</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c6</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
             <typeName>T__c7</typeName>
             <typeValue>Task</typeValue>
         </dataTypeMappings>
@@ -663,6 +639,30 @@ if($inputIds.size() &gt; 0) {
         </dataTypeMappings>
         <dataTypeMappings>
             <typeName>U__records</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c4</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c1</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c2</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c3</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c5</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c6</typeName>
             <typeValue>Task</typeValue>
         </dataTypeMappings>
         <flowTransactionModel>CurrentTransaction</flowTransactionModel>
@@ -1496,18 +1496,6 @@ if($inputIds.size() &gt; 0) {
             <typeValue>Task</typeValue>
         </dataTypeMappings>
         <dataTypeMappings>
-            <typeName>T__c7</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c8</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c9</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
             <typeName>T__i0</typeName>
             <typeValue>s_c__Store__c</typeValue>
         </dataTypeMappings>
@@ -1553,6 +1541,18 @@ if($inputIds.size() &gt; 0) {
         </dataTypeMappings>
         <dataTypeMappings>
             <typeName>U__records</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c7</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c8</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c9</typeName>
             <typeValue>Task</typeValue>
         </dataTypeMappings>
         <flowTransactionModel>CurrentTransaction</flowTransactionModel>
@@ -2326,26 +2326,6 @@ if($inputIds.size() &gt; 0) {
         <actionName>Streams__Streamscript</actionName>
         <actionType>apex</actionType>
         <dataTypeMappings>
-            <typeName>T__c1</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c2</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c3</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c4</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c5</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
             <typeName>T__c6</typeName>
             <typeValue>Task</typeValue>
         </dataTypeMappings>
@@ -2356,14 +2336,6 @@ if($inputIds.size() &gt; 0) {
         <dataTypeMappings>
             <typeName>T__c8</typeName>
             <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c9</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__i0</typeName>
-            <typeValue>s_c__Store__c</typeValue>
         </dataTypeMappings>
         <dataTypeMappings>
             <typeName>T__r1</typeName>
@@ -2402,11 +2374,39 @@ if($inputIds.size() &gt; 0) {
             <typeValue>Task</typeValue>
         </dataTypeMappings>
         <dataTypeMappings>
+            <typeName>T__c9</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__i0</typeName>
+            <typeValue>s_c__Store__c</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
             <typeName>U__record</typeName>
             <typeValue>Task</typeValue>
         </dataTypeMappings>
         <dataTypeMappings>
             <typeName>U__records</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c1</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c2</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c3</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c4</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c5</typeName>
             <typeValue>Task</typeValue>
         </dataTypeMappings>
         <flowTransactionModel>CurrentTransaction</flowTransactionModel>
@@ -2726,10 +2726,25 @@ function Http-Dispatch($requests, $platformInstanceName) {
 }
 
 # Controller to dispatch HTTP requests as either a synchonous or aysncronous callouts
-function Http-Dispatch-Controller($requests, $platformInstanceName, $async) {    if($requests.size() &gt; 0 &amp;&amp; $platformInstanceName != null) {
+function Http-Dispatch-Controller($requests, $platformInstanceName, $async) {
+    if($requests.size() &gt; 0 &amp;&amp; $platformInstanceName != null) {
         if($async) {
             Script-Defer $requests ${
-                Http-Dispatch $_ $platformInstanceName
+                # Iterate over each request
+                foreach($request in $_) {
+                    $request.headers = { &apos;Content-Type&apos;: &apos;application/json&apos; }
+                    try {
+                        $response = {status: 0, body: &apos;&apos;}
+                        # Method switcher
+                        if($request.method == &apos;POST&apos; ) {
+                            $response = Http-Post $request.url $request.headers $request.body
+                        } elseif($request.method == &apos;PATCH&apos;) {
+                            $response = Http-Patch $request.url $request.headers $request.body
+                        }
+                    } catch {                
+                        throw `Exception: $_` 
+                    }
+                }
             }
         } else {
             Http-Dispatch $requests $platformInstanceName
@@ -2856,12 +2871,12 @@ if($inputIds.size() &gt; 0) {
         
             # Reference maps
             $mediaMap = Map-Media $productIds
-            Log $mediaMap
+
             # Create HTTP requests
             $requests = Klaviyo-Create-FulfilledOrderEvent $shipments $mediaMap $namedCredential
             Log $requests
             # Dispatch all HTTP requests and create Integration records if possible
-            #Http-Dispatch-Controller $requests $platformInstanceName $async
+            Http-Dispatch-Controller $requests $platformInstanceName $async
         }
     }
 }
@@ -2925,10 +2940,6 @@ if($inputIds.size() &gt; 0) {
             <typeValue>Task</typeValue>
         </dataTypeMappings>
         <dataTypeMappings>
-            <typeName>T__r2</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
             <typeName>T__r3</typeName>
             <typeValue>Task</typeValue>
         </dataTypeMappings>
@@ -2962,6 +2973,10 @@ if($inputIds.size() &gt; 0) {
         </dataTypeMappings>
         <dataTypeMappings>
             <typeName>U__records</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r2</typeName>
             <typeValue>Task</typeValue>
         </dataTypeMappings>
         <flowTransactionModel>CurrentTransaction</flowTransactionModel>
@@ -3131,7 +3146,7 @@ function Klaviyo-Create-PlacedOrderEvent($records, $mediaMap, $namedCredential) 
             # Default event name
             $eventName = &apos;Order Placed&apos;
 
-            if($isAbandoned) {
+            if($isAbandoned == true) {
                 $eventName = &apos;Incomplete Order&apos;
             } elseif($checkoutStep != &apos;complete&apos; &amp;&amp; $checkoutStep != &apos;pos-complete&apos;) {
                 $eventName = &apos;Incomplete Order&apos;
@@ -3285,10 +3300,25 @@ function Http-Dispatch($requests, $platformInstanceName) {
 }
 
 # Controller to dispatch HTTP requests as either a synchonous or aysncronous callouts
-function Http-Dispatch-Controller($requests, $platformInstanceName, $async) {    if($requests.size() &gt; 0 &amp;&amp; $platformInstanceName != null) {
+function Http-Dispatch-Controller($requests, $platformInstanceName, $async) {    
+    if($requests.size() &gt; 0 &amp;&amp; $platformInstanceName != null) {
         if($async) {
             Script-Defer $requests ${
-                Http-Dispatch $_ $platformInstanceName
+                # Iterate over each request
+                foreach($request in $_) {
+                    $request.headers = { &apos;Content-Type&apos;: &apos;application/json&apos; }
+                    try {
+                        $response = {status: 0, body: &apos;&apos;}
+                        # Method switcher
+                        if($request.method == &apos;POST&apos; ) {
+                            $response = Http-Post $request.url $request.headers $request.body
+                        } elseif($request.method == &apos;PATCH&apos;) {
+                            $response = Http-Patch $request.url $request.headers $request.body
+                        }
+                    } catch {                
+                        throw `Exception: $_` 
+                    }
+                }
             }
         } else {
             Http-Dispatch $requests $platformInstanceName
@@ -3355,6 +3385,7 @@ if($inputIds.size() &gt; 0) {
                 s_c__Contact_Id__r.Name,
                 s_c__Checkout_Email__c,
                 s_c__Checkout_Phone__c,
+                s_c__Checkout_Step__c,
                 s_c__Ip_Address__c,
                 OriginalOrderId,
                 OriginalOrder.OrderNumber,
@@ -3450,7 +3481,7 @@ if($inputIds.size() &gt; 0) {
         `
         
         # Add Store scoping if set
-        if({$store.Id != null) {
+        if($store.Id != null) {
             $baseQuery = $baseQuery + `
                 AND s_c__Store_Id__c = &apos;$store.Id&apos; 
             `
@@ -3465,7 +3496,7 @@ if($inputIds.size() &gt; 0) {
         
             # Reference maps
             $mediaMap = Map-Media $productIds
-            Log $mediaMap
+
             # Create HTTP requests
             $requests = Klaviyo-Create-PlacedOrderEvent $orders $mediaMap $namedCredential
             Log $requests
@@ -3732,6 +3763,14 @@ if($inputIds.size() &gt; 0) {
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>kCatalogItem</name>
+        <apexClass>ExternalService__Klaviyo_CatalogItemCreateQuery</apexClass>
+        <dataType>Apex</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
         <isOutput>false</isOutput>
     </variables>
     <variables>

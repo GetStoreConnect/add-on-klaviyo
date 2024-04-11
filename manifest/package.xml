@@ -22,13 +22,10 @@
     </types>
     <types>
         <members>Klaviyo_ALF_Integration</members>
+        <members>Klaviyo_RTF_Order_Events</members>
+        <members>Klaviyo_RTF_Fulfillment_Events</members>
         <members>Klaviyo_SF_Sync</members>
         <name>Flow</name>
-    </types>
-    <types>
-        <members>Klaviyo_ALF_Integration</members>
-        <members>Klaviyo_SF_Sync</members>
-        <name>FlowDefinition</name>
     </types>
     <types>
         <members>Streams</members>
