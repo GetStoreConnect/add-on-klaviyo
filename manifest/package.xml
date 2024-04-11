@@ -28,10 +28,6 @@
         <name>Flow</name>
     </types>
     <types>
-        <members>Streams</members>
-        <name>InstalledPackage</name>
-    </types>
-    <types>
         <members>Integration__c-Integration Layout</members>
         <name>Layout</name>
     </types>

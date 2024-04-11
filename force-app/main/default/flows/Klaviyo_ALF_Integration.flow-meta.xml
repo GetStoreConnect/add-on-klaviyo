@@ -606,10 +606,6 @@ if($inputIds.size() &gt; 0) {
             <typeValue>Task</typeValue>
         </dataTypeMappings>
         <dataTypeMappings>
-            <typeName>T__r3</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
             <typeName>T__r4</typeName>
             <typeValue>Task</typeValue>
         </dataTypeMappings>
@@ -647,6 +643,10 @@ if($inputIds.size() &gt; 0) {
         </dataTypeMappings>
         <dataTypeMappings>
             <typeName>T__c1</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r3</typeName>
             <typeValue>Task</typeValue>
         </dataTypeMappings>
         <dataTypeMappings>
@@ -1472,46 +1472,6 @@ if($inputIds.size() &gt; 0) {
         <actionName>Streams__Streamscript</actionName>
         <actionType>apex</actionType>
         <dataTypeMappings>
-            <typeName>T__c1</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c2</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c3</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c4</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c5</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c6</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__i0</typeName>
-            <typeValue>s_c__Store__c</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__r1</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__r2</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__r3</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
             <typeName>T__r4</typeName>
             <typeValue>Task</typeValue>
         </dataTypeMappings>
@@ -1553,6 +1513,46 @@ if($inputIds.size() &gt; 0) {
         </dataTypeMappings>
         <dataTypeMappings>
             <typeName>T__c9</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r3</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c1</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c2</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c3</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c4</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c5</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c6</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__i0</typeName>
+            <typeValue>s_c__Store__c</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r1</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r2</typeName>
             <typeValue>Task</typeValue>
         </dataTypeMappings>
         <flowTransactionModel>CurrentTransaction</flowTransactionModel>
@@ -3763,14 +3763,6 @@ if($inputIds.size() &gt; 0) {
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>true</isInput>
-        <isOutput>false</isOutput>
-    </variables>
-    <variables>
-        <name>kCatalogItem</name>
-        <apexClass>ExternalService__Klaviyo_CatalogItemCreateQuery</apexClass>
-        <dataType>Apex</dataType>
-        <isCollection>false</isCollection>
-        <isInput>false</isInput>
         <isOutput>false</isOutput>
     </variables>
     <variables>
