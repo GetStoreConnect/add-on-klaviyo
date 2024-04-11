@@ -1,0 +1,292 @@
+{%- if store_variables['klaviyo_public_api_key'] and store_variables['klaviyo_public_api_key'] != '' %}
+  <script 
+    type="text/javascript" 
+    async=""
+    src="https://static.klaviyo.com/onsite/js/klaviyo.js?company_id={{store_variables['klaviyo_public_api_key']}}"
+  ></script>
+  //Initialize the Klaviyo object on page load
+  <script type="text/javascript"> !function(){if(!window.klaviyo){window._klOnsite=window._klOnsite||[];try{window.klaviyo=new Proxy({},{get:function(n,i){return"push"===i?function(){var n;(n=window._klOnsite).push.apply(n,arguments)}:function(){for(var n=arguments.length,o=new Array(n),w=0;w<n;w++)o[w]=arguments[w];var t="function"==typeof o[o.length-1]?o.pop():void 0,e=new Promise((function(n){window._klOnsite.push([i].concat(o,[function(i){t&&t(i),n(i)}]))}));return e}}})}catch(n){window.klaviyo=window.klaviyo||[],window.klaviyo.push=function(){var n;(n=window._klOnsite).push.apply(n,arguments)}}}}(); </script>
+
+  {%- if current_customer %}
+    {% assign discount = current_product.pricing.original_price | minus: current_product.pricing.sale_price %}
+    <script>
+      var klaviyo = window.klaviyo || [];
+      const identity = {
+        "$email": "{{ current_customer.email }}",
+        "$first_name": "{{ current_customer.firstname }}",
+        "$last_name": "{{ current_customer.lastname }}",
+        "$city": "{{ current_customer.mailing_city }}",
+        "$region": "{{ current_customer.mailing_state }}",
+        "$country": "{{ current_customer.mailing_country }}",
+        "$zip": "{{ current_customer.mailing_postal_code }}",
+        "Id": "{{ current_customer.id }}"
+      };
+      klaviyo.identify(identity);
+    </script>
+  {%- endif %}
+
+  <script>
+    function getChangedCart() {
+      const changedCart = localStorage.getItem('changed_cart');
+      return changedCart ? JSON.parse(changedCart) : {};
+    }
+
+    function updateLocalCartDetails() {
+      // Get current cart details
+      const currentCart = {
+        {%- if current_cart %}
+          {% assign comma = "" %}
+          {%- for item in current_cart.items %}
+            {% if item.reserved_product? != true %}
+              {{comma}}"{{ item.id }}": {
+                "product": {
+                  "id": "{{ item.product.id }}",
+                  "name": "{{ item.name }}",
+                  "product_code": "{{ item.product.product_code  }}",
+                  "brand": {
+                    "name": "{{ item.product.brand.name }}"
+                  },
+                  "categories": [
+                    {%- for category in item.product.categories %}
+                      {
+                        "name": "{{ category.name }}"
+                      }{%- unless forloop.last -%},{%- endunless -%}
+                    {%- endfor %}
+                  ],
+                  "url": "{{ item.product.url }}",
+                  "image": {
+                    "url": "{{ item.product.image.url }}"
+                  },
+                  "pricing": {
+                    "original_price": {{ item.pricing.original_price }},
+                    "sale_price": {{ item.pricing.sale_price | default: item.pricing.original_price }},
+                    "checkout_price": {{ item.pricing.checkout_price }}
+                  }
+                },
+                "quantity": {{ item.quantity }},
+                "price": {{ item.pricing.checkout_price }},
+                {% assign sale_price = item.pricing.sale_price | default: item.pricing.original_price %}
+                {% assign discount = item.pricing.original_price | minus: sale_price %}
+                "discount": {{ discount }},
+                "unit_discount": {{ discount | divided_by: item.quantity | round: 2 }},
+                "unit_price": {{ item.pricing.checkout_price | divided_by: item.quantity | round: 2 }}
+              }
+              {% assign comma = "," %}
+            {% endif %}
+          {%- endfor %}
+        {%- endif %}
+      };
+  
+      // Update local storage
+      localStorage.setItem('current_cart', JSON.stringify(currentCart));
+  
+      // If "previous_cart" exists, compare and find differences
+      const previousCartRaw = localStorage.getItem('previous_cart');
+      const previousCart = previousCartRaw ? JSON.parse(previousCartRaw) : {};
+  
+      // Find the difference between the current and previous cart
+      let changedCart = {};
+      for (const id in currentCart) {
+        if (!previousCart[id] || 
+          previousCart[id].quantity !== currentCart[id].quantity || 
+          previousCart[id].product.id !== currentCart[id].product.id
+        ) {
+          changedCart[id] = {
+            product: currentCart[id].product,
+            quantity: currentCart[id].quantity - (previousCart[id] ? previousCart[id].quantity : 0),
+            price: currentCart[id].price - (previousCart[id] ? previousCart[id].price : 0)
+          };
+          changedCart[id].price = Number.parseFloat(changedCart[id].price).toFixed(2)*1;
+          changedCart[id].unit_price = Number.parseFloat(changedCart[id].price / (changedCart[id].quantity !== 0 ? changedCart[id].quantity : 1)).toFixed(2)*1;
+        }
+      }
+  
+      // Update local storage
+      localStorage.setItem('previous_cart', JSON.stringify(currentCart));
+      localStorage.setItem('changed_cart', JSON.stringify(changedCart));
+    }
+  
+    function triggerChangeCartEvents() {
+      var klaviyo = window.klaviyo || [];
+      // Get changed cart details from local storage
+      // which is a difference between current and previous cart
+      const changedCart = getChangedCart();
+
+      // Track each item in the changed cart
+      for (const id in changedCart) {
+        const item = changedCart[id];
+
+        // Only track additions
+        if(item.product && item.quantity > 0) {
+          let categories = [];
+          if (item.product.categories.length > 0) {
+            categories = item.product.categories.map(category => category.name);
+          }
+
+          const data = {
+            "AddedItemProductName": item.product.name,
+            "AddedItemProductID": item.product.id,
+            "AddedItemSKU": item.product.product_code,
+            "AddedItemCategories": categories,
+            "AddedItemImageURL": item.product.image.url,
+            "AddedItemURL": item.product.url,
+            "AddedItemPrice": item.price,
+            "AddedItemQuantity": item.quantity,
+            "CheckoutURL": "{{ current_store.url }}{{ current_store.checkout_path | replace_first: "/", ""}}",
+            "ItemNames": [
+              {%- for item in current_cart.items %}
+                {% if item.reserved_product? != true %}
+                  "{{ item.name }}"{%- unless forloop.last -%},{%- endunless -%}
+                {% endif %}
+              {%- endfor %}
+            ],
+            "Items": [
+              {% assign value = 0 %}
+              {% assign comma = "" %}
+              {%- for item in current_cart.items %}
+                {% if item.reserved_product? != true %}
+                  {{comma}}{
+                    "ProductID": "{{ item.product.id  }}",
+                    "SKU": "{{ item.product.product_code  }}",
+                    "ProductName": "{{ item.name }}",
+                    "ProductURL": "{{ item.product.url }}",
+                    "ImageURL": "{{ item.product.image.url }}",
+                    {%- if item.product.categories.size > 0 %}
+                      "ProductCategories": [
+                        {%- for category in item.product.categories %}  
+                          "{{ category.name }}"{%- unless forloop.last -%},{%- endunless -%}
+                        {%- endfor %}
+                      ],
+                    {%- endif %}
+                    {%- if item.quantity > 0 %}
+                      "ItemPrice": {{ item.pricing.checkout_price | divided_by: item.quantity | round: 2 }},
+                    {%- else %}
+                      "ItemPrice": {{ item.pricing.checkout_price }},
+                    {%- endif %}
+                    "RowTotal": {{ item.pricing.checkout_price }},
+                    "Quantity": {{ item.quantity }}
+                  }
+                  {% assign value = value | plus: item.pricing.checkout_price %}
+                  {% assign comma = "," %}
+                {% endif %}
+              {%- endfor %}
+            ],
+            "$value": {{ value }}
+          };
+
+          klaviyo.track("Added to Cart", data);
+        }
+      }
+    }
+  
+    updateLocalCartDetails();
+    triggerChangeCartEvents();
+  </script>
+  
+  {%- unless current_events.size() > 0 %}
+    {%- case current_request.path %}
+    {%- when current_store.checkout_path %}
+      <script>
+        var klaviyo = window.klaviyo || [];
+        // IE8 support
+        if (!Date.now) {
+            Date.now = function() { return new Date().getTime(); }
+        }
+        const unix_timestamp_s = Math.floor(Date.now() / 1000)
+        const data = {
+          "$event_id": "{{ current_cart.id }}_" + unix_timestamp_s,
+          "CheckoutURL": "{{ current_store.url }}{{ current_store.checkout_path | replace_first: "/", ""}}",
+          "ItemNames": [
+            {%- for item in current_cart.items %}
+              {% if item.reserved_product? != true %}
+                "{{ item.name }}"{%- unless forloop.last -%},{%- endunless -%}
+              {% endif %}
+            {%- endfor %}
+          ],
+          "Categories": [
+            {%- assign counter = 0 %}
+            {%- for item in current_cart.items %}
+              {%- if item.reserved_product? != true and item.product.categories.size > 0 %}
+                {%- for category in item.product.categories %}
+                  {%- if counter > 0 %}
+                    , "{{ category.name }}"
+                  {%- else %}
+                    "{{ category.name }}"
+                  {%- endif %}
+                  {%- assign counter = counter | plus: 1 %}
+                {%- endfor %}
+              {%- endif %}
+            {%- endfor %}
+          ],
+          "Items": [
+            {% assign value = 0 %}
+            {% assign comma = "" %}
+            {%- for item in current_cart.items %}
+              {% if item.reserved_product? != true %}
+                {{comma}}{
+                  "ProductID": "{{ item.product.id  }}",
+                  "SKU": "{{ item.product.product_code  }}",
+                  "ProductName": "{{ item.name }}",
+                  "ProductURL": "{{ item.product.url }}",
+                  "ImageURL": "{{ item.product.image.url }}",
+                  {%- if item.product.categories.size > 0 %}
+                    "ProductCategories": [
+                      {%- for category in item.product.categories %}  
+                        "{{ category.name }}"{%- unless forloop.last -%},{%- endunless -%}
+                      {%- endfor %}
+                    ],
+                  {%- endif %}
+                  {%- if item.quantity > 0 %}
+                    "ItemPrice": {{ item.pricing.checkout_price | divided_by: item.quantity | round: 2 }},
+                  {%- else %}
+                    "ItemPrice": {{ item.pricing.checkout_price }},
+                  {%- endif %}
+                  "RowTotal": {{ item.pricing.checkout_price }},
+                  "Quantity": {{ item.quantity }}
+                }
+                {% assign value = value | plus: item.pricing.checkout_price %}
+                {% assign comma = "," %}
+              {% endif %}
+            {%- endfor %}
+          ],
+          "$value": {{ value }}
+        };
+
+        klaviyo.track("Started Checkout", data);
+      </script>
+    {%- endcase %}
+
+    {%- if current_product %}
+      <script>
+        var klaviyo = window.klaviyo || [];
+        const data = {
+          "ProductID": "{{ current_product.id }}",
+          "SKU": "{{ current_product.product_code }}",
+          "ProductName": "{{ current_product.name }}",
+          "URL": "{{ current_product.url }}",
+          "ImageURL": "{{ current_product.image.url }}",
+          "Brand": "{{ current_product.brand.name }}",
+          {%- if item.product.categories.size > 0 %}
+            "Categories": [
+              {%- for category in item.product.categories %}  
+                "{{ category.name }}"{%- unless forloop.last -%},{%- endunless -%}
+              {%- endfor %}
+            ],
+          {%- endif %}
+          {%- if current_product.bundle_lead? %}
+            {%- if current_product.pricing.subscription? %}
+              "Price": {{ current_product.pricing.subscription_total_price }},
+            {%- else %}
+              "Price": {{ current_product.pricing.price }},
+            {%- endif %}
+          {%- else %}
+            "Price": {{ current_product.pricing.checkout_price }},
+          {%- endif %}
+          "CompareAtPrice": {{ current_product.pricing.original_price }}
+        };
+
+        klaviyo.track("Viewed Product", data);
+      </script>
+    {%- endif %}
+  {%- endunless %}
+{%- endif %}

@@ -6,15 +6,15 @@
       "dependencies": [
         {
           "package": "Streams",
-          "versionNumber": "61.0.5"
+          "subscriberPackageVersionId": "04tGA000005VVe0YAG"
         },
         {
-          "package": "s_c",
-          "versionNumber": "16.3"
+          "package": "StoreConnect eCommerce",
+          "versionNumber": "16.3.0.LATEST"
         }
       ],
       "package": "StoreConnect Add-on: Klaviyo",
-      "versionName": "ver 0.1",
+      "versionName": "ver 0.1.0",
       "versionNumber": "0.1.0.NEXT",
       "versionDescription": "StoreConnect Add-on for Klaviyo integration"
     }
@@ -24,6 +24,9 @@
   "sfdcLoginUrl": "https://login.salesforce.com",
   "sourceApiVersion": "59.0",
   "packageAliases": {
-    "StoreConnect Add-on: Klaviyo": "0Ho2u000000001JCAQ"
+    "StoreConnect Add-on: Klaviyo": "0Ho2u000000001JCAQ",
+    "Streams": "04tGA000005VVe0YAG",
+    "StoreConnect eCommerce": "0Ho2u0000004C9DCAU",
+    "StoreConnect Add-on: Klaviyo@0.1.0-1": "04t2u000000D2l2AAC"
   }
 }

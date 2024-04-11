@@ -3735,14 +3735,6 @@ if($inputIds.size() &gt; 0) {
         <isOutput>false</isOutput>
     </variables>
     <variables>
-        <name>kCatalogItem</name>
-        <apexClass>ExternalService__Klaviyo_CatalogItemCreateQuery</apexClass>
-        <dataType>Apex</dataType>
-        <isCollection>false</isCollection>
-        <isInput>false</isInput>
-        <isOutput>false</isOutput>
-    </variables>
-    <variables>
         <name>NamedCredential</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
