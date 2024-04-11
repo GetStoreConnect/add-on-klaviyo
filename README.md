@@ -81,5 +81,6 @@ For additional Theme knowledge, please see the below resources:
 | ------------------------ | --------- | --------------------------------------------------------------------------- |
 | `klaviyo_public_api_key` |    YES    | Log into **Klaviyo** > **Account** > **Settings** > **API Keys** > `Public API Key` |
 
+
 ## Disclaimer
 This add-on is provided as-is with no warranty or support beyond this document. This package may be updated overtime if critical bugs are reported/detected but is designed to be an unmanaged package for the purposes of the end-user having full control to resolve any and all issues without publisher support.
