@@ -50,9 +50,9 @@ Due to the nature of Salesforce being a configurable platform, this add-on has b
 | `Fulfilled Order`  | `s_c__Shipment__c` record                                                                | Auto-Launch Flow | Requires specific implementation method with optional conditionals. Recommended via Record-Triggered-Flow |
 
 ##### Website Tracking
-You will need to install copy the contents of the provided [Theme Template](/themes/snippets/events/klaviyo.liquid) into a `s_c__Theme_Template__c` record in the required `s_c__Theme__c` record(s) within your org.
+You will need to install copy the contents of the provided [Theme Template](themes/snippets/events/klaviyo.liquid) into a `s_c__Theme_Template__c` record in the required `s_c__Theme__c` record(s) within your org.
 
-There is also an example [Events Theme Template](/themes/snippets/events.liquid) that can be used for rendering the Klaviyo snippet.
+There is also an example [Events Theme Template](themes/snippets/events.liquid) that can be used for rendering the Klaviyo snippet.
 
 For additional Theme knowledge, please see the below resources:
 * [Theme Builder](https://help.getstoreconnect.com/documentation/themes/0.11.6/index.html "Theme Builder")
