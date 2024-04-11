@@ -24,10 +24,10 @@ It has the following **key featuers**:
 3. Add your Klaviyo Public API Key to the Store Variable `klaviyo_public_api_key` of each store using the integration
 
 **Optional**
-4. Add the `Klaviyo Sync` button to the desired `Product2` Page Layout(s) and/or List View Layout(s)
-5. Add the `Klaviyo Sync` button to the desired `s_c__Product_Category__c` Page Layout(s) and/or List View Layout(s)
-6. Turn on the `Klaviyo_RTF_Order_Events` flow or implement the Order Events via a self-defined method, e.g. Apex Trigger, Scheduled Flow, etc.
-7. Turn on the `Klaviyo_RTF_Fulfillment_Events` flow or implement the Fulfillment Events via a self-defined method, e.g. Apex Trigger, Scheduled Flow, etc.
+1. Add the `Klaviyo Sync` button to the desired `Product2` Page Layout(s) and/or List View Layout(s)
+2. Add the `Klaviyo Sync` button to the desired `s_c__Product_Category__c` Page Layout(s) and/or List View Layout(s)
+3. Turn on the `Klaviyo_RTF_Order_Events` flow or implement the Order Events via a self-defined method, e.g. Apex Trigger, Scheduled Flow, etc.
+4. Turn on the `Klaviyo_RTF_Fulfillment_Events` flow or implement the Fulfillment Events via a self-defined method, e.g. Apex Trigger, Scheduled Flow, etc.
 
 ### Dependencies
 [![StoreConnect](https://custom-icon-badges.demolab.com/badge/StoreConnect-16.3+-fea42a "StoreConnect")](https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3A00000FMkeKUAT)
@@ -79,5 +79,5 @@ For additional Theme knowledge, please see the below resources:
 | ------------------------ | --------- | --------------------------------------------------------------------------- |
 | `klaviyo_public_api_key` |    YES    | Log into **Klaviyo** > **Account** > **Settings** > **API Keys** > `Public API Key` |
 
-#### Disclaimer
+## Disclaimer
 This add-on is provided as-is with no warranty or support beyond this document. This package may be updated overtime if critical bugs are reported/detected but is designed to be an unmanaged package for the purposes of the end-user having full control to resolve any and all issues without publisher support.
