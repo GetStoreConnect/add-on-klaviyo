@@ -14,8 +14,8 @@
         }
       ],
       "package": "StoreConnect Add-on: Klaviyo",
-      "versionName": "ver 0.1.1",
-      "versionNumber": "0.1.1.NEXT",
+      "versionName": "ver 0.1.2",
+      "versionNumber": "0.1.2.NEXT",
       "versionDescription": "StoreConnect Add-on for Klaviyo integration"
     }
   ],
@@ -28,6 +28,7 @@
     "Streams": "04tGA000005VVe0YAG",
     "StoreConnect eCommerce": "0Ho2u0000004C9DCAU",
     "StoreConnect Add-on: Klaviyo@0.1.0-1": "04t2u000000D2l2AAC",
-    "StoreConnect Add-on: Klaviyo@0.1.1-1": "04t2u000000D2l7AAC"
+    "StoreConnect Add-on: Klaviyo@0.1.1-1": "04t2u000000D2l7AAC",
+    "StoreConnect Add-on: Klaviyo@0.1.2-1": "04t2u000000D2lCAAS"
   }
 }
