@@ -1,5 +1,5 @@
 # StoreConnect Add-on: Klaviyo
-Integrate [![StoreConnect](https://custom-icon-badges.demolab.com/badge/StoreConnect-fea42a?logo=storeconnect&logoColor=white "StoreConnect")](https://getstoreconnect.com) with [![Klaviyo](https://custom-icon-badges.demolab.com/badge/Klaviyo-black?logo=klaviyo-flag&logoColor=white "Klaviyo")](https://klaviyo.com) to bring your marketing automation to life. With StoreConnect as your eCommerce built on top of Salesforce, the world's #1 CRM, you have customer knowledge and reach like never before.
+Integrate [![StoreConnect](https://custom-icon-badges.demolab.com/badge/StoreConnect-fea42a?logo=storeconnect&logoColor=white "StoreConnect")](https://getstoreconnect.com){:target=”_blank”} with [![Klaviyo](https://custom-icon-badges.demolab.com/badge/Klaviyo-black?logo=klaviyo-flag&logoColor=white "Klaviyo")](https://klaviyo.com){:target=”_blank”} to bring your marketing automation to life. With StoreConnect as your eCommerce built on top of Salesforce, the world's #1 CRM, you have customer knowledge and reach like never before.
 
 This integration is not like your typical integration! Say goodbye to locked down, half-baked integrations that you quickly come to regret!
 
@@ -13,9 +13,9 @@ It has the following **key featuers**:
 
 ## Installation
 
-[![Install in Production](https://custom-icon-badges.demolab.com/badge/Install-Production-fea42a?style=for-the-badge&logo=storeconnect&logoColor=fea42a "Install in Production")](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t2u000000D2lCAAS)
+[![Install in Production](https://custom-icon-badges.demolab.com/badge/Install-Production-fea42a?style=for-the-badge&logo=storeconnect&logoColor=fea42a "Install in Production")](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t2u000000D2l7AAC){:target=”_blank”}
 
-[![Install in Sandbox](https://custom-icon-badges.demolab.com/badge/Install-Sandbox-fea42a?style=for-the-badge&logo=storeconnect&logoColor=fea42a "Install in Sandbox")](https://test.salesforce.com/packaging/installPackage.apexp?p0=04t2u000000D2lCAAS)
+[![Install in Sandbox](https://custom-icon-badges.demolab.com/badge/Install-Sandbox-fea42a?style=for-the-badge&logo=storeconnect&logoColor=fea42a "Install in Sandbox")](https://test.salesforce.com/packaging/installPackage.apexp?p0=04t2u000000D2l7AAC){:target=”_blank”}
 
 ### Post-Installation
 **Required**
@@ -32,9 +32,9 @@ It has the following **key featuers**:
 5. Turn on the `Klaviyo_RTF_Fulfillment_Events` flow or implement the Fulfillment Events via a self-defined method, e.g. Apex Trigger, Scheduled Flow, etc.
 
 ### Dependencies
-[![StoreConnect](https://custom-icon-badges.demolab.com/badge/StoreConnect-16.3+-fea42a "StoreConnect")](https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3A00000FMkeKUAT)
+[![StoreConnect](https://custom-icon-badges.demolab.com/badge/StoreConnect-16.3+-fea42a "StoreConnect")](https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3A00000FMkeKUAT){:target=”_blank”}
 
-[![Streams](https://custom-icon-badges.demolab.com/badge/Streams-61.0+-blue "Streams")](https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3000000B5Z0LEAV)
+[![Streams](https://custom-icon-badges.demolab.com/badge/Streams-61.0+-blue "Streams")](https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3000000B5Z0LEAV){:target=”_blank”}
 
 ## Intended Use
 This add-on is intended to provide a base level of functionality and is published as an unmanaged Salesforce package for the purposes of flexibility and extensiblity.
@@ -65,10 +65,10 @@ You will need to install copy the contents of the provided [Theme Template](./th
 There is also an example [Events Theme Template](./themes/snippets/events.liquid) that can be used for rendering the Klaviyo snippet.
 
 For additional Theme knowledge, please see the below resources:
-* [Theme Builder](https://help.getstoreconnect.com/documentation/themes/0.11.6/index.html "Theme Builder")
-* [Theme Templates](https://help.getstoreconnect.com/documentation/themes/0.11.6/templates/index.html "Theme Templates")
-* [Theme Developer Cource](https://storeconnect.academy/students/sign_up?course_id=f39ced7f-5c52-4c70-a768-60f17026e74c "Theme Developer Course")
-* [Store Variables](https://help.getstoreconnect.com/documentation/store-variables.html "Store Variables")
+* [Theme Builder](https://help.getstoreconnect.com/documentation/themes/0.11.6/index.html "Theme Builder"){:target=”_blank”}
+* [Theme Templates](https://help.getstoreconnect.com/documentation/themes/0.11.6/templates/index.html "Theme Templates"){:target=”_blank”}
+* [Theme Developer Cource](https://storeconnect.academy/students/sign_up?course_id=f39ced7f-5c52-4c70-a768-60f17026e74c "Theme Developer Course"){:target=”_blank”}
+* [Store Variables](https://help.getstoreconnect.com/documentation/store-variables.html "Store Variables"){:target=”_blank”}
 
 | Events             | Description                                                                                     |
 | ------------------ | ----------------------------------------------------------------------------------------------- |
@@ -80,6 +80,7 @@ For additional Theme knowledge, please see the below resources:
 | Store Variables          | Required  | Description                                                                 |
 | ------------------------ | --------- | --------------------------------------------------------------------------- |
 | `klaviyo_public_api_key` |    YES    | Log into **Klaviyo** > **Account** > **Settings** > **API Keys** > `Public API Key` |
+
 
 ## Disclaimer
 This add-on is provided as-is with no warranty or support beyond this document. This package may be updated overtime if critical bugs are reported/detected but is designed to be an unmanaged package for the purposes of the end-user having full control to resolve any and all issues without publisher support.
