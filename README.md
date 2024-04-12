@@ -21,8 +21,16 @@ It has the following **key featuers**:
 **Required**
 1. Assign the `StoreConnect Add-on: Klaviyo` to any users that need to use the integration or see the `Integration__c` records
 2. Klaviyo [Theme Template](./themes/snippets/events/klaviyo.liquid)
-3. Add your Klaviyo Public API Key to the Store Variable `klaviyo_public_api_key` of each store using the integration
-4. Turn on the `Klaviyo_ALF_Integration` flow
+3. Add your [Klaviyo Public API Key](https://www.klaviyo.com/settings/account/api-keys) to the Store Variable `klaviyo_public_api_key` of each store using the integration
+4. Create your [Klaviyo Private API Key](https://www.klaviyo.com/create-private-api-key), you will need the below minimum access:
+    * **Catalogs**: `Full Access`
+    * **Events**: `Full Access`
+5. Add your Klaviyo Private API Key to Salesforce
+    * **Setup** > **Named Credentials** > `Klaviyo` > **External Credential**: `Klaviyo`
+    * Under **Principals** > **Actions** > **Edit** > **Add**:
+        * **Name**: `PrivateKey`
+        * **Value**: *[Private API Key from Klaviyo dashboard]*
+6. Turn on the `Klaviyo_ALF_Integration` flow
 
 **Optional**
 1. Turn on the `Klaviyo_SF_Sync` flow to enable `Klaviyo Sync` buttons
