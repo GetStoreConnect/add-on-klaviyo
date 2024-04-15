@@ -9,5 +9,5 @@
     <masterLabel>Klaviyo Sync</masterLabel>
     <openType>sidebar</openType>
     <protected>false</protected>
-    <url>/flow/Klaviyo_SF_Sync?targetId={!Product2.Id}&amp;IntegrationType=CatalogItem&amp;retURL=/lightning/r/Product2/{!Product2.Id}/view</url>
+    <url>/flow/Klaviyo_SF_Sync?TargetId={!Product2.Id}&amp;IntegrationType=CatalogItem&amp;retURL=/lightning/r/Product2/{!Product2.Id}/view</url>
 </WebLink>
