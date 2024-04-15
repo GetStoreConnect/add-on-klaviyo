@@ -9,5 +9,5 @@
     <masterLabel>Klaviyo Sync</masterLabel>
     <openType>sidebar</openType>
     <protected>false</protected>
-    <url>/flow/Klaviyo_SF_Sync?targetId={!s_c__Product_Category__c.Id}&amp;IntegrationType=CatalogCategory&amp;retURL=/lightning/r/s_c__Product_Category__c/{!s_c__Product_Category__c.Id}/view</url>
+    <url>/flow/Klaviyo_SF_Sync?TargetId={!s_c__Product_Category__c.Id}&amp;IntegrationType=CatalogCategory&amp;retURL=/lightning/r/s_c__Product_Category__c/{!s_c__Product_Category__c.Id}/view</url>
 </WebLink>
