@@ -10,5 +10,5 @@
     <openType>sidebar</openType>
     <protected>false</protected>
     <requireRowSelection>true</requireRowSelection>
-    <url>/flow/Klaviyo_SF_Sync?IntegrationType=CatalogCategory&amp;retURL=/a0n/o</url>
+    <url>/flow/Klaviyo_SF_Sync?isdtp=vw&amp;IntegrationType=CatalogCategory</url>
 </WebLink>

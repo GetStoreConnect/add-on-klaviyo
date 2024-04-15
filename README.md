@@ -3,7 +3,7 @@ Integrate [![StoreConnect](https://custom-icon-badges.demolab.com/badge/StoreCon
 
 This integration is not like your typical integration! Say goodbye to locked down, half-baked integrations that you quickly come to regret!
 
-It has the following **key featuers**:
+It has the following **key features**:
 * Fully **Extensible**
 * **Open source** unmanaged package
 * **No Apex**, on-demand code changes directly in Flow without Apex
@@ -19,7 +19,7 @@ It has the following **key featuers**:
 
 ### Post-Installation
 **Required**
-1. Assign the `StoreConnect Add-on: Klaviyo` to any users that need to use the integration or see the `Integration__c` records
+1. Assign the `StoreConnect Add-on: Klaviyo` to any users that need to use the integration or see the `Integration__c` records (required for Flow execution)
 2. Klaviyo [Theme Template](./theme/snippets/events/klaviyo.liquid)
 3. Add your [Klaviyo Public API Key](https://www.klaviyo.com/settings/account/api-keys) to the Store Variable `klaviyo_public_api_key` of each store using the integration
 4. Create your [Klaviyo Private API Key](https://www.klaviyo.com/create-private-api-key), you will need the below minimum access:
@@ -89,6 +89,16 @@ For additional Theme knowledge, please see the below resources:
 | ------------------------ | --------- | --------------------------------------------------------------------------- |
 | `klaviyo_public_api_key` |    YES    | Log into **Klaviyo** > **Account** > **Settings** > **API Keys** > `Public API Key` |
 
+## Advanced Configuration
+This package relies on three (3) values being set via the Custom Settings in `StoreConnect_Add_on_Klaviyo__c`:
+* `Named_Credential__c`
+* `Platform_Instance_Name__c`
+* `Batch_Size__c`
+
+This settings are designed for a single Salesforce:Klaviyo instance mapping to simplify installation. For a 1:many integration, you will need to override the supplied flows that trigger the Auto-Launch Flow controller to supply the instance specific value logic.
+
+## Troubleshooting
+Outside of typical Salesforce permission issues that may be org specific, there may be permission issues on the Klaviyo side. If this is the case, adjust the permissions of the Private API Key in Klaviyo to `Full Access` and then restrict down as required to maintain the integration function.
 
 ## Disclaimer
 This add-on is provided as-is with no warranty or support beyond this document. This package may be updated overtime if critical bugs are reported/detected but is designed to be an unmanaged package for the purposes of the end-user having full control to resolve any and all issues without publisher support.

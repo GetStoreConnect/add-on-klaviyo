@@ -1,12 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <actionCalls>
-        <name>Create_Catalog_Category</name>
-        <label>Create Catalog Category</label>
-        <locationX>50</locationX>
-        <locationY>458</locationY>
+        <name>Batch_Invocation</name>
+        <label>Batch Invocation</label>
+        <locationX>314</locationX>
+        <locationY>566</locationY>
         <actionName>Streams__Streamscript</actionName>
         <actionType>apex</actionType>
+        <dataTypeMappings>
+            <typeName>T__c1</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c2</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c3</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c4</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c5</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c6</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c7</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c8</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
         <dataTypeMappings>
             <typeName>T__c9</typeName>
             <typeValue>Task</typeValue>
@@ -59,6 +91,113 @@
             <typeName>U__records</typeName>
             <typeValue>Task</typeValue>
         </dataTypeMappings>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>b1</name>
+            <value>
+                <elementReference>UseBulkApi</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>b2</name>
+            <value>
+                <elementReference>RunAsynchronously</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i0</name>
+            <value>
+                <elementReference>Store</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i1</name>
+            <value>
+                <elementReference>flowName</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i2</name>
+            <value>
+                <elementReference>NamedCredential</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i3</name>
+            <value>
+                <elementReference>IntegrationType</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i4</name>
+            <value>
+                <elementReference>PlatformInstanceName</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>l1</name>
+            <value>
+                <elementReference>InputIds</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>n1</name>
+            <value>
+                <elementReference>BatchSize</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>x</name>
+            <value>
+                <stringValue># Streamscript l1=InputIds i1=flowName n1=batchSize b1=UseBulkApi b2=RunAsynchronously i2=NamedCredential i3=IntegrationType i4=platformInstanceName i0=Store
+
+# Convert list to queryable string
+$inputIds = {`!InputIds}
+
+# Automatically batch the inputs
+if($inputIds.size() &gt; 0) {
+    # Capture global Flow variables
+    $flowName = {`!flowName}
+    $batchSize = {`!batchSize}
+    $useBulkApi = {`!UseBulkApi}
+    $async = {`!RunAsynchronously}
+    $namedCredential = {`!NamedCredential}
+    $integrationType = {`!IntegrationType}
+    $platformInstanceName = {`!platformInstanceName}
+    $store = {`!Store}
+
+    $scope = {
+        &apos;FlowName&apos;: $flowName,
+        &apos;UseBulkApi&apos;: $useBulkApi,
+        &apos;RunAsynchronously&apos;: $async,
+        &apos;IntegrationType&apos;: $integrationType,
+        &apos;InputIds&apos;: []
+    }
+    Script-Batch $batchSize $inputIds $scope ${
+        $ctx = {
+            &apos;UseBulkApi&apos;: $_.UseBulkApi,
+            &apos;RunAsynchronously&apos;: $_.RunAsynchronously,
+            &apos;IntegrationType&apos;: $_.IntegrationType,
+            &apos;InputIds&apos;: $__.items
+        }
+        Script-Flow $_.FlowName $ctx
+    }
+}
+
+</stringValue>
+            </value>
+        </inputParameters>
+        <nameSegment>Streams__Streamscript</nameSegment>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+        <versionSegment>1</versionSegment>
+    </actionCalls>
+    <actionCalls>
+        <name>Coalesce_and_Batch</name>
+        <label>Coalesce and Batch</label>
+        <locationX>50</locationX>
+        <locationY>242</locationY>
+        <actionName>Streams__Streamscript</actionName>
+        <actionType>apex</actionType>
         <dataTypeMappings>
             <typeName>T__c1</typeName>
             <typeValue>Task</typeValue>
@@ -89,6 +228,253 @@
         </dataTypeMappings>
         <dataTypeMappings>
             <typeName>T__c8</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c9</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__i0</typeName>
+            <typeValue>s_c__Store__c</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r1</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r2</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r3</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r4</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r5</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r6</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r7</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r8</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r9</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>U__record</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>U__records</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>b1</name>
+            <value>
+                <elementReference>UseBulkApi</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>b2</name>
+            <value>
+                <elementReference>RunAsynchronously</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i0</name>
+            <value>
+                <elementReference>Store</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i1</name>
+            <value>
+                <elementReference>InputId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i2</name>
+            <value>
+                <elementReference>flowName</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i3</name>
+            <value>
+                <elementReference>NamedCredential</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i4</name>
+            <value>
+                <elementReference>IntegrationType</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i5</name>
+            <value>
+                <elementReference>PlatformInstanceName</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>n1</name>
+            <value>
+                <elementReference>BatchSize</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>x</name>
+            <value>
+                <stringValue># Streamscript bulk i1=InputId i2=flowName n1=batchSize b1=UseBulkApi b2=RunAsynchronously i3=NamedCredential i4=IntegrationType i5=platformInstanceName i0=Store
+
+$bulkInputIds = {`!InputId}
+$inputIds = []
+
+if($bulkInputIds.size() &gt; 0) {
+    $inputIds.addAll($bulkInputIds)
+}
+
+# Automatically batch the inputs
+if($inputIds.size() &gt; 0) {
+    # Capture global Flow variables
+    $flowName = {`!flowName}.get(0)
+    $batchSize = {`!batchSize}.get(0)
+    $useBulkApi = {`!UseBulkApi}.get(0)
+    $async = {`!RunAsynchronously}.get(0)
+    $namedCredential = {`!NamedCredential}.get(0)
+    $integrationType = {`!IntegrationType}.get(0)
+    $platformInstanceName = {`!platformInstanceName}.get(0)
+    $store = {`!Store}.get(0)
+
+    $scope = {
+        &apos;FlowName&apos;: $flowName,
+        &apos;UseBulkApi&apos;: $useBulkApi,
+        &apos;RunAsynchronously&apos;: $async,
+        &apos;IntegrationType&apos;: $integrationType,
+        &apos;InputIds&apos;: []
+    }
+    Script-Batch $batchSize $inputIds $scope ${
+        $ctx = {
+            &apos;UseBulkApi&apos;: $_.UseBulkApi,
+            &apos;RunAsynchronously&apos;: $_.RunAsynchronously,
+            &apos;IntegrationType&apos;: $_.IntegrationType,
+            &apos;InputIds&apos;: $__.items
+        }
+        Script-Flow $_.FlowName $ctx
+    }
+}
+
+</stringValue>
+            </value>
+        </inputParameters>
+        <nameSegment>Streams__Streamscript</nameSegment>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+        <versionSegment>1</versionSegment>
+    </actionCalls>
+    <actionCalls>
+        <name>Create_Catalog_Category</name>
+        <label>Create Catalog Category</label>
+        <locationX>578</locationX>
+        <locationY>674</locationY>
+        <actionName>Streams__Streamscript</actionName>
+        <actionType>apex</actionType>
+        <dataTypeMappings>
+            <typeName>T__c1</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c2</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c3</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c4</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c5</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c6</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c7</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c8</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c9</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__i0</typeName>
+            <typeValue>s_c__Store__c</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r1</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r2</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r3</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r4</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r5</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r6</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r7</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r8</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r9</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>U__record</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>U__records</typeName>
             <typeValue>Task</typeValue>
         </dataTypeMappings>
         <flowTransactionModel>CurrentTransaction</flowTransactionModel>
@@ -131,7 +517,7 @@
         <inputParameters>
             <name>i4</name>
             <value>
-                <elementReference>platformInstanceName</elementReference>
+                <elementReference>PlatformInstanceName</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
@@ -143,7 +529,7 @@
         <inputParameters>
             <name>n1</name>
             <value>
-                <elementReference>batchSize</elementReference>
+                <elementReference>BatchSize</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
@@ -494,75 +880,55 @@ if($inputIds.size() &gt; 0) {
     $platformInstanceName = {`!platformInstanceName}
     $store = {`!Store}
 
-    # Automatically batch the inputs if they exceed the batch limit
-    if($inputIds.size() &gt; $batchSize) {
-        $scope = {
-            &apos;FlowName&apos;: $flowName,
-            &apos;UseBulkApi&apos;: $useBulkApi,
-            &apos;RunAsynchronously&apos;: $async,
-            &apos;IntegrationType&apos;: $integrationType,
-            &apos;InputIds&apos;: []
-        }
-        Script-Batch $batchSize $inputIds $scope ${
-            $ctx = {
-                &apos;UseBulkApi&apos;: $_.UseBulkApi,
-                &apos;RunAsynchronously&apos;: $_.RunAsynchronously,
-                &apos;IntegrationType&apos;: $_.IntegrationType,
-                &apos;InputIds&apos;: $__.items
-            }
-            Script-Flow $_.FlowName $ctx
-        }
-    } else {
-        # Convert list to queryable string
-        $inputIds = List-Stringify $inputIds
+    # Convert list to queryable string
+    $inputIds = List-Stringify $inputIds
 
-        # Limit all following queries to a single store since there is a 1:1
-        # relationship between a store and a platform instance
-        $taxonomyQuery = `
-            SELECT Id, s_c__Store_Id__c
-            FROM s_c__Taxonomy__c 
+    # Limit all following queries to a single store since there is a 1:1
+    # relationship between a store and a platform instance
+    $taxonomyQuery = `
+        SELECT Id, s_c__Store_Id__c
+        FROM s_c__Taxonomy__c 
+    `
+
+    # Add Store scoping if set
+    if($store.Id != null) {
+        $taxonomyQuery = $taxonomyQuery + `
+            WHERE s_c__Store_Id__c = &apos;$store.Id&apos; 
+        `
+    }
+
+    # Query Taxonomies
+    $taxonomies = Query-Records $taxonomyQuery
+
+    $integrations = []
+
+    # Only carry out further operations if records exist for scope
+    if($taxonomies.size() &gt; 0) {
+        # Convert list to queryable string
+        $taxonomyIds = List-Stringify $taxonomies &apos;Id&apos; false
+
+        # Initial queries for all actionable records
+        $categories = Query-Records `
+            SELECT Id, Name, s_c__Display_Name__c
+            FROM s_c__Product_Category__c 
+            WHERE Id IN $inputIds AND
+                    s_c__Taxonomy_Id__c IN $taxonomyIds
         `
 
-        # Add Store scoping if set
-        if($store.Id != null) {
-            $taxonomyQuery = $taxonomyQuery + `
-                WHERE s_c__Store_Id__c = &apos;$store.Id&apos; 
-            `
-        }
-
-        # Query Taxonomies
-        $taxonomies = Query-Records $taxonomyQuery
-
-        $integrations = []
-
-        # Only carry out further operations if records exist for scope
-        if($taxonomies.size() &gt; 0) {
+        # Only carry out further operations if some valid records are found
+        if($categories.size() &gt; 0) {
+            $klaviyoIntegrationType = &apos;$custom&apos;
+            $klaviyoCatalogType = &apos;$default&apos;
             # Convert list to queryable string
-            $taxonomyIds = List-Stringify $taxonomies &apos;Id&apos; false
+            $categoryIds = List-Stringify $categories &apos;Id&apos; false
+            # Get map of existing integrations
+            $integrationMap = Map-Integrations $platformInstanceName $categoryIds &apos;Product_Category_Id__c&apos;
 
-            # Initial queries for all actionable records
-            $categories = Query-Records `
-                SELECT Id, Name, s_c__Display_Name__c
-                FROM s_c__Product_Category__c 
-                WHERE Id IN $inputIds AND
-                        s_c__Taxonomy_Id__c IN $taxonomyIds
-            `
-
-            # Only carry out further operations if some valid records are found
-            if($categories.size() &gt; 0) {
-                $klaviyoIntegrationType = &apos;$custom&apos;
-                $klaviyoCatalogType = &apos;$default&apos;
-                # Convert list to queryable string
-                $categoryIds = List-Stringify $categories &apos;Id&apos; false
-                # Get map of existing integrations
-                $integrationMap = Map-Integrations $platformInstanceName $categoryIds &apos;Product_Category_Id__c&apos;
-
-                # Create HTTP requests
-                $requests = Klaviyo-Create-CatalogCategoryRequests $categories $integrationMap $klaviyoIntegrationType $klaviyoCatalogType $namedCredential $useBulkApi
-                Log $requests
-                # Dispatch all HTTP requests and create Integration records if possible
-                Http-Dispatch-Controller $requests $integrationMap $platformInstanceName $async
-            }
+            # Create HTTP requests
+            $requests = Klaviyo-Create-CatalogCategoryRequests $categories $integrationMap $klaviyoIntegrationType $klaviyoCatalogType $namedCredential $useBulkApi
+            Log $requests
+            # Dispatch all HTTP requests and create Integration records if possible
+            Http-Dispatch-Controller $requests $integrationMap $platformInstanceName $async
         }
     }
 }
@@ -577,10 +943,34 @@ if($inputIds.size() &gt; 0) {
     <actionCalls>
         <name>Create_Catalog_Item</name>
         <label>Create Catalog Item</label>
-        <locationX>314</locationX>
-        <locationY>458</locationY>
+        <locationX>842</locationX>
+        <locationY>674</locationY>
         <actionName>Streams__Streamscript</actionName>
         <actionType>apex</actionType>
+        <dataTypeMappings>
+            <typeName>T__c1</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c2</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c3</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c4</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c5</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c6</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
         <dataTypeMappings>
             <typeName>T__c7</typeName>
             <typeValue>Task</typeValue>
@@ -603,6 +993,10 @@ if($inputIds.size() &gt; 0) {
         </dataTypeMappings>
         <dataTypeMappings>
             <typeName>T__r2</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r3</typeName>
             <typeValue>Task</typeValue>
         </dataTypeMappings>
         <dataTypeMappings>
@@ -635,34 +1029,6 @@ if($inputIds.size() &gt; 0) {
         </dataTypeMappings>
         <dataTypeMappings>
             <typeName>U__records</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c4</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c1</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__r3</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c2</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c3</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c5</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c6</typeName>
             <typeValue>Task</typeValue>
         </dataTypeMappings>
         <flowTransactionModel>CurrentTransaction</flowTransactionModel>
@@ -705,7 +1071,7 @@ if($inputIds.size() &gt; 0) {
         <inputParameters>
             <name>i4</name>
             <value>
-                <elementReference>platformInstanceName</elementReference>
+                <elementReference>PlatformInstanceName</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
@@ -717,7 +1083,7 @@ if($inputIds.size() &gt; 0) {
         <inputParameters>
             <name>n1</name>
             <value>
-                <elementReference>batchSize</elementReference>
+                <elementReference>BatchSize</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
@@ -1308,152 +1674,132 @@ if($inputIds.size() &gt; 0) {
     $platformInstanceName = {`!platformInstanceName}
     $store = {`!Store}
 
-    # Automatically batch the inputs if they exceed the batch limit
-    if($inputIds.size() &gt; $batchSize) {
-        $scope = {
-            &apos;FlowName&apos;: $flowName,
-            &apos;UseBulkApi&apos;: $useBulkApi,
-            &apos;RunAsynchronously&apos;: $async,
-            &apos;IntegrationType&apos;: $integrationType,
-            &apos;InputIds&apos;: []
-        }
-        Script-Batch $batchSize $inputIds $scope ${
-            $ctx = {
-                &apos;UseBulkApi&apos;: $_.UseBulkApi,
-                &apos;RunAsynchronously&apos;: $_.RunAsynchronously,
-                &apos;IntegrationType&apos;: $_.IntegrationType,
-                &apos;InputIds&apos;: $__.items
-            }
-            Script-Flow $_.FlowName $ctx
-        }
-    } else {
-        # Convert list to queryable string
-        $inputIds = List-Stringify $inputIds
+    # Convert list to queryable string
+    $inputIds = List-Stringify $inputIds
 
-        # Limit all following queries to a single store since there is a 1:1
-        # relationship between a store and a platform instance
-        $stockLocationsQuery = `
-            SELECT Id, s_c__Stock_Location_Id__c, s_c__Store_Id__c
-            FROM s_c__Store_Stock_Location__c
+    # Limit all following queries to a single store since there is a 1:1
+    # relationship between a store and a platform instance
+    $stockLocationsQuery = `
+        SELECT Id, s_c__Stock_Location_Id__c, s_c__Store_Id__c
+        FROM s_c__Store_Stock_Location__c
+    `
+    
+    # Add Store scoping if set
+    if($store.Id != null) {
+        $stockLocationsQuery = $stockLocationsQuery + `
+            WHERE s_c__Store_Id__c = &apos;$store.Id&apos; 
+        `
+    }
+    
+    # Query Stock Locations
+    $stockLocations = Query-Records $stockLocationsQuery
+    
+    $integrations = []
+    
+    # Only carry out further operations if some stock locations are found
+    if($stockLocations.size() &gt; 0) {
+        # Convert list to queryable string
+        $stockLocationIds = List-Stringify $stockLocations &apos;s_c__Stock_Location_Id__c&apos; false
+    
+        # Initial queries for all ProductIds to be optimised
+        $products = Query-Records `
+            SELECT Id, Name, s_c__Display_Name__c, s_c__Summary_Markdown__c, Description,
+                    s_c__Slug__c, IsActive, s_c__Is_Master__c, ProductCode, StockKeepingUnit, 
+                    s_c__Track_Inventory__c, s_c__Available_On__c
+            FROM Product2 
+            WHERE Id IN $inputIds AND
+                    Id IN (
+                        SELECT s_c__Product_Id__c
+                        FROM s_c__Stock_Level__c 
+                        WHERE s_c__Stock_Location_Id__c IN $stockLocationIds
+                    )
         `
         
-        # Add Store scoping if set
-        if($store.Id != null) {
-            $stockLocationsQuery = $stockLocationsQuery + `
-                WHERE s_c__Store_Id__c = &apos;$store.Id&apos; 
-            `
-        }
-        
-        # Query Stock Locations
-        $stockLocations = Query-Records $stockLocationsQuery
-        
-        $integrations = []
-        
-        # Only carry out further operations if some stock locations are found
-        if($stockLocations.size() &gt; 0) {
-            # Convert list to queryable string
-            $stockLocationIds = List-Stringify $stockLocations &apos;s_c__Stock_Location_Id__c&apos; false
-        
-            # Initial queries for all ProductIds to be optimised
-            $products = Query-Records `
-                SELECT Id, Name, s_c__Display_Name__c, s_c__Summary_Markdown__c, Description,
-                        s_c__Slug__c, IsActive, s_c__Is_Master__c, ProductCode, StockKeepingUnit, 
-                        s_c__Track_Inventory__c, s_c__Available_On__c
-                FROM Product2 
-                WHERE Id IN $inputIds AND
-                        Id IN (
-                            SELECT s_c__Product_Id__c
-                            FROM s_c__Stock_Level__c 
-                            WHERE s_c__Stock_Location_Id__c IN $stockLocationIds
-                        )
-            `
-            
-            # Only carry out further operations if some valid records are found
-            if($products.size() &gt; 0) {
-                $callbackContext = {
-                    &apos;UseBulkApi&apos;: $useBulkApi,
-                    &apos;RunAsynchronously&apos;: $async,
-                    &apos;IntegrationType&apos;: &apos;CatalogVariant&apos;,
-                    &apos;InputIds&apos;: []
-                }
-                $masterProducts = []
-        
-                # Split the products into master and non-master in case a 
-                # mixed list is provided to this action
-                foreach($product in $products) {
-                    if($product.s_c__Is_Master__c) {
-                        $masterProducts.add($product)
-                    } else {
-                        $callbackContext.InputIds.add($product.Id)
-                    }
-                }
-        
-                # Reallocate master products to the original products list
-                $products = $masterProducts
-        
-                if($products.size() &gt; 0) {
-                    $klaviyoIntegrationType = &apos;$custom&apos;
-                    $klaviyoCatalogType = &apos;$default&apos;
-                    
-                    # Convert list to queryable string
-                    $productIds = List-Stringify $products &apos;Id&apos; false
-                    $pricebookId = null
-                    $currencyIsoCode = null
-            
-                    if($store == null) {
-                        $pricebook = Query-Record `
-                            SELECT Id
-                            FROM Pricebook2
-                            WHERE IsStandard = true
-                        `
-                        $pricebookId = $pricebook.Id
-                    } else {
-                        $pricebookId = $store.s_c__Pricebook_Id__c
-                        $currencyIsoCode = $store.CurrencyIsoCode
-                    }
-            
-                    # Map all the related Objects to each ProductId in the input list for
-                    # fast and efficient lookups when building payloads
-                    $stockLevelMap = Map-StockLevels $productIds $stockLocationIds
-                    $pricebookEntryMap = Map-StandardPricebookEntries $pricebookId $currencyIsoCode $productIds
-                    $categoryMap = Map-Categories $productIds
-                    $mediaMap = Map-Media $productIds
-            
-                    $categories = []
-                    foreach($category in $categoryMap.values()) {
-                        $categories.addAll($category)
-                    }
-                    $categoryIds = List-Stringify $categories &apos;Id&apos; false
-            
-                    # Get map of existing integrations
-                    $integrationMap = {}
-                    $integrationMap.putAll(Map-Integrations $platformInstanceName $productIds &apos;Product_Id__c&apos;)
-                    $integrationMap.putAll(Map-Integrations $platformInstanceName $categoryIds &apos;Product_Category_Id__c&apos;)
-            
-                    $context = {
-                        &apos;store&apos;: $store, 
-                        &apos;stockLevelMap&apos;: $stockLevelMap, 
-                        &apos;pricebookEntryMap&apos;: $pricebookEntryMap, 
-                        &apos;categoryMap&apos;: $categoryMap, 
-                        &apos;mediaMap&apos;: $mediaMap
-                    }
-            
-                    # Create HTTP requests
-                    $requests = Klaviyo-Create-CatalogItemRequests $products $context $integrationMap $klaviyoIntegrationType $klaviyoCatalogType $namedCredential $useBulkApi
-                    # Dispatch all HTTP requests and create Integration records if possible
-                    Http-Dispatch-Controller $requests $flowName $callbackContext $integrationMap $platformInstanceName $async
-                } elseif($callbackContext.InputIds.size() &gt; 0) {
-                    # Execute callback for variant products if found with no master products
-                    $scope = {
-                        &apos;callback&apos;: $flowName,
-                        &apos;callbackContext&apos;: $callbackContext
-                    }
-                    Script-Enqueue $scope ${
-                        Script-Flow $_.callback $_.callbackContext
-                    }
+        # Only carry out further operations if some valid records are found
+        if($products.size() &gt; 0) {
+            $callbackContext = {
+                &apos;UseBulkApi&apos;: $useBulkApi,
+                &apos;RunAsynchronously&apos;: $async,
+                &apos;IntegrationType&apos;: &apos;CatalogVariant&apos;,
+                &apos;InputIds&apos;: []
+            }
+            $masterProducts = []
+    
+            # Split the products into master and non-master in case a 
+            # mixed list is provided to this action
+            foreach($product in $products) {
+                if($product.s_c__Is_Master__c) {
+                    $masterProducts.add($product)
+                } else {
+                    $callbackContext.InputIds.add($product.Id)
                 }
             }
-        }   
+    
+            # Reallocate master products to the original products list
+            $products = $masterProducts
+    
+            if($products.size() &gt; 0) {
+                $klaviyoIntegrationType = &apos;$custom&apos;
+                $klaviyoCatalogType = &apos;$default&apos;
+                
+                # Convert list to queryable string
+                $productIds = List-Stringify $products &apos;Id&apos; false
+                $pricebookId = null
+                $currencyIsoCode = null
+        
+                if($store == null) {
+                    $pricebook = Query-Record `
+                        SELECT Id
+                        FROM Pricebook2
+                        WHERE IsStandard = true
+                    `
+                    $pricebookId = $pricebook.Id
+                } else {
+                    $pricebookId = $store.s_c__Pricebook_Id__c
+                    $currencyIsoCode = $store.CurrencyIsoCode
+                }
+        
+                # Map all the related Objects to each ProductId in the input list for
+                # fast and efficient lookups when building payloads
+                $stockLevelMap = Map-StockLevels $productIds $stockLocationIds
+                $pricebookEntryMap = Map-StandardPricebookEntries $pricebookId $currencyIsoCode $productIds
+                $categoryMap = Map-Categories $productIds
+                $mediaMap = Map-Media $productIds
+        
+                $categories = []
+                foreach($category in $categoryMap.values()) {
+                    $categories.addAll($category)
+                }
+                $categoryIds = List-Stringify $categories &apos;Id&apos; false
+        
+                # Get map of existing integrations
+                $integrationMap = {}
+                $integrationMap.putAll(Map-Integrations $platformInstanceName $productIds &apos;Product_Id__c&apos;)
+                $integrationMap.putAll(Map-Integrations $platformInstanceName $categoryIds &apos;Product_Category_Id__c&apos;)
+        
+                $context = {
+                    &apos;store&apos;: $store, 
+                    &apos;stockLevelMap&apos;: $stockLevelMap, 
+                    &apos;pricebookEntryMap&apos;: $pricebookEntryMap, 
+                    &apos;categoryMap&apos;: $categoryMap, 
+                    &apos;mediaMap&apos;: $mediaMap
+                }
+        
+                # Create HTTP requests
+                $requests = Klaviyo-Create-CatalogItemRequests $products $context $integrationMap $klaviyoIntegrationType $klaviyoCatalogType $namedCredential $useBulkApi
+                # Dispatch all HTTP requests and create Integration records if possible
+                Http-Dispatch-Controller $requests $flowName $callbackContext $integrationMap $platformInstanceName $async
+            } elseif($callbackContext.InputIds.size() &gt; 0) {
+                # Execute callback for variant products if found with no master products
+                $scope = {
+                    &apos;callback&apos;: $flowName,
+                    &apos;callbackContext&apos;: $callbackContext
+                }
+                Script-Enqueue $scope ${
+                    Script-Flow $_.callback $_.callbackContext
+                }
+            }
+        }
     }
 }
 
@@ -1467,10 +1813,54 @@ if($inputIds.size() &gt; 0) {
     <actionCalls>
         <name>Create_Catalog_Variant</name>
         <label>Create Catalog Variant</label>
-        <locationX>578</locationX>
-        <locationY>458</locationY>
+        <locationX>1106</locationX>
+        <locationY>674</locationY>
         <actionName>Streams__Streamscript</actionName>
         <actionType>apex</actionType>
+        <dataTypeMappings>
+            <typeName>T__c3</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c4</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c5</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c6</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c7</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c8</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c9</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__i0</typeName>
+            <typeValue>s_c__Store__c</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r1</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r2</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r3</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
         <dataTypeMappings>
             <typeName>T__r4</typeName>
             <typeValue>Task</typeValue>
@@ -1504,55 +1894,11 @@ if($inputIds.size() &gt; 0) {
             <typeValue>Task</typeValue>
         </dataTypeMappings>
         <dataTypeMappings>
-            <typeName>T__c7</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c8</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c9</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__r3</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
             <typeName>T__c1</typeName>
             <typeValue>Task</typeValue>
         </dataTypeMappings>
         <dataTypeMappings>
             <typeName>T__c2</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c3</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c4</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c5</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c6</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__i0</typeName>
-            <typeValue>s_c__Store__c</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__r1</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__r2</typeName>
             <typeValue>Task</typeValue>
         </dataTypeMappings>
         <flowTransactionModel>CurrentTransaction</flowTransactionModel>
@@ -1595,7 +1941,7 @@ if($inputIds.size() &gt; 0) {
         <inputParameters>
             <name>i4</name>
             <value>
-                <elementReference>platformInstanceName</elementReference>
+                <elementReference>PlatformInstanceName</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
@@ -1607,7 +1953,7 @@ if($inputIds.size() &gt; 0) {
         <inputParameters>
             <name>n1</name>
             <value>
-                <elementReference>batchSize</elementReference>
+                <elementReference>BatchSize</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
@@ -2182,131 +2528,111 @@ if($inputIds.size() &gt; 0) {
     $platformInstanceName = {`!platformInstanceName}
     $store = {`!Store}
 
-    # Automatically batch the inputs if they exceed the batch limit
-    if($inputIds.size() &gt; $batchSize) {
-        $scope = {
-            &apos;FlowName&apos;: $flowName,
-            &apos;UseBulkApi&apos;: $useBulkApi,
-            &apos;RunAsynchronously&apos;: $async,
-            &apos;IntegrationType&apos;: $integrationType,
-            &apos;InputIds&apos;: []
-        }
-        Script-Batch $batchSize $inputIds $scope ${
-            $ctx = {
-                &apos;UseBulkApi&apos;: $_.UseBulkApi,
-                &apos;RunAsynchronously&apos;: $_.RunAsynchronously,
-                &apos;IntegrationType&apos;: $_.IntegrationType,
-                &apos;InputIds&apos;: $__.items
-            }
-            Script-Flow $_.FlowName $ctx
-        }
-    } else {
-        # Convert list to queryable string
-        $inputIds = List-Stringify $inputIds
+    # Convert list to queryable string
+    $inputIds = List-Stringify $inputIds
 
-        # Limit all following queries to a single store since there is a 1:1
-        # relationship between a store and a platform instance
-        $stockLocationsQuery = `
-            SELECT Id, s_c__Stock_Location_Id__c, s_c__Store_Id__c
-            FROM s_c__Store_Stock_Location__c
+    # Limit all following queries to a single store since there is a 1:1
+    # relationship between a store and a platform instance
+    $stockLocationsQuery = `
+        SELECT Id, s_c__Stock_Location_Id__c, s_c__Store_Id__c
+        FROM s_c__Store_Stock_Location__c
+    `
+    
+    # Add Store scoping if set
+    if($store.Id != null) {
+        $stockLocationsQuery = $stockLocationsQuery + `
+            WHERE s_c__Store_Id__c = &apos;$store.Id&apos; 
+        `
+    }
+    
+    # Query Stock Locations
+    $stockLocations = Query-Records $stockLocationsQuery
+    
+    $integrations = []
+    
+    # Only carry out further operations if some stock locations are found
+    if($stockLocations.size() &gt; 0) {
+        # Convert list to queryable string
+        $stockLocationIds = List-Stringify $stockLocations &apos;s_c__Stock_Location_Id__c&apos; false
+    
+        # Initial queries for all ProductIds to be optimised
+        $products = Query-Records `
+            SELECT Id, Name, s_c__Display_Name__c, s_c__Summary_Markdown__c, Description,
+                    s_c__Slug__c, IsActive, s_c__Is_Master__c, ProductCode, StockKeepingUnit, 
+                    s_c__Track_Inventory__c, s_c__Available_On__c
+            FROM Product2 
+            WHERE Id IN $inputIds AND
+                    s_c__Is_Master__c = false AND
+                    Id IN (
+                        SELECT s_c__Product_Id__c
+                        FROM s_c__Stock_Level__c 
+                        WHERE s_c__Stock_Location_Id__c IN $stockLocationIds
+                    )
         `
         
-        # Add Store scoping if set
-        if($store.Id != null) {
-            $stockLocationsQuery = $stockLocationsQuery + `
-                WHERE s_c__Store_Id__c = &apos;$store.Id&apos; 
-            `
-        }
-        
-        # Query Stock Locations
-        $stockLocations = Query-Records $stockLocationsQuery
-        
-        $integrations = []
-        
-        # Only carry out further operations if some stock locations are found
-        if($stockLocations.size() &gt; 0) {
+        # Only carry out further operations if some valid records are found
+        if($products.size() &gt; 0) {
+            $klaviyoIntegrationType = &apos;$custom&apos;
+            $klaviyoCatalogType = &apos;$default&apos;
             # Convert list to queryable string
-            $stockLocationIds = List-Stringify $stockLocations &apos;s_c__Stock_Location_Id__c&apos; false
-        
-            # Initial queries for all ProductIds to be optimised
-            $products = Query-Records `
-                SELECT Id, Name, s_c__Display_Name__c, s_c__Summary_Markdown__c, Description,
-                        s_c__Slug__c, IsActive, s_c__Is_Master__c, ProductCode, StockKeepingUnit, 
-                        s_c__Track_Inventory__c, s_c__Available_On__c
-                FROM Product2 
-                WHERE Id IN $inputIds AND
-                        s_c__Is_Master__c = false AND
-                        Id IN (
-                            SELECT s_c__Product_Id__c
-                            FROM s_c__Stock_Level__c 
-                            WHERE s_c__Stock_Location_Id__c IN $stockLocationIds
-                        )
-            `
-            
-            # Only carry out further operations if some valid records are found
-            if($products.size() &gt; 0) {
-                $klaviyoIntegrationType = &apos;$custom&apos;
-                $klaviyoCatalogType = &apos;$default&apos;
-                # Convert list to queryable string
-                $productIds = List-Stringify $products &apos;Id&apos; false
-                $pricebookId = null
-                $currencyIsoCode = null
-        
-                if($store == null) {
-                    $pricebook = Query-Record `
-                        SELECT Id
-                        FROM Pricebook2
-                        WHERE IsStandard = true
-                    `
-                    $pricebookId = $pricebook.Id
-                } else {
-                    $pricebookId = $store.s_c__Pricebook_Id__c
-                    $currencyIsoCode = $store.CurrencyIsoCode
-                }
-        
-                # Map all the related Objects to each ProductId in the input list for
-                # fast and efficient lookups when building payloads
-                $stockLevelMap = Map-StockLevels $productIds $stockLocationIds
-                $pricebookEntryMap = Map-StandardPricebookEntries $pricebookId $currencyIsoCode $productIds
-                $masterProductMap = Map-MasterProducts $productIds
-                $mediaMap = Map-Media $productIds
-                $masterProductMediaMap = {}
-        
-                $masterProducts = []
-                $allProducts = []
-                foreach($masterProduct in $masterProductMap.values()) {
-                    $masterProducts.add($masterProduct)
-                    $allProducts.add($masterProduct.s_c__Master_Product_Id__c)
-                }
-                $masterProductIds = List-Stringify $masterProducts &apos;s_c__Master_Product_Id__c&apos; false
-        
-                foreach($product in $products) {
-                    $allProducts.add($product.Id)
-                }
-                $allProductIds = List-Stringify $allProducts null false
-        
-                # Media map of all products for both variant and master
-                # in case the variant doesn&apos;t have any media then the master can be used
-                $mediaMap = Map-Media $allProductIds
-        
-                # Get map of existing integrations
-                $integrationMap = {}
-                $integrationMap.putAll(Map-Integrations $platformInstanceName $productIds &apos;Product_Id__c&apos;)
-                $integrationMap.putAll(Map-Integrations $platformInstanceName $masterProductIds &apos;Product_Id__c&apos;)
-        
-                $context = {
-                    &apos;store&apos;: $store, 
-                    &apos;stockLevelMap&apos;: $stockLevelMap, 
-                    &apos;pricebookEntryMap&apos;: $pricebookEntryMap, 
-                    &apos;masterProductMap&apos;: $masterProductMap,
-                    &apos;mediaMap&apos;: $mediaMap
-                }
-        
-                # Create HTTP requests
-                $requests = Klaviyo-Create-CatalogVariantRequests $products $context $integrationMap $klaviyoIntegrationType $klaviyoCatalogType $namedCredential $useBulkApi
-                # Dispatch all HTTP requests and create Integration records if possible
-                Http-Dispatch-Controller $requests $integrationMap $platformInstanceName $async
+            $productIds = List-Stringify $products &apos;Id&apos; false
+            $pricebookId = null
+            $currencyIsoCode = null
+    
+            if($store == null) {
+                $pricebook = Query-Record `
+                    SELECT Id
+                    FROM Pricebook2
+                    WHERE IsStandard = true
+                `
+                $pricebookId = $pricebook.Id
+            } else {
+                $pricebookId = $store.s_c__Pricebook_Id__c
+                $currencyIsoCode = $store.CurrencyIsoCode
             }
+    
+            # Map all the related Objects to each ProductId in the input list for
+            # fast and efficient lookups when building payloads
+            $stockLevelMap = Map-StockLevels $productIds $stockLocationIds
+            $pricebookEntryMap = Map-StandardPricebookEntries $pricebookId $currencyIsoCode $productIds
+            $masterProductMap = Map-MasterProducts $productIds
+            $mediaMap = Map-Media $productIds
+            $masterProductMediaMap = {}
+    
+            $masterProducts = []
+            $allProducts = []
+            foreach($masterProduct in $masterProductMap.values()) {
+                $masterProducts.add($masterProduct)
+                $allProducts.add($masterProduct.s_c__Master_Product_Id__c)
+            }
+            $masterProductIds = List-Stringify $masterProducts &apos;s_c__Master_Product_Id__c&apos; false
+    
+            foreach($product in $products) {
+                $allProducts.add($product.Id)
+            }
+            $allProductIds = List-Stringify $allProducts null false
+    
+            # Media map of all products for both variant and master
+            # in case the variant doesn&apos;t have any media then the master can be used
+            $mediaMap = Map-Media $allProductIds
+    
+            # Get map of existing integrations
+            $integrationMap = {}
+            $integrationMap.putAll(Map-Integrations $platformInstanceName $productIds &apos;Product_Id__c&apos;)
+            $integrationMap.putAll(Map-Integrations $platformInstanceName $masterProductIds &apos;Product_Id__c&apos;)
+    
+            $context = {
+                &apos;store&apos;: $store, 
+                &apos;stockLevelMap&apos;: $stockLevelMap, 
+                &apos;pricebookEntryMap&apos;: $pricebookEntryMap, 
+                &apos;masterProductMap&apos;: $masterProductMap,
+                &apos;mediaMap&apos;: $mediaMap
+            }
+    
+            # Create HTTP requests
+            $requests = Klaviyo-Create-CatalogVariantRequests $products $context $integrationMap $klaviyoIntegrationType $klaviyoCatalogType $namedCredential $useBulkApi
+            # Dispatch all HTTP requests and create Integration records if possible
+            Http-Dispatch-Controller $requests $integrationMap $platformInstanceName $async
         }
     }
 }
@@ -2321,10 +2647,30 @@ if($inputIds.size() &gt; 0) {
     <actionCalls>
         <name>Create_Fulfillment_Events</name>
         <label>Create Fulfillment Events</label>
-        <locationX>1106</locationX>
-        <locationY>458</locationY>
+        <locationX>1634</locationX>
+        <locationY>674</locationY>
         <actionName>Streams__Streamscript</actionName>
         <actionType>apex</actionType>
+        <dataTypeMappings>
+            <typeName>T__c1</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c2</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c3</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c4</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c5</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
         <dataTypeMappings>
             <typeName>T__c6</typeName>
             <typeValue>Task</typeValue>
@@ -2338,15 +2684,19 @@ if($inputIds.size() &gt; 0) {
             <typeValue>Task</typeValue>
         </dataTypeMappings>
         <dataTypeMappings>
+            <typeName>T__c9</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__i0</typeName>
+            <typeValue>s_c__Store__c</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
             <typeName>T__r1</typeName>
             <typeValue>Task</typeValue>
         </dataTypeMappings>
         <dataTypeMappings>
             <typeName>T__r2</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__r3</typeName>
             <typeValue>Task</typeValue>
         </dataTypeMappings>
         <dataTypeMappings>
@@ -2374,14 +2724,6 @@ if($inputIds.size() &gt; 0) {
             <typeValue>Task</typeValue>
         </dataTypeMappings>
         <dataTypeMappings>
-            <typeName>T__c9</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__i0</typeName>
-            <typeValue>s_c__Store__c</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
             <typeName>U__record</typeName>
             <typeValue>Task</typeValue>
         </dataTypeMappings>
@@ -2390,23 +2732,7 @@ if($inputIds.size() &gt; 0) {
             <typeValue>Task</typeValue>
         </dataTypeMappings>
         <dataTypeMappings>
-            <typeName>T__c1</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c2</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c3</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c4</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c5</typeName>
+            <typeName>T__r3</typeName>
             <typeValue>Task</typeValue>
         </dataTypeMappings>
         <flowTransactionModel>CurrentTransaction</flowTransactionModel>
@@ -2449,7 +2775,7 @@ if($inputIds.size() &gt; 0) {
         <inputParameters>
             <name>i4</name>
             <value>
-                <elementReference>platformInstanceName</elementReference>
+                <elementReference>PlatformInstanceName</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
@@ -2461,7 +2787,7 @@ if($inputIds.size() &gt; 0) {
         <inputParameters>
             <name>n1</name>
             <value>
-                <elementReference>batchSize</elementReference>
+                <elementReference>BatchSize</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
@@ -2768,116 +3094,96 @@ if($inputIds.size() &gt; 0) {
     $platformInstanceName = {`!platformInstanceName}
     $store = {`!Store}
 
-    # Automatically batch the inputs if they exceed the batch limit
-    if($inputIds.size() &gt; $batchSize) {
-        $scope = {
-            &apos;FlowName&apos;: $flowName,
-            &apos;UseBulkApi&apos;: $useBulkApi,
-            &apos;RunAsynchronously&apos;: $async,
-            &apos;IntegrationType&apos;: $integrationType,
-            &apos;InputIds&apos;: []
-        }
-        Script-Batch $batchSize $inputIds $scope ${
-            $ctx = {
-                &apos;UseBulkApi&apos;: $_.UseBulkApi,
-                &apos;RunAsynchronously&apos;: $_.RunAsynchronously,
-                &apos;IntegrationType&apos;: $_.IntegrationType,
-                &apos;InputIds&apos;: $__.items
-            }
-            Script-Flow $_.FlowName $ctx
-        }
-    } else {
-        # Convert list to queryable string
-        $inputIds = List-Stringify $inputIds
+    # Convert list to queryable string
+    $inputIds = List-Stringify $inputIds
 
-        # Limit all following queries to a single store since there is a 1:1
-        # relationship between a store and a platform instance
-        $baseQuery = `
-            SELECT
+    # Limit all following queries to a single store since there is a 1:1
+    # relationship between a store and a platform instance
+    $baseQuery = `
+        SELECT
+            Id,
+            Name,
+            LastModifiedDate,
+            s_c__Provider__c,
+            s_c__Provider_Service__c,
+            s_c__Tracking_Code__c,
+            s_c__State__c,
+            s_c__Order_Id__r.OrderNumber,
+            s_c__Order_Id__r.OrderReferenceNumber,
+            s_c__Order_Id__r.Status,
+            s_c__Order_Id__r.IsDeleted,
+            s_c__Order_Id__r.CreatedDate,
+            s_c__Order_Id__r.LastModifiedDate,
+            s_c__Order_Id__r.EffectiveDate,
+            s_c__Order_Id__r.AccountId,
+            s_c__Order_Id__r.Account.Name,
+            s_c__Order_Id__r.s_c__Abandoned__c,
+            s_c__Order_Id__r.s_c__Submitted_Date__c,
+            s_c__Order_Id__r.s_c__Timezone__c,
+            s_c__Order_Id__r.s_c__Contact_Id__c,
+            s_c__Order_Id__r.s_c__Contact_Id__r.Name,
+            s_c__Order_Id__r.s_c__Checkout_Email__c,
+            s_c__Order_Id__r.s_c__Checkout_Phone__c,
+            s_c__Order_Id__r.s_c__Ip_Address__c,
+            s_c__Order_Id__r.OriginalOrderId,
+            s_c__Order_Id__r.OriginalOrder.OrderNumber,
+            s_c__Order_Id__r.OriginalOrder.OrderReferenceNumber,
+            s_c__Order_Id__r.CurrencyIsoCode,
+            s_c__Order_Id__r.ShippingStreet,
+            s_c__Order_Id__r.ShippingCity,
+            s_c__Order_Id__r.ShippingState,
+            s_c__Order_Id__r.ShippingPostalCode,
+            s_c__Order_Id__r.ShippingCountry,
+            (SELECT
                 Id,
-                Name,
-                LastModifiedDate,
-                s_c__Provider__c,
-                s_c__Provider_Service__c,
-                s_c__Tracking_Code__c,
-                s_c__State__c,
-                s_c__Order_Id__r.OrderNumber,
-                s_c__Order_Id__r.OrderReferenceNumber,
-                s_c__Order_Id__r.Status,
-                s_c__Order_Id__r.IsDeleted,
-                s_c__Order_Id__r.CreatedDate,
-                s_c__Order_Id__r.LastModifiedDate,
-                s_c__Order_Id__r.EffectiveDate,
-                s_c__Order_Id__r.AccountId,
-                s_c__Order_Id__r.Account.Name,
-                s_c__Order_Id__r.s_c__Abandoned__c,
-                s_c__Order_Id__r.s_c__Submitted_Date__c,
-                s_c__Order_Id__r.s_c__Timezone__c,
-                s_c__Order_Id__r.s_c__Contact_Id__c,
-                s_c__Order_Id__r.s_c__Contact_Id__r.Name,
-                s_c__Order_Id__r.s_c__Checkout_Email__c,
-                s_c__Order_Id__r.s_c__Checkout_Phone__c,
-                s_c__Order_Id__r.s_c__Ip_Address__c,
-                s_c__Order_Id__r.OriginalOrderId,
-                s_c__Order_Id__r.OriginalOrder.OrderNumber,
-                s_c__Order_Id__r.OriginalOrder.OrderReferenceNumber,
-                s_c__Order_Id__r.CurrencyIsoCode,
-                s_c__Order_Id__r.ShippingStreet,
-                s_c__Order_Id__r.ShippingCity,
-                s_c__Order_Id__r.ShippingState,
-                s_c__Order_Id__r.ShippingPostalCode,
-                s_c__Order_Id__r.ShippingCountry,
-                (SELECT
-                    Id,
-                    ListPrice,
-                    UnitPrice,
-                    Quantity,
-                    TotalPrice,
-                    s_c__Deposit_Amount__c,
-                    s_c__Total_of_Discounts__c,
-                    s_c__Tax_Amount__c,
-                    Description,
-                    Product2Id,
-                    Product2.Name,
-                    Product2.s_c__Display_Name__c,
-                    Product2.ProductCode,
-                    Product2.StockKeepingUnit,
-                    Product2.s_c__Barcode__c,
-                    Product2.IsActive,
-                    Product2.QuantityUnitOfMeasure,
-                    Product2.s_c__Shipping_Length__c,
-                    Product2.s_c__Shipping_Width__c,
-                    Product2.s_c__Shipping_Height__c,
-                    Product2.s_c__Shipping_Weight__c
-                 FROM s_c__OrderItems__r
-                )
-            FROM s_c__Shipment__c 
-            WHERE Id IN $inputIds
+                ListPrice,
+                UnitPrice,
+                Quantity,
+                TotalPrice,
+                s_c__Deposit_Amount__c,
+                s_c__Total_of_Discounts__c,
+                s_c__Tax_Amount__c,
+                Description,
+                Product2Id,
+                Product2.Name,
+                Product2.s_c__Display_Name__c,
+                Product2.ProductCode,
+                Product2.StockKeepingUnit,
+                Product2.s_c__Barcode__c,
+                Product2.IsActive,
+                Product2.QuantityUnitOfMeasure,
+                Product2.s_c__Shipping_Length__c,
+                Product2.s_c__Shipping_Width__c,
+                Product2.s_c__Shipping_Height__c,
+                Product2.s_c__Shipping_Weight__c
+             FROM s_c__OrderItems__r
+            )
+        FROM s_c__Shipment__c 
+        WHERE Id IN $inputIds
+    `
+    
+    # Add Store scoping if set
+    if($store.Id != null) {
+        $baseQuery = $baseQuery + `
+            AND s_c__Store_Id__c = &apos;$store.Id&apos; 
         `
-        
-        # Add Store scoping if set
-        if($store.Id != null) {
-            $baseQuery = $baseQuery + `
-                AND s_c__Store_Id__c = &apos;$store.Id&apos; 
-            `
-        }
-        
-        # Initial queries for all actionable records
-        $shipments = Query-Records $baseQuery
-        
-        # Only carry out further operations if records exist for scope
-        if($shipments.size() &gt; 0) {
-            $productIds = List-Stringify (Map-Filter-Child $shipments &apos;s_c__OrderItems__r&apos; &apos;Product2Id&apos; true)
-        
-            # Reference maps
-            $mediaMap = Map-Media $productIds
+    }
+    
+    # Initial queries for all actionable records
+    $shipments = Query-Records $baseQuery
+    
+    # Only carry out further operations if records exist for scope
+    if($shipments.size() &gt; 0) {
+        $productIds = List-Stringify (Map-Filter-Child $shipments &apos;s_c__OrderItems__r&apos; &apos;Product2Id&apos; true)
+    
+        # Reference maps
+        $mediaMap = Map-Media $productIds
 
-            # Create HTTP requests
-            $requests = Klaviyo-Create-FulfilledOrderEvent $shipments $mediaMap $namedCredential
-            Log $requests
-            # Dispatch all HTTP requests and create Integration records if possible
-            Http-Dispatch-Controller $requests $platformInstanceName $async
-        }
+        # Create HTTP requests
+        $requests = Klaviyo-Create-FulfilledOrderEvent $shipments $mediaMap $namedCredential
+        Log $requests
+        # Dispatch all HTTP requests and create Integration records if possible
+        Http-Dispatch-Controller $requests $platformInstanceName $async
     }
 }
 
@@ -2891,8 +3197,8 @@ if($inputIds.size() &gt; 0) {
     <actionCalls>
         <name>Create_Order_Events</name>
         <label>Create Order Events</label>
-        <locationX>842</locationX>
-        <locationY>458</locationY>
+        <locationX>1370</locationX>
+        <locationY>674</locationY>
         <actionName>Streams__Streamscript</actionName>
         <actionType>apex</actionType>
         <dataTypeMappings>
@@ -2940,6 +3246,10 @@ if($inputIds.size() &gt; 0) {
             <typeValue>Task</typeValue>
         </dataTypeMappings>
         <dataTypeMappings>
+            <typeName>T__r2</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
             <typeName>T__r3</typeName>
             <typeValue>Task</typeValue>
         </dataTypeMappings>
@@ -2973,10 +3283,6 @@ if($inputIds.size() &gt; 0) {
         </dataTypeMappings>
         <dataTypeMappings>
             <typeName>U__records</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__r2</typeName>
             <typeValue>Task</typeValue>
         </dataTypeMappings>
         <flowTransactionModel>CurrentTransaction</flowTransactionModel>
@@ -3019,7 +3325,7 @@ if($inputIds.size() &gt; 0) {
         <inputParameters>
             <name>i4</name>
             <value>
-                <elementReference>platformInstanceName</elementReference>
+                <elementReference>PlatformInstanceName</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
@@ -3031,7 +3337,7 @@ if($inputIds.size() &gt; 0) {
         <inputParameters>
             <name>n1</name>
             <value>
-                <elementReference>batchSize</elementReference>
+                <elementReference>BatchSize</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
@@ -3342,167 +3648,147 @@ if($inputIds.size() &gt; 0) {
     $platformInstanceName = {`!platformInstanceName}
     $store = {`!Store}
 
-    # Automatically batch the inputs if they exceed the batch limit
-    if($inputIds.size() &gt; $batchSize) {
-        $scope = {
-            &apos;FlowName&apos;: $flowName,
-            &apos;UseBulkApi&apos;: $useBulkApi,
-            &apos;RunAsynchronously&apos;: $async,
-            &apos;IntegrationType&apos;: $integrationType,
-            &apos;InputIds&apos;: []
-        }
-        Script-Batch $batchSize $inputIds $scope ${
-            $ctx = {
-                &apos;UseBulkApi&apos;: $_.UseBulkApi,
-                &apos;RunAsynchronously&apos;: $_.RunAsynchronously,
-                &apos;IntegrationType&apos;: $_.IntegrationType,
-                &apos;InputIds&apos;: $__.items
-            }
-            Script-Flow $_.FlowName $ctx
-        }
-    } else {
-        # Convert list to queryable string
-        $inputIds = List-Stringify $inputIds
+    # Convert list to queryable string
+    $inputIds = List-Stringify $inputIds
 
-        # Limit all following queries to a single store since there is a 1:1
-        # relationship between a store and a platform instance
-        $baseQuery = `
-            SELECT
+    # Limit all following queries to a single store since there is a 1:1
+    # relationship between a store and a platform instance
+    $baseQuery = `
+        SELECT
+            Id,
+            OrderNumber,
+            OrderReferenceNumber,
+            Status,
+            IsDeleted,
+            CreatedDate,
+            LastModifiedDate,
+            EffectiveDate,
+            AccountId,
+            Account.Name,
+            s_c__Abandoned__c,
+            s_c__Submitted_Date__c,
+            s_c__Timezone__c,
+            s_c__Contact_Id__c,
+            s_c__Contact_Id__r.Name,
+            s_c__Checkout_Email__c,
+            s_c__Checkout_Phone__c,
+            s_c__Checkout_Step__c,
+            s_c__Ip_Address__c,
+            OriginalOrderId,
+            OriginalOrder.OrderNumber,
+            OriginalOrder.OrderReferenceNumber,
+            OwnerId,
+            Owner.Name,
+            CurrencyIsoCode,
+            ShippingStreet,
+            ShippingCity,
+            ShippingState,
+            ShippingPostalCode,
+            ShippingCountry,
+            s_c__Shipping_Method__c,
+            s_c__Shipping_Notes__c,
+            s_c__Customer_Notes_Long__c,
+            TotalAmount,
+            (SELECT
                 Id,
-                OrderNumber,
-                OrderReferenceNumber,
-                Status,
-                IsDeleted,
-                CreatedDate,
-                LastModifiedDate,
-                EffectiveDate,
-                AccountId,
-                Account.Name,
-                s_c__Abandoned__c,
-                s_c__Submitted_Date__c,
-                s_c__Timezone__c,
-                s_c__Contact_Id__c,
-                s_c__Contact_Id__r.Name,
-                s_c__Checkout_Email__c,
-                s_c__Checkout_Phone__c,
-                s_c__Checkout_Step__c,
-                s_c__Ip_Address__c,
-                OriginalOrderId,
-                OriginalOrder.OrderNumber,
-                OriginalOrder.OrderReferenceNumber,
-                OwnerId,
-                Owner.Name,
-                CurrencyIsoCode,
-                ShippingStreet,
-                ShippingCity,
-                ShippingState,
-                ShippingPostalCode,
-                ShippingCountry,
-                s_c__Shipping_Method__c,
-                s_c__Shipping_Notes__c,
-                s_c__Customer_Notes_Long__c,
-                TotalAmount,
-                (SELECT
-                    Id,
-                    ListPrice,
-                    UnitPrice,
-                    Quantity,
-                    TotalPrice,
-                    s_c__Deposit_Amount__c,
-                    s_c__Total_of_Discounts__c,
-                    s_c__Tax_Amount__c,
-                    Description,
-                    Product2Id,
-                    Product2.Name,
-                    Product2.s_c__Display_Name__c,
-                    Product2.ProductCode,
-                    Product2.StockKeepingUnit,
-                    Product2.s_c__Barcode__c,
-                    Product2.IsActive,
-                    Product2.QuantityUnitOfMeasure,
-                    Product2.s_c__Shipping_Length__c,
-                    Product2.s_c__Shipping_Width__c,
-                    Product2.s_c__Shipping_Height__c,
-                    Product2.s_c__Shipping_Weight__c
-                 FROM OrderItems
-                ),
-                (SELECT
-                    Id,
-                    Name,
-                    s_c__Order_Id__c,
-                    s_c__UTM_Campaign__c,
-                    s_c__UTM_Content__c,
-                    s_c__UTM_Medium__c,
-                    s_c__UTM_Source__c,
-                    s_c__UTM_Term__c,
-                    s_c__UTM_Token__c,
-                    s_c__Visited_At__c
-                 FROM s_c__Order_Campaigns__r
-                ),
-                (SELECT
-                    Id,
-                    Name,
-                    s_c__Calculation_Type__c,
-                    s_c__Credit_Value__c,
-                    s_c__Value_Discount__c,
-                    s_c__Percent_Discount__c,
-                    s_c__Discounted_Price__c,
-                    s_c__Order_Id__c,
-                    s_c__Qualifying_Quantity__c,
-                    s_c__Discount_Id__c,
-                    s_c__Discount_Id__r.Name
-                 FROM s_c__Discount_Credits__r
-                ),
-                (SELECT
-                    Id,
-                    Name,
-                    s_c__Amount__c,
-                    s_c__Invoice_Reference__c,
-                    s_c__Invoice_Url__c,
-                    s_c__Method__c,
-                    s_c__Order_Id__c,
-                    s_c__Paid_At__c,
-                    s_c__Payment_Provider_Id__c,
-                    s_c__Payment_Provider_Id__r.Name,
-                    s_c__Payment_Provider_Id__r.s_c__Display_Name__c,
-                    s_c__Payment_Provider_Id__r.s_c__Provider__c,
-                    s_c__Payment_Provider_Id__r.s_c__Api_Options__c,
-                    s_c__Response__c,
-                    s_c__Status__c,
-                    s_c__Surcharge_Amount__c,
-                    s_c__Surcharge_Product_Id__c,
-                    s_c__Surcharge_Product_Id__r.Name,
-                    s_c__Surcharge_Product_Id__r.s_c__Display_Name__c,
-                    s_c__Transaction_Number__c
-                 FROM s_c__Payments__r
-                )
-            FROM Order 
-            WHERE Id IN $inputIds
+                ListPrice,
+                UnitPrice,
+                Quantity,
+                TotalPrice,
+                s_c__Deposit_Amount__c,
+                s_c__Total_of_Discounts__c,
+                s_c__Tax_Amount__c,
+                Description,
+                Product2Id,
+                Product2.Name,
+                Product2.s_c__Display_Name__c,
+                Product2.ProductCode,
+                Product2.StockKeepingUnit,
+                Product2.s_c__Barcode__c,
+                Product2.IsActive,
+                Product2.QuantityUnitOfMeasure,
+                Product2.s_c__Shipping_Length__c,
+                Product2.s_c__Shipping_Width__c,
+                Product2.s_c__Shipping_Height__c,
+                Product2.s_c__Shipping_Weight__c
+             FROM OrderItems
+            ),
+            (SELECT
+                Id,
+                Name,
+                s_c__Order_Id__c,
+                s_c__UTM_Campaign__c,
+                s_c__UTM_Content__c,
+                s_c__UTM_Medium__c,
+                s_c__UTM_Source__c,
+                s_c__UTM_Term__c,
+                s_c__UTM_Token__c,
+                s_c__Visited_At__c
+             FROM s_c__Order_Campaigns__r
+            ),
+            (SELECT
+                Id,
+                Name,
+                s_c__Calculation_Type__c,
+                s_c__Credit_Value__c,
+                s_c__Value_Discount__c,
+                s_c__Percent_Discount__c,
+                s_c__Discounted_Price__c,
+                s_c__Order_Id__c,
+                s_c__Qualifying_Quantity__c,
+                s_c__Discount_Id__c,
+                s_c__Discount_Id__r.Name
+             FROM s_c__Discount_Credits__r
+            ),
+            (SELECT
+                Id,
+                Name,
+                s_c__Amount__c,
+                s_c__Invoice_Reference__c,
+                s_c__Invoice_Url__c,
+                s_c__Method__c,
+                s_c__Order_Id__c,
+                s_c__Paid_At__c,
+                s_c__Payment_Provider_Id__c,
+                s_c__Payment_Provider_Id__r.Name,
+                s_c__Payment_Provider_Id__r.s_c__Display_Name__c,
+                s_c__Payment_Provider_Id__r.s_c__Provider__c,
+                s_c__Payment_Provider_Id__r.s_c__Api_Options__c,
+                s_c__Response__c,
+                s_c__Status__c,
+                s_c__Surcharge_Amount__c,
+                s_c__Surcharge_Product_Id__c,
+                s_c__Surcharge_Product_Id__r.Name,
+                s_c__Surcharge_Product_Id__r.s_c__Display_Name__c,
+                s_c__Transaction_Number__c
+             FROM s_c__Payments__r
+            )
+        FROM Order 
+        WHERE Id IN $inputIds
+    `
+    
+    # Add Store scoping if set
+    if($store.Id != null) {
+        $baseQuery = $baseQuery + `
+            AND s_c__Store_Id__c = &apos;$store.Id&apos; 
         `
-        
-        # Add Store scoping if set
-        if($store.Id != null) {
-            $baseQuery = $baseQuery + `
-                AND s_c__Store_Id__c = &apos;$store.Id&apos; 
-            `
-        }
-        
-        # Initial queries for all actionable records
-        $orders = Query-Records $baseQuery
-        
-        # Only carry out further operations if records exist for scope
-        if($orders.size() &gt; 0) {
-            $productIds = List-Stringify (Map-Filter-Child $orders &apos;OrderItems&apos; &apos;Product2Id&apos; true)
-        
-            # Reference maps
-            $mediaMap = Map-Media $productIds
+    }
+    
+    # Initial queries for all actionable records
+    $orders = Query-Records $baseQuery
+    
+    # Only carry out further operations if records exist for scope
+    if($orders.size() &gt; 0) {
+        $productIds = List-Stringify (Map-Filter-Child $orders &apos;OrderItems&apos; &apos;Product2Id&apos; true)
+    
+        # Reference maps
+        $mediaMap = Map-Media $productIds
 
-            # Create HTTP requests
-            $requests = Klaviyo-Create-PlacedOrderEvent $orders $mediaMap $namedCredential
-            Log $requests
-            # Dispatch all HTTP requests and create Integration records if possible
-            Http-Dispatch-Controller $requests $platformInstanceName $async
-        }
+        # Create HTTP requests
+        $requests = Klaviyo-Create-PlacedOrderEvent $orders $mediaMap $namedCredential
+        Log $requests
+        # Dispatch all HTTP requests and create Integration records if possible
+        Http-Dispatch-Controller $requests $platformInstanceName $async
     }
 }
 
@@ -3517,8 +3803,8 @@ if($inputIds.size() &gt; 0) {
     <assignments>
         <name>Count_Input_Records</name>
         <label>Count Input Records</label>
-        <locationX>1172</locationX>
-        <locationY>134</locationY>
+        <locationX>1469</locationX>
+        <locationY>242</locationY>
         <assignmentItems>
             <assignToReference>countInput</assignToReference>
             <operator>AssignCount</operator>
@@ -3531,31 +3817,49 @@ if($inputIds.size() &gt; 0) {
         </connector>
     </assignments>
     <constants>
-        <name>batchSize</name>
-        <dataType>Number</dataType>
-        <value>
-            <numberValue>5.0</numberValue>
-        </value>
-    </constants>
-    <constants>
         <name>flowName</name>
         <dataType>String</dataType>
         <value>
             <stringValue>Klaviyo_ALF_Integration</stringValue>
         </value>
     </constants>
-    <constants>
-        <name>platformInstanceName</name>
-        <dataType>String</dataType>
-        <value>
-            <stringValue>KlaviyoDemo</stringValue>
-        </value>
-    </constants>
+    <decisions>
+        <name>Input_Mode</name>
+        <label>Input Mode</label>
+        <locationX>759</locationX>
+        <locationY>134</locationY>
+        <defaultConnector>
+            <targetReference>Count_Input_Records</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Collection</defaultConnectorLabel>
+        <rules>
+            <name>Singe</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>InputId</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>InputId</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <stringValue></stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Coalesce_and_Batch</targetReference>
+            </connector>
+            <label>Singe</label>
+        </rules>
+    </decisions>
     <decisions>
         <name>Integration_Type</name>
         <label>Integration Type</label>
-        <locationX>710</locationX>
-        <locationY>350</locationY>
+        <locationX>1238</locationX>
+        <locationY>566</locationY>
         <defaultConnectorLabel>--Unsupported--</defaultConnectorLabel>
         <rules>
             <name>Integration_Type_CatalogCategory</name>
@@ -3634,10 +3938,35 @@ if($inputIds.size() &gt; 0) {
         </rules>
     </decisions>
     <decisions>
+        <name>Process_Batch</name>
+        <label>Process Batch</label>
+        <locationX>776</locationX>
+        <locationY>458</locationY>
+        <defaultConnector>
+            <targetReference>Integration_Type</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No</defaultConnectorLabel>
+        <rules>
+            <name>Process_Batch_Yes</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>countIntegrationRecords</leftValueReference>
+                <operator>GreaterThan</operator>
+                <rightValue>
+                    <elementReference>BatchSize</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Batch_Invocation</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
         <name>Valid_Input</name>
         <label>Valid Input</label>
-        <locationX>1172</locationX>
-        <locationY>242</locationY>
+        <locationX>1469</locationX>
+        <locationY>350</locationY>
         <defaultConnectorLabel>No</defaultConnectorLabel>
         <rules>
             <name>Valid_Input_Yes</name>
@@ -3664,7 +3993,7 @@ if($inputIds.size() &gt; 0) {
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Integration_Type</targetReference>
+                <targetReference>Process_Batch</targetReference>
             </connector>
             <label>Yes</label>
         </rules>
@@ -3692,13 +4021,24 @@ if($inputIds.size() &gt; 0) {
     </processMetadataValues>
     <processType>AutoLaunchedFlow</processType>
     <start>
-        <locationX>1046</locationX>
+        <locationX>633</locationX>
         <locationY>0</locationY>
         <connector>
-            <targetReference>Count_Input_Records</targetReference>
+            <targetReference>Input_Mode</targetReference>
         </connector>
     </start>
     <status>Active</status>
+    <variables>
+        <name>BatchSize</name>
+        <dataType>Number</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <scale>0</scale>
+        <value>
+            <numberValue>5.0</numberValue>
+        </value>
+    </variables>
     <variables>
         <name>countInput</name>
         <dataType>Number</dataType>
@@ -3746,6 +4086,13 @@ if($inputIds.size() &gt; 0) {
         <objectType>Integration__c</objectType>
     </variables>
     <variables>
+        <name>InputId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
         <name>InputIds</name>
         <dataType>String</dataType>
         <isCollection>true</isCollection>
@@ -3767,6 +4114,16 @@ if($inputIds.size() &gt; 0) {
     </variables>
     <variables>
         <name>NamedCredential</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <stringValue>Klaviyo</stringValue>
+        </value>
+    </variables>
+    <variables>
+        <name>PlatformInstanceName</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>true</isInput>
