@@ -1,22 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>60.0</apiVersion>
-    <assignments>
-        <name>Append_Record_ID</name>
-        <label>Append Record ID</label>
-        <locationX>308</locationX>
-        <locationY>276</locationY>
-        <assignmentItems>
-            <assignToReference>ids</assignToReference>
-            <operator>Add</operator>
-            <value>
-                <elementReference>$Record.Id</elementReference>
-            </value>
-        </assignmentItems>
-        <connector>
-            <targetReference>Trigger_Fulfillment_Event</targetReference>
-        </connector>
-    </assignments>
     <constants>
         <name>integrationType</name>
         <dataType>String</dataType>
@@ -24,14 +8,77 @@
             <stringValue>FulfillmentEvent</stringValue>
         </value>
     </constants>
-    <constants>
-        <name>namedCredential</name>
-        <dataType>String</dataType>
-        <value>
-            <stringValue>Klaviyo</stringValue>
-        </value>
-    </constants>
+    <decisions>
+        <name>Valid_Settings</name>
+        <label>Valid Settings</label>
+        <locationX>374</locationX>
+        <locationY>600</locationY>
+        <defaultConnectorLabel>No</defaultConnectorLabel>
+        <rules>
+            <name>Valid_Settings_Yes</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>cBatchSize</leftValueReference>
+                <operator>GreaterThanOrEqualTo</operator>
+                <rightValue>
+                    <numberValue>0.0</numberValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>cPlatformInstanceName</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>cPlatformInstanceName</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <stringValue></stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Trigger_Fulfillment_Event</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
     <environments>Default</environments>
+    <formulas>
+        <name>cBatchSize</name>
+        <dataType>Number</dataType>
+        <expression>NULLVALUE(
+  {!BatchSize}, 
+  NULLVALUE({!Klaviyo_User_Settings.Batch_Size__c}, 
+  NULLVALUE({!Klaviyo_Profile_Settings.Batch_Size__c}, 
+  NULLVALUE({!Klaviyo_Org_Settings.Batch_Size__c}, 
+  0
+))))</expression>
+        <scale>0</scale>
+    </formulas>
+    <formulas>
+        <name>cNamedCredential</name>
+        <dataType>String</dataType>
+        <expression>BLANKVALUE(
+  {!NamedCredential}, 
+  BLANKVALUE({!Klaviyo_User_Settings.Named_Credential__c}, 
+  BLANKVALUE({!Klaviyo_Profile_Settings.Named_Credential__c}, 
+  BLANKVALUE({!Klaviyo_Org_Settings.Named_Credential__c}, 
+  &quot;&quot;
+))))</expression>
+    </formulas>
+    <formulas>
+        <name>cPlatformInstanceName</name>
+        <dataType>String</dataType>
+        <expression>BLANKVALUE(
+  {!PlatformInstanceName}, 
+  BLANKVALUE({!Klaviyo_User_Settings.Platform_Instance_Name__c}, 
+  BLANKVALUE({!Klaviyo_Profile_Settings.Platform_Instance_Name__c}, 
+  BLANKVALUE({!Klaviyo_Org_Settings.Platform_Instance_Name__c}, 
+  &quot;&quot;
+))))</expression>
+    </formulas>
     <interviewLabel>Klaviyo - RTF - Fu {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Klaviyo - RTF - Fulfillment Events</label>
     <processMetadataValues>
@@ -53,6 +100,69 @@
         </value>
     </processMetadataValues>
     <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Klaviyo_Org_Settings</name>
+        <label>Klaviyo Org Settings</label>
+        <locationX>374</locationX>
+        <locationY>492</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Valid_Settings</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>SetupOwnerId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Organization.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>StoreConnect_Add_on_Klaviyo__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Klaviyo_Profile_Settings</name>
+        <label>Klaviyo Profile Settings</label>
+        <locationX>374</locationX>
+        <locationY>384</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Klaviyo_Org_Settings</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>SetupOwnerId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Profile.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>StoreConnect_Add_on_Klaviyo__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Klaviyo_User_Settings</name>
+        <label>Klaviyo User Settings</label>
+        <locationX>374</locationX>
+        <locationY>276</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Klaviyo_Profile_Settings</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>SetupOwnerId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$User.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>StoreConnect_Add_on_Klaviyo__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
     <start>
         <locationX>50</locationX>
         <locationY>0</locationY>
@@ -76,23 +186,29 @@
         <recordTriggerType>CreateAndUpdate</recordTriggerType>
         <scheduledPaths>
             <connector>
-                <targetReference>Append_Record_ID</targetReference>
+                <targetReference>Klaviyo_User_Settings</targetReference>
             </connector>
             <pathType>AsyncAfterCommit</pathType>
         </scheduledPaths>
         <triggerType>RecordAfterSave</triggerType>
     </start>
-    <status>Obsolete</status>
+    <status>Draft</status>
     <subflows>
         <name>Trigger_Fulfillment_Event</name>
         <label>Trigger Fulfillment Event</label>
-        <locationX>308</locationX>
-        <locationY>384</locationY>
+        <locationX>242</locationX>
+        <locationY>708</locationY>
         <flowName>Klaviyo_ALF_Integration</flowName>
         <inputAssignments>
-            <name>InputIds</name>
+            <name>batchSize</name>
             <value>
-                <elementReference>ids</elementReference>
+                <elementReference>cBatchSize</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>InputId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -104,7 +220,13 @@
         <inputAssignments>
             <name>NamedCredential</name>
             <value>
-                <elementReference>namedCredential</elementReference>
+                <elementReference>cNamedCredential</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>platformInstanceName</name>
+            <value>
+                <elementReference>cPlatformInstanceName</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -115,10 +237,25 @@
         </inputAssignments>
     </subflows>
     <variables>
-        <name>ids</name>
+        <name>BatchSize</name>
+        <dataType>Number</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <scale>0</scale>
+    </variables>
+    <variables>
+        <name>NamedCredential</name>
         <dataType>String</dataType>
-        <isCollection>true</isCollection>
-        <isInput>false</isInput>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>PlatformInstanceName</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
         <isOutput>false</isOutput>
     </variables>
 </Flow>
