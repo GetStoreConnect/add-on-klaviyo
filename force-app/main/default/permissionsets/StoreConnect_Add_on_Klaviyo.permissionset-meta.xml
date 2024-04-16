@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
-    <description>Permission to access/edit Integration__c object</description>
+    <description>Permission to access/edit StoreConnect_Integration__c object</description>
     <externalCredentialPrincipalAccesses>
         <enabled>true</enabled>
         <externalCredentialPrincipal>Klaviyo-Authorization</externalCredentialPrincipal>
     </externalCredentialPrincipalAccesses>
     <fieldPermissions>
         <editable>true</editable>
-        <field>Integration__c.External_Id__c</field>
+        <field>StoreConnect_Integration__c.External_Id__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>Integration__c.Product_Category_Id__c</field>
+        <field>StoreConnect_Integration__c.Product_Category_Id__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>Integration__c.Product_Id__c</field>
+        <field>StoreConnect_Integration__c.Product_Id__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>Integration__c.Synced__c</field>
+        <field>StoreConnect_Integration__c.Synced__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <hasActivationRequired>false</hasActivationRequired>
@@ -33,7 +33,7 @@
         <allowEdit>true</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>true</modifyAllRecords>
-        <object>Integration__c</object>
+        <object>StoreConnect_Integration__c</object>
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
 </PermissionSet>

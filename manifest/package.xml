@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
-        <members>Integration__c.External_Id__c</members>
-        <members>Integration__c.Platform__c</members>
-        <members>Integration__c.Product_Category_Id__c</members>
-        <members>Integration__c.Product_Id__c</members>
-        <members>Integration__c.Synced__c</members>
+        <members>StoreConnect_Integration__c.External_Id__c</members>
+        <members>StoreConnect_Integration__c.Platform__c</members>
+        <members>StoreConnect_Integration__c.Product_Category_Id__c</members>
+        <members>StoreConnect_Integration__c.Product_Id__c</members>
+        <members>StoreConnect_Integration__c.Synced__c</members>
         <name>CustomField</name>
     </types>
     <types>
-        <members>Integration__c</members>
+        <members>StoreConnect_Integration__c</members>
         <name>CustomObject</name>
     </types>
     <types>
-        <members>Integration__c-en_US</members>
+        <members>StoreConnect_Integration__c-en_US</members>
         <name>CustomObjectTranslation</name>
     </types>
     <types>
@@ -28,7 +28,7 @@
         <name>Flow</name>
     </types>
     <types>
-        <members>Integration__c-Integration Layout</members>
+        <members>StoreConnect_Integration__c-Integration Layout</members>
         <name>Layout</name>
     </types>
     <types>

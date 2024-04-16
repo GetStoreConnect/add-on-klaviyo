@@ -153,13 +153,13 @@
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
     <externalSharingModel>Private</externalSharingModel>
-    <label>Integration</label>
+    <label>StoreConnect Integration</label>
     <nameField>
         <displayFormat>SCI{000000}</displayFormat>
         <label>Integration Name</label>
         <type>AutoNumber</type>
     </nameField>
-    <pluralLabel>Integration</pluralLabel>
+    <pluralLabel>StoreConnect Integrations</pluralLabel>
     <searchLayouts></searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>

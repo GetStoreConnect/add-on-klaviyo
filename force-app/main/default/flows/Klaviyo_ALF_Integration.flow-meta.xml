@@ -572,7 +572,7 @@ function Map-Integrations($platformInstanceName, $inputIds, $field) {
         # Query existing integrations for the input ProductIds OR CategoryIds
         $integrations = Query-Records `
             SELECT Id, External_Id__c, $field
-            FROM Integration__c 
+            FROM StoreConnect_Integration__c 
             WHERE Platform__c = &apos;$platformInstanceName&apos; AND
                 $field IN $inputIds
         `
@@ -752,9 +752,9 @@ function Http-Dispatch($requests, $integrationMap, $platformInstanceName) {
                 $integrationId = $integrationMap.get($recordId).Id
             }
             # Determine if New or Existing Integration
-            $integration = New-Integration__c
+            $integration = New-StoreConnect_Integration__c
             if($integrationId != null) {
-                $integration = New-Integration__c -Id $integrationId
+                $integration = New-StoreConnect_Integration__c -Id $integrationId
             }
             # Set Integration fields
             $integration.Platform__c = $platformInstanceName
@@ -777,7 +777,7 @@ function Integration-Upsert($records) {
 }
 
 # Controller to dispatch HTTP requests as either a synchonous or aysncronous callouts
-# If valid Integration__c records are returned then this will commit those to the database
+# If valid StoreConnect_Integration__c records are returned then this will commit those to the database
 function Http-Dispatch-Controller($requests, $integrationMap, $platformInstanceName, $async) {
     if($requests.size() &gt; 0 &amp;&amp; $platformInstanceName != null) {
         if($async) {
@@ -839,9 +839,9 @@ function Http-Dispatch-Controller($requests, $integrationMap, $platformInstanceN
                             $integrationId = $integrationMap.get($recordId).Id
                         }
                         # Determine if New or Existing Integration
-                        $integration = New-Integration__c
+                        $integration = New-StoreConnect_Integration__c
                         if($integrationId != null) {
-                            $integration = New-Integration__c -Id $integrationId
+                            $integration = New-StoreConnect_Integration__c -Id $integrationId
                         }
                         # Set Integration fields
                         $integration.Platform__c = $platformInstanceName
@@ -1126,7 +1126,7 @@ function Map-Integrations($platformInstanceName, $inputIds, $field) {
         # Query existing integrations for the input ProductIds OR CategoryIds
         $integrations = Query-Records `
             SELECT Id, External_Id__c, $field
-            FROM Integration__c 
+            FROM StoreConnect_Integration__c 
             WHERE Platform__c = &apos;$platformInstanceName&apos; AND
                 $field IN $inputIds
         `
@@ -1520,9 +1520,9 @@ function Http-Dispatch($requests, $callback, $callbackContext, $integrationMap, 
                 $integrationId = $integrationMap.get($recordId).Id
             }
             # Determine if New or Existing Integration
-            $integration = New-Integration__c
+            $integration = New-StoreConnect_Integration__c
             if($integrationId != null) {
-                $integration = New-Integration__c -Id $integrationId
+                $integration = New-StoreConnect_Integration__c -Id $integrationId
             }
             # Set Integration fields
             $integration.Platform__c = $platformInstanceName
@@ -1557,7 +1557,7 @@ function Integration-Upsert($records) {
 }
 
 # Controller to dispatch HTTP requests as either a synchonous or aysncronous callouts
-# If valid Integration__c records are returned then this will commit those to the database
+# If valid StoreConnect_Integration__c records are returned then this will commit those to the database
 function Http-Dispatch-Controller($requests, $callback, $callbackContext, $integrationMap, $platformInstanceName, $async) {
     if($requests.size() &gt; 0 &amp;&amp; $platformInstanceName != null) {
         if($async) {
@@ -1622,9 +1622,9 @@ function Http-Dispatch-Controller($requests, $callback, $callbackContext, $integ
                             $integrationId = $integrationMap.get($recordId).Id
                         }
                         # Determine if New or Existing Integration
-                        $integration = New-Integration__c
+                        $integration = New-StoreConnect_Integration__c
                         if($integrationId != null) {
-                            $integration = New-Integration__c -Id $integrationId
+                            $integration = New-StoreConnect_Integration__c -Id $integrationId
                         }
                         # Set Integration fields
                         $integration.Platform__c = $platformInstanceName
@@ -1996,7 +1996,7 @@ function Map-Integrations($platformInstanceName, $inputIds, $field) {
         # Query existing integrations for the input ProductIds OR CategoryIds
         $integrations = Query-Records `
             SELECT Id, External_Id__c, $field
-            FROM Integration__c 
+            FROM StoreConnect_Integration__c 
             WHERE Platform__c = &apos;$platformInstanceName&apos; AND
                 $field IN $inputIds
         `
@@ -2397,9 +2397,9 @@ function Http-Dispatch($requests, $integrationMap, $platformInstanceName) {
                 $integrationId = $integrationMap.get($recordId).Id
             }
             # Determine if New or Existing Integration
-            $integration = New-Integration__c
+            $integration = New-StoreConnect_Integration__c
             if($integrationId != null) {
-                $integration = New-Integration__c -Id $integrationId
+                $integration = New-StoreConnect_Integration__c -Id $integrationId
             }
             # Set Integration fields
             $integration.Platform__c = $platformInstanceName
@@ -2422,7 +2422,7 @@ function Integration-Upsert($records) {
 }
 
 # Controller to dispatch HTTP requests as either a synchonous or aysncronous callouts
-# If valid Integration__c records are returned then this will commit those to the database
+# If valid StoreConnect_Integration__c records are returned then this will commit those to the database
 function Http-Dispatch-Controller($requests, $integrationMap, $platformInstanceName, $async) {
     if($requests.size() &gt; 0 &amp;&amp; $platformInstanceName != null) {
         if($async) {
@@ -2487,9 +2487,9 @@ function Http-Dispatch-Controller($requests, $integrationMap, $platformInstanceN
                             $integrationId = $integrationMap.get($recordId).Id
                         }
                         # Determine if New or Existing Integration
-                        $integration = New-Integration__c
+                        $integration = New-StoreConnect_Integration__c
                         if($integrationId != null) {
-                            $integration = New-Integration__c -Id $integrationId
+                            $integration = New-StoreConnect_Integration__c -Id $integrationId
                         }
                         # Set Integration fields
                         $integration.Platform__c = $platformInstanceName
@@ -4075,7 +4075,7 @@ if($inputIds.size() &gt; 0) {
         <isCollection>false</isCollection>
         <isInput>false</isInput>
         <isOutput>false</isOutput>
-        <objectType>Integration__c</objectType>
+        <objectType>StoreConnect_Integration__c</objectType>
     </variables>
     <variables>
         <name>currentItem_Product_Integration</name>
@@ -4083,7 +4083,7 @@ if($inputIds.size() &gt; 0) {
         <isCollection>false</isCollection>
         <isInput>false</isInput>
         <isOutput>false</isOutput>
-        <objectType>Integration__c</objectType>
+        <objectType>StoreConnect_Integration__c</objectType>
     </variables>
     <variables>
         <name>InputId</name>

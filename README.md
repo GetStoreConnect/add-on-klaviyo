@@ -13,13 +13,13 @@ It has the following **key features**:
 
 ## Installation
 
-[![Install in Production](https://custom-icon-badges.demolab.com/badge/Install-Production-fea42a?style=for-the-badge&logo=storeconnect&logoColor=fea42a "Install in Production")](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t2u000000D2lRAAS)
+[![Install in Production](https://custom-icon-badges.demolab.com/badge/Install-Production-fea42a?style=for-the-badge&logo=storeconnect&logoColor=fea42a "Install in Production")](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t2u000000D2lbAAC)
 
-[![Install in Sandbox](https://custom-icon-badges.demolab.com/badge/Install-Sandbox-fea42a?style=for-the-badge&logo=storeconnect&logoColor=fea42a "Install in Sandbox")](https://test.salesforce.com/packaging/installPackage.apexp?p0=04t2u000000D2lRAAS)
+[![Install in Sandbox](https://custom-icon-badges.demolab.com/badge/Install-Sandbox-fea42a?style=for-the-badge&logo=storeconnect&logoColor=fea42a "Install in Sandbox")](https://test.salesforce.com/packaging/installPackage.apexp?p0=04t2u000000D2lbAAC)
 
 ### Post-Installation
 **Required**
-1. Assign the `StoreConnect Add-on: Klaviyo` to any users that need to use the integration or see the `Integration__c` records (required for Flow execution)
+1. Assign the `StoreConnect Add-on: Klaviyo` to any users that need to use the integration or see the `StoreConnect_Integration__c` records (required for Flow execution)
 2. Klaviyo [Theme Template](./theme/snippets/events/klaviyo.liquid)
 3. Add your [Klaviyo Public API Key](https://www.klaviyo.com/settings/account/api-keys) to the Store Variable `klaviyo_public_api_key` of each store using the integration
 4. Create your [Klaviyo Private API Key](https://www.klaviyo.com/create-private-api-key), you will need the below minimum access:
