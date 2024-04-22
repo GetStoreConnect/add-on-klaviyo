@@ -296,7 +296,7 @@
         <locationY>1274</locationY>
         <flowName>Klaviyo_ALF_Integration</flowName>
         <inputAssignments>
-            <name>batchSize</name>
+            <name>BatchSize</name>
             <value>
                 <elementReference>cBatchSize</elementReference>
             </value>
@@ -320,7 +320,7 @@
             </value>
         </inputAssignments>
         <inputAssignments>
-            <name>platformInstanceName</name>
+            <name>PlatformInstanceName</name>
             <value>
                 <elementReference>cPlatformInstanceName</elementReference>
             </value>

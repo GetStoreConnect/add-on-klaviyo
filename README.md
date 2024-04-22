@@ -13,9 +13,9 @@ It has the following **key features**:
 
 ## Installation
 
-[![Install in Production](https://custom-icon-badges.demolab.com/badge/Install-Production-fea42a?style=for-the-badge&logo=storeconnect&logoColor=fea42a "Install in Production")](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t2u000000D2lbAAC)
+[![Install in Production](https://custom-icon-badges.demolab.com/badge/Install-Production-fea42a?style=for-the-badge&logo=storeconnect&logoColor=fea42a "Install in Production")](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t2u000000D2mFAAS)
 
-[![Install in Sandbox](https://custom-icon-badges.demolab.com/badge/Install-Sandbox-fea42a?style=for-the-badge&logo=storeconnect&logoColor=fea42a "Install in Sandbox")](https://test.salesforce.com/packaging/installPackage.apexp?p0=04t2u000000D2lbAAC)
+[![Install in Sandbox](https://custom-icon-badges.demolab.com/badge/Install-Sandbox-fea42a?style=for-the-badge&logo=storeconnect&logoColor=fea42a "Install in Sandbox")](https://test.salesforce.com/packaging/installPackage.apexp?p0=04t2u000000D2mFAAS)
 
 ### Post-Installation
 **Required**
@@ -30,14 +30,16 @@ It has the following **key features**:
     * Under **Principals** > **Actions** > **Edit** > **Add**:
         * **Name**: `PrivateKey`
         * **Value**: *[Private API Key from Klaviyo dashboard]*
-6. Turn on the `Klaviyo_ALF_Integration` flow
+6. Add Organization level Custom Settings to `StoreConnect_Add_on_Klaviyo__c` (Required), below are some recommendations:
+    * `Named_Credential__c`: `Klaviyo` (This matches the installed Named Credential API name)
+    * `Platform_Instance_Name__c`: `Klaviyo`
+    * `Batch_Size__c`: `5`
 
 **Optional**
-1. Turn on the `Klaviyo_SF_Sync` flow to enable `Klaviyo Sync` buttons
-2. Add the `Klaviyo Sync` button to the desired `Product2` Page Layout(s) and/or List View Layout(s)
-3. Add the `Klaviyo Sync` button to the desired `s_c__Product_Category__c` Page Layout(s) and/or List View Layout(s)
-4. Turn on the `Klaviyo_RTF_Order_Events` flow or implement the Order Events via a self-defined method, e.g. Apex Trigger, Scheduled Flow, etc.
-5. Turn on the `Klaviyo_RTF_Fulfillment_Events` flow or implement the Fulfillment Events via a self-defined method, e.g. Apex Trigger, Scheduled Flow, etc.
+1. Add the `Klaviyo Sync` button to the desired `Product2` Page Layout(s) and/or List View Layout(s)
+2. Add the `Klaviyo Sync` button to the desired `s_c__Product_Category__c` Page Layout(s) and/or List View Layout(s)
+3. Turn on the `Klaviyo_RTF_Order_Events` flow or implement the Order Events via a self-defined method, e.g. Apex Trigger, Scheduled Flow, etc.
+4. Turn on the `Klaviyo_RTF_Fulfillment_Events` flow or implement the Fulfillment Events via a self-defined method, e.g. Apex Trigger, Scheduled Flow, etc.
 
 ### Dependencies
 [![StoreConnect](https://custom-icon-badges.demolab.com/badge/StoreConnect-16.3+-fea42a "StoreConnect")](https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3A00000FMkeKUAT)
@@ -61,11 +63,11 @@ Due to the nature of Salesforce being a configurable platform, this add-on has b
 | `CatalogVariant`  | Synchronizes `Product` non `s_c__Is_Master__c` records | Auto-Launch Flow | `Product2` button for List/Page Layout                 |
 
 
-| Events             | Description                                                                              | Method           | Deployment |
-| -----------------  | ---------------------------------------------------------------------------------------- | ---------------- | - |
-| `Order Placed`     | `Order` record where `s_c__Checkout_Step__c == 'complete'`                               | Auto-Launch Flow | Requires specific implementation method with optional conditionals. Recommended via Record-Triggered-Flow |
-| `Incomplete Order` | `Order` record where `s_c__Checkout_Step__c == 'complete' or s_c__Abandonded__c == TRUE` | Auto-Launch Flow | Requires specific implementation method with optional conditionals. Recommended via Record-Triggered-Flow |
-| `Fulfilled Order`  | `s_c__Shipment__c` record                                                                | Auto-Launch Flow | Requires specific implementation method with optional conditionals. Recommended via Record-Triggered-Flow |
+| Events             | Description                                                                              | Method                | Deployment |
+| -----------------  | ---------------------------------------------------------------------------------------- | --------------------- | - |
+| `Order Placed`     | `Order` record where `s_c__Checkout_Step__c == 'complete'`                               | Record Triggered Flow | Must be enabled after installing package. Used as an out-of-the-box method but can be replaced to fit org requirements |
+| `Incomplete Order` | `Order` record where `s_c__Checkout_Step__c == 'complete' or s_c__Abandonded__c == TRUE` | Record Triggered Flow | Must be enabled after installing package. Used as an out-of-the-box method but can be replaced to fit org requirements |
+| `Fulfilled Order`  | `s_c__Shipment__c` record                                                                | Record Triggered Flow | Must be enabled after installing package. Used as an out-of-the-box method but can be replaced to fit org requirements |
 
 ### Website Tracking
 You will need to install copy the contents of the provided [Theme Template](./theme/snippets/events/klaviyo.liquid) into a `s_c__Theme_Template__c` record in the required `s_c__Theme__c` record(s) within your org.
@@ -80,6 +82,8 @@ For additional Theme knowledge, please see the below resources:
 
 | Events             | Description                                                                                     |
 | ------------------ | ----------------------------------------------------------------------------------------------- |
+| `Active on Site`   | Triggered when a unique vistor views any page                                                   |
+| `Identifty`        | Triggered when a user registers and/or logins                                                   |
 | `Viewed Product`   | Triggered when viewing a Product page | `s_c__Theme_Template__c` record                         |
 | `Added to Cart`    | Triggered when adding a Product to the Cart via `Buy Now`, `Add to Cart`, or Cart `Update`      |
 | `Started Checkout` | Triggered when navigated to `/checkout` page (if using custom checkout then modify this method) |
