@@ -4,7 +4,7 @@
         <name>Batch_Invocation</name>
         <label>Batch Invocation</label>
         <locationX>314</locationX>
-        <locationY>566</locationY>
+        <locationY>782</locationY>
         <actionName>Streams__Streamscript</actionName>
         <actionType>apex</actionType>
         <dataTypeMappings>
@@ -17,10 +17,6 @@
         </dataTypeMappings>
         <dataTypeMappings>
             <typeName>T__c3</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c4</typeName>
             <typeValue>Task</typeValue>
         </dataTypeMappings>
         <dataTypeMappings>
@@ -89,6 +85,10 @@
         </dataTypeMappings>
         <dataTypeMappings>
             <typeName>U__records</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c4</typeName>
             <typeValue>Task</typeValue>
         </dataTypeMappings>
         <flowTransactionModel>CurrentTransaction</flowTransactionModel>
@@ -203,7 +203,7 @@ if($inputIds.size() &gt; 0) {
         <name>Coalesce_and_Batch</name>
         <label>Coalesce and Batch</label>
         <locationX>50</locationX>
-        <locationY>242</locationY>
+        <locationY>458</locationY>
         <actionName>Streams__Streamscript</actionName>
         <actionType>apex</actionType>
         <dataTypeMappings>
@@ -406,7 +406,7 @@ if($inputIds.size() &gt; 0) {
         <name>Create_Catalog_Category</name>
         <label>Create Catalog Category</label>
         <locationX>578</locationX>
-        <locationY>674</locationY>
+        <locationY>890</locationY>
         <actionName>Streams__Streamscript</actionName>
         <actionType>apex</actionType>
         <dataTypeMappings>
@@ -960,33 +960,9 @@ if($inputIds.size() &gt; 0) {
         <name>Create_Catalog_Item</name>
         <label>Create Catalog Item</label>
         <locationX>842</locationX>
-        <locationY>674</locationY>
+        <locationY>890</locationY>
         <actionName>Streams__Streamscript</actionName>
         <actionType>apex</actionType>
-        <dataTypeMappings>
-            <typeName>T__c1</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c2</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c3</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c4</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c5</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c6</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
         <dataTypeMappings>
             <typeName>T__c7</typeName>
             <typeValue>Task</typeValue>
@@ -1020,11 +996,11 @@ if($inputIds.size() &gt; 0) {
             <typeValue>Task</typeValue>
         </dataTypeMappings>
         <dataTypeMappings>
-            <typeName>T__r5</typeName>
+            <typeName>T__c6</typeName>
             <typeValue>Task</typeValue>
         </dataTypeMappings>
         <dataTypeMappings>
-            <typeName>T__r6</typeName>
+            <typeName>T__r5</typeName>
             <typeValue>Task</typeValue>
         </dataTypeMappings>
         <dataTypeMappings>
@@ -1045,6 +1021,30 @@ if($inputIds.size() &gt; 0) {
         </dataTypeMappings>
         <dataTypeMappings>
             <typeName>U__records</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r6</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c1</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c2</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c3</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c4</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c5</typeName>
             <typeValue>Task</typeValue>
         </dataTypeMappings>
         <flowTransactionModel>CurrentTransaction</flowTransactionModel>
@@ -1833,7 +1833,7 @@ if($inputIds.size() &gt; 0) {
         <name>Create_Catalog_Variant</name>
         <label>Create Catalog Variant</label>
         <locationX>1106</locationX>
-        <locationY>674</locationY>
+        <locationY>890</locationY>
         <actionName>Streams__Streamscript</actionName>
         <actionType>apex</actionType>
         <dataTypeMappings>
@@ -1854,10 +1854,6 @@ if($inputIds.size() &gt; 0) {
         </dataTypeMappings>
         <dataTypeMappings>
             <typeName>T__c5</typeName>
-            <typeValue>Task</typeValue>
-        </dataTypeMappings>
-        <dataTypeMappings>
-            <typeName>T__c6</typeName>
             <typeValue>Task</typeValue>
         </dataTypeMappings>
         <dataTypeMappings>
@@ -1890,6 +1886,10 @@ if($inputIds.size() &gt; 0) {
         </dataTypeMappings>
         <dataTypeMappings>
             <typeName>T__r4</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c6</typeName>
             <typeValue>Task</typeValue>
         </dataTypeMappings>
         <dataTypeMappings>
@@ -2287,8 +2287,10 @@ function Klaviyo-Create-CatalogVariantRequests($records, $context, $integrationM
             }
 
             # Is published logic
-            if($record.IsActive &amp;&amp; $availableDate &lt;= $dtNow &amp;&amp; $pricebookEntry.UnitPrice != null) {
-                $isPublished = true
+            if($availableDate != null) {
+                if($record.IsActive &amp;&amp; $availableDate &lt;= $dtNow &amp;&amp; $pricebookEntry.UnitPrice != null) {
+                    $isPublished = true
+                }
             }
 
             # Base request as if its a POST
@@ -2663,7 +2665,7 @@ if($inputIds.size() &gt; 0) {
         <name>Create_Fulfillment_Events</name>
         <label>Create Fulfillment Events</label>
         <locationX>1634</locationX>
-        <locationY>674</locationY>
+        <locationY>890</locationY>
         <actionName>Streams__Streamscript</actionName>
         <actionType>apex</actionType>
         <dataTypeMappings>
@@ -3233,7 +3235,7 @@ if($inputIds.size() &gt; 0) {
         <name>Create_Order_Events</name>
         <label>Create Order Events</label>
         <locationX>1370</locationX>
-        <locationY>674</locationY>
+        <locationY>890</locationY>
         <actionName>Streams__Streamscript</actionName>
         <actionType>apex</actionType>
         <dataTypeMappings>
@@ -3856,10 +3858,40 @@ if($inputIds.size() &gt; 0) {
     </actionCalls>
     <apiVersion>60.0</apiVersion>
     <assignments>
+        <name>Assign_Dynamic_Inputs</name>
+        <label>Assign Dynamic Inputs</label>
+        <locationX>1592</locationX>
+        <locationY>134</locationY>
+        <assignmentItems>
+            <assignToReference>BatchSize</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>cBatchSize</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>NamedCredential</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>cNamedCredential</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>PlatformInstanceName</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>cPlatformInstanceName</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Valid_Inputs</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
         <name>Count_Input_Records</name>
         <label>Count Input Records</label>
         <locationX>1469</locationX>
-        <locationY>242</locationY>
+        <locationY>458</locationY>
         <assignmentItems>
             <assignToReference>countInput</assignToReference>
             <operator>AssignCount</operator>
@@ -3882,13 +3914,13 @@ if($inputIds.size() &gt; 0) {
         <name>Input_Mode</name>
         <label>Input Mode</label>
         <locationX>759</locationX>
-        <locationY>134</locationY>
+        <locationY>350</locationY>
         <defaultConnector>
             <targetReference>Count_Input_Records</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>Collection</defaultConnectorLabel>
         <rules>
-            <name>Singe</name>
+            <name>Input_Mode_Single</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
                 <leftValueReference>InputId</leftValueReference>
@@ -3907,14 +3939,14 @@ if($inputIds.size() &gt; 0) {
             <connector>
                 <targetReference>Coalesce_and_Batch</targetReference>
             </connector>
-            <label>Singe</label>
+            <label>Single</label>
         </rules>
     </decisions>
     <decisions>
         <name>Integration_Type</name>
         <label>Integration Type</label>
         <locationX>1238</locationX>
-        <locationY>566</locationY>
+        <locationY>782</locationY>
         <defaultConnectorLabel>--Unsupported--</defaultConnectorLabel>
         <rules>
             <name>Integration_Type_CatalogCategory</name>
@@ -3996,7 +4028,7 @@ if($inputIds.size() &gt; 0) {
         <name>Process_Batch</name>
         <label>Process Batch</label>
         <locationX>776</locationX>
-        <locationY>458</locationY>
+        <locationY>674</locationY>
         <defaultConnector>
             <targetReference>Integration_Type</targetReference>
         </defaultConnector>
@@ -4021,7 +4053,7 @@ if($inputIds.size() &gt; 0) {
         <name>Valid_Input</name>
         <label>Valid Input</label>
         <locationX>1469</locationX>
-        <locationY>350</locationY>
+        <locationY>566</locationY>
         <defaultConnectorLabel>No</defaultConnectorLabel>
         <rules>
             <name>Valid_Input_Yes</name>
@@ -4053,7 +4085,73 @@ if($inputIds.size() &gt; 0) {
             <label>Yes</label>
         </rules>
     </decisions>
+    <decisions>
+        <name>Valid_Inputs</name>
+        <label>Valid Inputs</label>
+        <locationX>1592</locationX>
+        <locationY>242</locationY>
+        <defaultConnectorLabel>No</defaultConnectorLabel>
+        <rules>
+            <name>Valid_Inputs_Yes</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>BatchSize</leftValueReference>
+                <operator>GreaterThanOrEqualTo</operator>
+                <rightValue>
+                    <numberValue>0.0</numberValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>NamedCredential</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>NamedCredential</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <stringValue></stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>PlatformInstanceName</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>PlatformInstanceName</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <stringValue></stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Input_Mode</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
     <environments>Default</environments>
+    <formulas>
+        <name>cBatchSize</name>
+        <dataType>Number</dataType>
+        <expression>NULLVALUE({!BatchSize}, {!$Setup.StoreConnect_Add_on_Klaviyo__c.Batch_Size__c})</expression>
+        <scale>0</scale>
+    </formulas>
+    <formulas>
+        <name>cNamedCredential</name>
+        <dataType>String</dataType>
+        <expression>BLANKVALUE({!NamedCredential}, {!$Setup.StoreConnect_Add_on_Klaviyo__c.Named_Credential__c})</expression>
+    </formulas>
+    <formulas>
+        <name>cPlatformInstanceName</name>
+        <dataType>String</dataType>
+        <expression>BLANKVALUE({!PlatformInstanceName}, {!$Setup.StoreConnect_Add_on_Klaviyo__c.Platform_Instance_Name__c})</expression>
+    </formulas>
     <interviewLabel>Klaviyo - ALF - Integration {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Klaviyo - ALF - Integration</label>
     <processMetadataValues>
@@ -4076,10 +4174,10 @@ if($inputIds.size() &gt; 0) {
     </processMetadataValues>
     <processType>AutoLaunchedFlow</processType>
     <start>
-        <locationX>633</locationX>
+        <locationX>1466</locationX>
         <locationY>0</locationY>
         <connector>
-            <targetReference>Input_Mode</targetReference>
+            <targetReference>Assign_Dynamic_Inputs</targetReference>
         </connector>
     </start>
     <status>Active</status>

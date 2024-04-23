@@ -30,7 +30,7 @@
             </value>
         </assignmentItems>
         <connector>
-            <targetReference>Klaviyo_User_Settings</targetReference>
+            <targetReference>Klaviyo_Integration</targetReference>
         </connector>
     </assignments>
     <decisions>
@@ -71,7 +71,7 @@
         <locationX>182</locationX>
         <locationY>542</locationY>
         <defaultConnector>
-            <targetReference>Klaviyo_User_Settings</targetReference>
+            <targetReference>Klaviyo_Integration</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>No</defaultConnectorLabel>
         <rules>
@@ -100,7 +100,7 @@
     <decisions>
         <name>Has_Valid_Input</name>
         <label>Has Valid Input</label>
-        <locationX>380</locationX>
+        <locationX>336</locationX>
         <locationY>134</locationY>
         <defaultConnectorLabel>No</defaultConnectorLabel>
         <rules>
@@ -126,77 +126,7 @@
             <label>Yes</label>
         </rules>
     </decisions>
-    <decisions>
-        <name>Valid_Settings</name>
-        <label>Valid Settings</label>
-        <locationX>182</locationX>
-        <locationY>1166</locationY>
-        <defaultConnectorLabel>No</defaultConnectorLabel>
-        <rules>
-            <name>Valid_Settings_Yes</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>cBatchSize</leftValueReference>
-                <operator>GreaterThanOrEqualTo</operator>
-                <rightValue>
-                    <numberValue>0.0</numberValue>
-                </rightValue>
-            </conditions>
-            <conditions>
-                <leftValueReference>cPlatformInstanceName</leftValueReference>
-                <operator>IsNull</operator>
-                <rightValue>
-                    <booleanValue>false</booleanValue>
-                </rightValue>
-            </conditions>
-            <conditions>
-                <leftValueReference>cPlatformInstanceName</leftValueReference>
-                <operator>NotEqualTo</operator>
-                <rightValue>
-                    <stringValue></stringValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Klaviyo_Integration</targetReference>
-            </connector>
-            <label>Yes</label>
-        </rules>
-    </decisions>
     <environments>Default</environments>
-    <formulas>
-        <name>cBatchSize</name>
-        <dataType>Number</dataType>
-        <expression>NULLVALUE(
-  {!BatchSize}, 
-  NULLVALUE({!Klaviyo_User_Settings.Batch_Size__c}, 
-  NULLVALUE({!Klaviyo_Profile_Settings.Batch_Size__c}, 
-  NULLVALUE({!Klaviyo_Org_Settings.Batch_Size__c}, 
-  0
-))))</expression>
-        <scale>0</scale>
-    </formulas>
-    <formulas>
-        <name>cNamedCredential</name>
-        <dataType>String</dataType>
-        <expression>BLANKVALUE(
-  {!NamedCredential}, 
-  BLANKVALUE({!Klaviyo_User_Settings.Named_Credential__c}, 
-  BLANKVALUE({!Klaviyo_Profile_Settings.Named_Credential__c}, 
-  BLANKVALUE({!Klaviyo_Org_Settings.Named_Credential__c}, 
-  &quot;&quot;
-))))</expression>
-    </formulas>
-    <formulas>
-        <name>cPlatformInstanceName</name>
-        <dataType>String</dataType>
-        <expression>BLANKVALUE(
-  {!PlatformInstanceName}, 
-  BLANKVALUE({!Klaviyo_User_Settings.Platform_Instance_Name__c}, 
-  BLANKVALUE({!Klaviyo_Profile_Settings.Platform_Instance_Name__c}, 
-  BLANKVALUE({!Klaviyo_Org_Settings.Platform_Instance_Name__c}, 
-  &quot;&quot;
-))))</expression>
-    </formulas>
     <interviewLabel>Klaviyo - SF - Sync {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Klaviyo - SF - Sync</label>
     <processMetadataValues>
@@ -218,71 +148,8 @@
         </value>
     </processMetadataValues>
     <processType>Flow</processType>
-    <recordLookups>
-        <name>Klaviyo_Org_Settings</name>
-        <label>Klaviyo Org Settings</label>
-        <locationX>182</locationX>
-        <locationY>1058</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>Valid_Settings</targetReference>
-        </connector>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>SetupOwnerId</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>$Organization.Id</elementReference>
-            </value>
-        </filters>
-        <getFirstRecordOnly>true</getFirstRecordOnly>
-        <object>StoreConnect_Add_on_Klaviyo__c</object>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
-    </recordLookups>
-    <recordLookups>
-        <name>Klaviyo_Profile_Settings</name>
-        <label>Klaviyo Profile Settings</label>
-        <locationX>182</locationX>
-        <locationY>950</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>Klaviyo_Org_Settings</targetReference>
-        </connector>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>SetupOwnerId</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>$Profile.Id</elementReference>
-            </value>
-        </filters>
-        <getFirstRecordOnly>true</getFirstRecordOnly>
-        <object>StoreConnect_Add_on_Klaviyo__c</object>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
-    </recordLookups>
-    <recordLookups>
-        <name>Klaviyo_User_Settings</name>
-        <label>Klaviyo User Settings</label>
-        <locationX>182</locationX>
-        <locationY>842</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>Klaviyo_Profile_Settings</targetReference>
-        </connector>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>SetupOwnerId</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>$User.Id</elementReference>
-            </value>
-        </filters>
-        <getFirstRecordOnly>true</getFirstRecordOnly>
-        <object>StoreConnect_Add_on_Klaviyo__c</object>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
-    </recordLookups>
     <start>
-        <locationX>254</locationX>
+        <locationX>210</locationX>
         <locationY>0</locationY>
         <connector>
             <targetReference>Has_Valid_Input</targetReference>
@@ -292,13 +159,13 @@
     <subflows>
         <name>Klaviyo_Integration</name>
         <label>Klaviyo Integration</label>
-        <locationX>50</locationX>
-        <locationY>1274</locationY>
+        <locationX>182</locationX>
+        <locationY>842</locationY>
         <flowName>Klaviyo_ALF_Integration</flowName>
         <inputAssignments>
             <name>BatchSize</name>
             <value>
-                <elementReference>cBatchSize</elementReference>
+                <elementReference>BatchSize</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -316,13 +183,13 @@
         <inputAssignments>
             <name>NamedCredential</name>
             <value>
-                <elementReference>cNamedCredential</elementReference>
+                <elementReference>NamedCredential</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
             <name>PlatformInstanceName</name>
             <value>
-                <elementReference>cPlatformInstanceName</elementReference>
+                <elementReference>PlatformInstanceName</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>

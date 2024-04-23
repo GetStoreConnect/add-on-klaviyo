@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Sync_Product_Variants</name>
+        <label>Sync Product Variants</label>
+        <locationX>50</locationX>
+        <locationY>431</locationY>
+        <actionName>Streams__Streamscript</actionName>
+        <actionType>apex</actionType>
+        <dataTypeMappings>
+            <typeName>U__records</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c1</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c2</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c3</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c4</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c5</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c6</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c7</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c8</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c9</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__i0</typeName>
+            <typeValue>StoreConnect_Integration__c</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r1</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r2</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r3</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r4</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r5</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r6</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r7</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r8</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r9</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>U__record</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>i0</name>
+            <value>
+                <elementReference>$Record</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i1</name>
+            <value>
+                <elementReference>flowName</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i2</name>
+            <value>
+                <elementReference>NamedCredential</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i3</name>
+            <value>
+                <elementReference>PlatformInstanceName</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>n1</name>
+            <value>
+                <elementReference>BatchSize</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>x</name>
+            <value>
+                <stringValue># Streamscript bulk i0=$Record i1=flowName n1=BatchSize i2=NamedCredential i3=PlatformInstanceName
+
+# Converts a List into a queryable string of quote enclosed
+# (&apos;,&apos;) separated values
+function List-Stringify($list, $identifier, $alwaysFill) {
+    $string = []
+
+    foreach($item in $list) {
+        $value = &apos;&apos;
+        if($identifier == null) {
+            $value = $item
+        } else {
+            $value = $item.get($identifier)
+        }
+        $string.add(`&apos;$value&apos;`)
+    }
+
+    if($string.isEmpty() &amp;&amp; $alwaysFill == true) {
+        $string.add(&apos;&apos;)
+    }
+
+    $string = List-Concat $string &apos;,&apos;
+    $string = `($string)`
+
+    return $string
+}
+
+$masterProducts = {`!$Record}
+
+# Check inputs were given
+if($masterProducts.size() &gt; 0) {
+    # Capture global Flow variables
+    $flowName = {`!flowName}.get(0)
+    $batchSize = {`!BatchSize}.get(0)
+    $useBulkApi = false
+    $async = false
+    $namedCredential = {`!NamedCredential}.get(0)
+    $integrationType = &apos;CatalogVariant&apos;
+    $platformInstanceName = {`!PlatformInstanceName}.get(0)
+    $store = New-s_c__Store__c
+
+    $masterProductIds = List-Stringify $masterProducts &apos;Product_Id__c&apos; false
+
+    # Sanity check
+    if($masterProductIds != &apos;()&apos;) {
+        $variantProducts = Query-Records `
+            SELECT s_c__Variant_Product_Id__c
+            FROM s_c__Product_Variant__c
+            WHERE s_c__Master_Product_Id__c IN $masterProductIds
+                AND s_c__Variant_Product_Id__c != NULL
+        `
+
+        # Check variants were found
+        if($variantProducts.size() &gt; 0) {
+            $variantProductIds = []
+            foreach($variantProduct in $variantProducts) {
+                $variantProductIds.add($variantProduct.s_c__Variant_Product_Id__c)
+            }
+
+            $scope = {
+                &apos;callback&apos;: $flowName,
+                &apos;callbackContext&apos;: {
+                    &apos;UseBulkApi&apos;: $useBulkApi,
+                    &apos;RunAsynchronously&apos;: $async,
+                    &apos;IntegrationType&apos;: $integrationType,
+                    &apos;BatchSize&apos;: $batchSize,
+                    &apos;NamedCredential&apos;: $namedCredential,
+                    &apos;PlatformInstanceName&apos;: $platformInstanceName,
+                    &apos;Store&apos;: $store,
+                    &apos;InputIds&apos;: $variantProductIds
+                }
+            }
+
+            # Run asynchronously to prevent lower than batch size synchronous flow
+            # which will eventually hit governor limits
+            Script-Enqueue $scope ${
+                # Call flow with bulkified inputs
+                Script-Flow $_.callback $_.callbackContext
+            }
+        }
+    }
+}
+
+</stringValue>
+            </value>
+        </inputParameters>
+        <nameSegment>Streams__Streamscript</nameSegment>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+        <versionSegment>1</versionSegment>
+    </actionCalls>
+    <apiVersion>60.0</apiVersion>
+    <constants>
+        <name>flowName</name>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Klaviyo_ALF_Integration</stringValue>
+        </value>
+    </constants>
+    <decisions>
+        <name>Integration_Type</name>
+        <label>Integration Type</label>
+        <locationX>182</locationX>
+        <locationY>323</locationY>
+        <defaultConnectorLabel>Unhandled</defaultConnectorLabel>
+        <rules>
+            <name>Integration_Type_CatalogItem</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Product_Id__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Product_Id__r.s_c__Is_Master__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Sync_Product_Variants</targetReference>
+            </connector>
+            <label>CatalogItem</label>
+        </rules>
+    </decisions>
+    <description>When a parent object integration is created/updated, it will automatically trigger the sync of all child related objects so that the integration cascades.
+
+Logic works like this:
+  |- Product master synced
+  |--- Product variant(s) synced</description>
+    <environments>Default</environments>
+    <interviewLabel>Klaviyo - RTF - Integration Child Sync {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Klaviyo - RTF - Integration Child Sync</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>56</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Integration_Type</targetReference>
+        </connector>
+        <filterFormula>AND(
+  NOT(ISNULL({!$Record.Product_Id__c})),
+  NOT(ISBLANK({!$Record.External_Id__c})),
+  {!$Record.Synced__c},
+  {!$Record.Platform__c} = {!$Setup.StoreConnect_Add_on_Klaviyo__c.Platform_Instance_Name__c},
+  {!$Record.Product_Id__r.s_c__Is_Master__c},
+  OR(
+    ISNEW(),
+    ISCHANGED({!$Record.LastModifiedDate})
+  )
+)</filterFormula>
+        <object>StoreConnect_Integration__c</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <variables>
+        <name>BatchSize</name>
+        <dataType>Number</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <scale>0</scale>
+    </variables>
+    <variables>
+        <name>NamedCredential</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>PlatformInstanceName</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>
