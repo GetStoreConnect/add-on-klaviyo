@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Sync_Missing_or_Modified_Records</name>
+        <label>Sync Missing or Modified Records</label>
+        <locationX>176</locationX>
+        <locationY>360</locationY>
+        <actionName>Streams__Streamscript</actionName>
+        <actionType>apex</actionType>
+        <dataTypeMappings>
+            <typeName>T__c1</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c2</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c3</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c4</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c5</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c6</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c7</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c8</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__c9</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__i0</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r1</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r2</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r3</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r4</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r5</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r6</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r7</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r8</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>T__r9</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>U__record</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <dataTypeMappings>
+            <typeName>U__records</typeName>
+            <typeValue>Task</typeValue>
+        </dataTypeMappings>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>i1</name>
+            <value>
+                <elementReference>flowName</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i2</name>
+            <value>
+                <elementReference>NamedCredential</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i3</name>
+            <value>
+                <elementReference>PlatformInstanceName</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>i4</name>
+            <value>
+                <elementReference>$User.TimeZoneSidKey</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>n1</name>
+            <value>
+                <elementReference>BatchSize</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>x</name>
+            <value>
+                <stringValue># Streamscript i1=flowName n1=BatchSize i2=NamedCredential i3=PlatformInstanceName i4=$User.TimeZoneSidKey
+
+# Capture global Flow variables
+$flowName = {`!flowName}
+$batchSize = {`!BatchSize}
+$useBulkApi = false
+$async = false
+$namedCredential = {`!NamedCredential}
+$platformInstanceName = {`!PlatformInstanceName}
+$store = New-s_c__Store__c
+
+$scope = {
+    &apos;callback&apos;: $flowName,
+    &apos;callbackContext&apos;: {
+        &apos;UseBulkApi&apos;: $useBulkApi,
+        &apos;RunAsynchronously&apos;: $async,
+        &apos;IntegrationType&apos;: $integrationType,
+        &apos;BatchSize&apos;: $batchSize,
+        &apos;NamedCredential&apos;: $namedCredential,
+        &apos;PlatformInstanceName&apos;: $platformInstanceName,
+        &apos;Store&apos;: $store,
+        &apos;InputIds&apos;: []
+    }
+}
+
+$dtNow = Script-Now
+$dtNow = $dtNow.addDays(-1)
+$yesterdayDateTime = $dtNow.format(&quot;yyyy-MM-dd&apos;T&apos;HH:mm:ssZ&quot;, {`!$User.TimeZoneSidKey})
+
+$allCategories = []
+$allProducts = []
+
+$allCategoryIds = []
+$allMasterProductIds = []
+$allVariantProductIds = []
+
+# Get a collection of all Categories to sync
+$allCategories.addAll(Query-Records `
+    SELECT Id
+    FROM s_c__Product_Category__c
+    WHERE Id NOT IN (
+      SELECT Product_Category_Id__c
+      FROM StoreConnect_Integration__c
+      WHERE Platform__c = &apos;$platformInstanceName&apos; AND
+            Product_Category_Id__c != NULL AND
+            Synced__c = TRUE
+    )
+`)
+
+$allCategories.addAll(Query-Records `
+    SELECT Id
+    FROM s_c__Product_Category__c
+    WHERE LastModifiedDate &gt; $yesterdayDateTime
+`)
+
+# Get a collection of all Products to sync
+$allProducts.addAll(Query-Records `
+    SELECT Id, s_c__Is_Master__c
+    FROM Product2
+    WHERE Id NOT IN (
+      SELECT Product_Id__c
+      FROM StoreConnect_Integration__c
+      WHERE Platform__c = &apos;$platformInstanceName&apos; AND
+            Product_Id__c != NULL AND
+            Synced__c = TRUE
+    )
+    AND s_c__Is_Master__c = TRUE
+`)
+
+$allProducts.addAll(Query-Records `
+    SELECT Id, s_c__Is_Master__c
+    FROM Product2
+    WHERE LastModifiedDate &gt; $yesterdayDateTime
+`)
+
+# Capture all Category Ids for Flow
+foreach($category in $allCategories) {
+    $allCategoryIds.add($category.Id)
+}
+
+# Capture all Product Ids for Flow
+# and split products in Master and Variant lists
+foreach($product in $allProducts) {
+    if($product.s_c__Is_Master__c) {
+        $allMasterProductIds.add($product.Id)
+    } else {
+        $allVariantProductIds.add($product.Id)
+    }
+}
+
+# Enqueue Category sync
+if($allCategoryIds.size() &gt; 0) {
+    # Update scope items
+    $scope.callbackContext.IntegrationType = &apos;CatelogCategory&apos;
+    $scope.callbackContext.InputIds = $allCategoryIds
+    Log $scope
+    # Run Auto-Launch Flow asynchronously
+    Script-Enqueue $scope ${
+        Script-Flow $_.callback $_.callbackContext
+    }
+}
+
+# Enqueue Master Product sync
+if($allMasterProductIds.size() &gt; 0) {
+    # Update scope items
+    $scope.callbackContext.IntegrationType = &apos;CatelogItem&apos;
+    $scope.callbackContext.InputIds = $allMasterProductIds
+    Log $scope
+    # Run Auto-Launch Flow asynchronously
+    Script-Enqueue $scope ${
+        Script-Flow $_.callback $_.callbackContext
+    }
+}
+
+# Enqueue Variant Product sync
+if($allVariantProductIds.size() &gt; 0) {
+    # Update scope items
+    $scope.callbackContext.IntegrationType = &apos;CatelogVariant&apos;
+    $scope.callbackContext.InputIds = $allVariantProductIds
+    Log $scope
+    # Run Auto-Launch Flow asynchronously
+    Script-Enqueue $scope ${
+        Script-Flow $_.callback $_.callbackContext
+    }
+}
+
+</stringValue>
+            </value>
+        </inputParameters>
+        <nameSegment>Streams__Streamscript</nameSegment>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+        <versionSegment>1</versionSegment>
+    </actionCalls>
+    <apiVersion>60.0</apiVersion>
+    <assignments>
+        <name>Assign_Dynamic_Inputs</name>
+        <label>Assign Dynamic Inputs</label>
+        <locationX>176</locationX>
+        <locationY>252</locationY>
+        <assignmentItems>
+            <assignToReference>BatchSize</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>cBatchSize</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>NamedCredential</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>cNamedCredential</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>PlatformInstanceName</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>cPlatformInstanceName</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Sync_Missing_or_Modified_Records</targetReference>
+        </connector>
+    </assignments>
+    <constants>
+        <name>flowName</name>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Klaviyo_ALF_Integration</stringValue>
+        </value>
+    </constants>
+    <environments>Default</environments>
+    <formulas>
+        <name>cBatchSize</name>
+        <dataType>Number</dataType>
+        <expression>NULLVALUE({!BatchSize}, {!$Setup.StoreConnect_Add_on_Klaviyo__c.Batch_Size__c})</expression>
+        <scale>0</scale>
+    </formulas>
+    <formulas>
+        <name>cNamedCredential</name>
+        <dataType>String</dataType>
+        <expression>BLANKVALUE({!NamedCredential}, {!$Setup.StoreConnect_Add_on_Klaviyo__c.Named_Credential__c})</expression>
+    </formulas>
+    <formulas>
+        <name>cPlatformInstanceName</name>
+        <dataType>String</dataType>
+        <expression>BLANKVALUE({!PlatformInstanceName}, {!$Setup.StoreConnect_Add_on_Klaviyo__c.Platform_Instance_Name__c})</expression>
+    </formulas>
+    <formulas>
+        <name>dtYesterday</name>
+        <dataType>DateTime</dataType>
+        <expression>FROMUNIXTIME(UNIXTIMESTAMP(NOW()) - (24 * 60 * 60 * 1000))</expression>
+    </formulas>
+    <formulas>
+        <name>dtYesterday2</name>
+        <dataType>String</dataType>
+        <expression>SUBSTITUTE(
+  TEXT(FROMUNIXTIME(UNIXTIMESTAMP(NOW()) - (24 * 60 * 60 * 1000))),
+  &quot; &quot;,
+  &quot;T&quot;
+)</expression>
+    </formulas>
+    <interviewLabel>Klaviyo - SF - Daily Sync {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Klaviyo - SF - Daily Sync</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Assign_Dynamic_Inputs</targetReference>
+        </connector>
+        <schedule>
+            <frequency>Daily</frequency>
+            <startDate>2024-04-23</startDate>
+            <startTime>01:00:00.000Z</startTime>
+        </schedule>
+        <triggerType>Scheduled</triggerType>
+    </start>
+    <status>Draft</status>
+    <variables>
+        <name>BatchSize</name>
+        <dataType>Number</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <scale>0</scale>
+    </variables>
+    <variables>
+        <name>NamedCredential</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>PlatformInstanceName</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>
