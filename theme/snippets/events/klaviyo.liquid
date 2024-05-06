@@ -8,10 +8,9 @@
   <script type="text/javascript"> !function(){if(!window.klaviyo){window._klOnsite=window._klOnsite||[];try{window.klaviyo=new Proxy({},{get:function(n,i){return"push"===i?function(){var n;(n=window._klOnsite).push.apply(n,arguments)}:function(){for(var n=arguments.length,o=new Array(n),w=0;w<n;w++)o[w]=arguments[w];var t="function"==typeof o[o.length-1]?o.pop():void 0,e=new Promise((function(n){window._klOnsite.push([i].concat(o,[function(i){t&&t(i),n(i)}]))}));return e}}})}catch(n){window.klaviyo=window.klaviyo||[],window.klaviyo.push=function(){var n;(n=window._klOnsite).push.apply(n,arguments)}}}}(); </script>
 
   {%- if current_customer %}
-    {% assign discount = current_product.pricing.original_price | minus: current_product.pricing.sale_price %}
     <script>
       var klaviyo = window.klaviyo || [];
-      const identity = {
+      const klaviyoIdentity = {
         "$email": "{{ current_customer.email }}",
         "$first_name": "{{ current_customer.firstname }}",
         "$last_name": "{{ current_customer.lastname }}",
@@ -21,7 +20,14 @@
         "$zip": "{{ current_customer.mailing_postal_code }}",
         "Id": "{{ current_customer.id }}"
       };
-      klaviyo.identify(identity);
+      klaviyo.identify(klaviyoIdentity);
+
+      const existingCustomerId = localStorage.getItem('customer_id');
+
+      if(existingCustomerId !== "{{ current_customer.id }}") {
+        localStorage.setItem('customer_id', "{{ current_customer.id }}");
+        klaviyo.track("Authenticated", klaviyoIdentity);
+      }
     </script>
   {%- endif %}
 
@@ -38,6 +44,15 @@
           {% assign comma = "" %}
           {%- for item in current_cart.items %}
             {% if item.reserved_product? != true %}
+              {% assign unit_price = item.pricing.original_price | divided_by: item.quantity | round: 2 %}
+              {% if item.pricing.original_price != item.pricing.sale_price %}
+                {% assign unit_sale_price = item.pricing.sale_price %}
+              {% else %}
+                {% assign unit_sale_price = item.pricing.price | divided_by: item.quantity | round: 2 %}
+              {% endif %}
+              {% assign unit_discount = unit_price | minus: unit_sale_price %}
+              {% assign sale_price = unit_sale_price | times: item.quantity %}
+              {% assign discount = unit_discount | times: item.quantity %}
               {{comma}}"{{ item.id }}": {
                 "product": {
                   "id": "{{ item.product.id }}",
@@ -59,17 +74,19 @@
                   },
                   "pricing": {
                     "original_price": {{ item.pricing.original_price }},
-                    "sale_price": {{ item.pricing.sale_price | default: item.pricing.original_price }},
-                    "checkout_price": {{ item.pricing.checkout_price }}
+                    "checkout_price": {{ item.pricing.checkout_price }},
+                    "price": {{ item.pricing.price }},
+                    "sale_price": {{ item.pricing.sale_price }},
+                    "unit_price": {{ unit_price }},
+                    "unit_sale_price": {{ unit_sale_price }},
+                    "unit_discount": {{ unit_discount }}
                   }
                 },
                 "quantity": {{ item.quantity }},
-                "price": {{ item.pricing.checkout_price }},
-                {% assign sale_price = item.pricing.sale_price | default: item.pricing.original_price %}
-                {% assign discount = item.pricing.original_price | minus: sale_price %}
+                "price": {{ sale_price }},
                 "discount": {{ discount }},
-                "unit_discount": {{ discount | divided_by: item.quantity | round: 2 }},
-                "unit_price": {{ item.pricing.checkout_price | divided_by: item.quantity | round: 2 }}
+                "unit_discount": {{ unit_discount }},
+                "unit_price": {{ unit_sale_price }}
               }
               {% assign comma = "," %}
             {% endif %}
@@ -123,7 +140,7 @@
             categories = item.product.categories.map(category => category.name);
           }
 
-          const data = {
+          const klaviyoData = {
             "AddedItemProductName": item.product.name,
             "AddedItemProductID": item.product.id,
             "AddedItemSKU": item.product.product_code,
@@ -145,6 +162,15 @@
               {% assign comma = "" %}
               {%- for item in current_cart.items %}
                 {% if item.reserved_product? != true %}
+                  {% assign unit_price = item.pricing.original_price | divided_by: item.quantity | round: 2 %}
+                  {% if item.pricing.original_price != item.pricing.sale_price %}
+                    {% assign unit_sale_price = item.pricing.sale_price %}
+                  {% else %}
+                    {% assign unit_sale_price = item.pricing.price | divided_by: item.quantity | round: 2 %}
+                  {% endif %}
+                  {% assign unit_discount = unit_price | minus: unit_sale_price %}
+                  {% assign sale_price = unit_sale_price | times: item.quantity %}
+                  {% assign discount = unit_discount | times: item.quantity %}
                   {{comma}}{
                     "ProductID": "{{ item.product.id  }}",
                     "SKU": "{{ item.product.product_code  }}",
@@ -158,15 +184,11 @@
                         {%- endfor %}
                       ],
                     {%- endif %}
-                    {%- if item.quantity > 0 %}
-                      "ItemPrice": {{ item.pricing.checkout_price | divided_by: item.quantity | round: 2 }},
-                    {%- else %}
-                      "ItemPrice": {{ item.pricing.checkout_price }},
-                    {%- endif %}
-                    "RowTotal": {{ item.pricing.checkout_price }},
+                    "ItemPrice": {{ unit_sale_price }},
+                    "RowTotal": {{ sale_price }},
                     "Quantity": {{ item.quantity }}
                   }
-                  {% assign value = value | plus: item.pricing.checkout_price %}
+                  {% assign value = value | plus: sale_price %}
                   {% assign comma = "," %}
                 {% endif %}
               {%- endfor %}
@@ -174,7 +196,7 @@
             "$value": {{ value }}
           };
 
-          klaviyo.track("Added to Cart", data);
+          klaviyo.track("Added to Cart", klaviyoData);
         }
       }
     }
@@ -193,7 +215,7 @@
             Date.now = function() { return new Date().getTime(); }
         }
         const unix_timestamp_s = Math.floor(Date.now() / 1000)
-        const data = {
+        const klaviyoData = {
           "$event_id": "{{ current_cart.id }}_" + unix_timestamp_s,
           "CheckoutURL": "{{ current_store.url }}{{ current_store.checkout_path | replace_first: "/", ""}}",
           "ItemNames": [
@@ -223,6 +245,15 @@
             {% assign comma = "" %}
             {%- for item in current_cart.items %}
               {% if item.reserved_product? != true %}
+                {% assign unit_price = item.pricing.original_price | divided_by: item.quantity | round: 2 %}
+                {% if item.pricing.original_price != item.pricing.sale_price %}
+                  {% assign unit_sale_price = item.pricing.sale_price %}
+                {% else %}
+                  {% assign unit_sale_price = item.pricing.price | divided_by: item.quantity | round: 2 %}
+                {% endif %}
+                {% assign unit_discount = unit_price | minus: unit_sale_price %}
+                {% assign sale_price = unit_sale_price | times: item.quantity %}
+                {% assign discount = unit_discount | times: item.quantity %}
                 {{comma}}{
                   "ProductID": "{{ item.product.id  }}",
                   "SKU": "{{ item.product.product_code  }}",
@@ -236,15 +267,11 @@
                       {%- endfor %}
                     ],
                   {%- endif %}
-                  {%- if item.quantity > 0 %}
-                    "ItemPrice": {{ item.pricing.checkout_price | divided_by: item.quantity | round: 2 }},
-                  {%- else %}
-                    "ItemPrice": {{ item.pricing.checkout_price }},
-                  {%- endif %}
-                  "RowTotal": {{ item.pricing.checkout_price }},
+                  "ItemPrice": {{ unit_sale_price }},
+                  "RowTotal": {{ sale_price }},
                   "Quantity": {{ item.quantity }}
                 }
-                {% assign value = value | plus: item.pricing.checkout_price %}
+                {% assign value = value | plus: sale_price %}
                 {% assign comma = "," %}
               {% endif %}
             {%- endfor %}
@@ -252,14 +279,16 @@
           "$value": {{ value }}
         };
 
-        klaviyo.track("Started Checkout", data);
+        klaviyo.track("Started Checkout", klaviyoData);
       </script>
     {%- endcase %}
 
     {%- if current_product %}
+      {% assign sale_price = current_product.pricing.sale_price | default: current_product.pricing.original_price %}
+      {% assign discount = current_product.pricing.original_price | minus: sale_price %}
       <script>
         var klaviyo = window.klaviyo || [];
-        const data = {
+        const klaviyoData = {
           "ProductID": "{{ current_product.id }}",
           "SKU": "{{ current_product.product_code }}",
           "ProductName": "{{ current_product.name }}",
@@ -273,19 +302,15 @@
               {%- endfor %}
             ],
           {%- endif %}
-          {%- if current_product.bundle_lead? %}
-            {%- if current_product.pricing.subscription? %}
-              "Price": {{ current_product.pricing.subscription_total_price }},
-            {%- else %}
-              "Price": {{ current_product.pricing.price }},
-            {%- endif %}
+          {%- if current_product.pricing.subscription? %}
+            "Price": {{ current_product.pricing.subscription_total_price }},
           {%- else %}
-            "Price": {{ current_product.pricing.checkout_price }},
+            "Price": {{ sale_price }},
           {%- endif %}
           "CompareAtPrice": {{ current_product.pricing.original_price }}
         };
         
-        klaviyo.track("Viewed Product", data);
+        klaviyo.track("Viewed Product", klaviyoData);
       </script>
     {%- endif %}
   {%- endunless %}
